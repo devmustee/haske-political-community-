@@ -1,0 +1,997 @@
+// Haske Community — Prisma schema
+// Auth strategy: credentials + JWT session (no OAuth adapter tables needed).
+// Content provenance: every editorial content model carries a ContentStatus
+// so the UI can distinguish documented record / proposed agenda / community
+// content / official / third-party / draft / archived, per platform policy.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────
+
+enum ContentStatus {
+  OFFICIAL
+  DOCUMENTED
+  PROPOSED
+  COMMUNITY
+  THIRD_PARTY
+  DRAFT
+  ARCHIVED
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum VerificationBadge {
+  NONE
+  OFFICIAL
+  ORGANIZATION
+}
+
+enum AdminRoleName {
+  SUPER_ADMIN
+  CONTENT_ADMIN
+  COMMUNITY_MANAGER
+  PROGRAM_MANAGER
+  EVENT_MANAGER
+  ANALYST
+  MODERATOR
+}
+
+enum PostType {
+  TEXT
+  IMAGE
+  VIDEO
+  LINK
+  POLL
+  ANNOUNCEMENT
+}
+
+enum MediaAssetType {
+  IMAGE
+  VIDEO
+}
+
+enum ReportTargetType {
+  POST
+  COMMENT
+  USER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+enum ModerationActionType {
+  REMOVE_POST
+  REMOVE_COMMENT
+  WARN_USER
+  SUSPEND_USER
+  BAN_USER
+  UNSUSPEND_USER
+  UNBAN_USER
+  VERIFY_USER
+  UNVERIFY_USER
+  DISMISS_REPORT
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  REPLY
+  REPOST
+  QUOTE_REPOST
+  FOLLOW
+  POLL_RESULT
+  EVENT_REMINDER
+  PROGRAM_UPDATE
+  ADMIN_ANNOUNCEMENT
+  FEEDBACK_STATUS
+}
+
+enum PollResultsVisibility {
+  AFTER_VOTE
+  AFTER_END
+  ALWAYS
+}
+
+enum TimelineEra {
+  EARLY_LIFE
+  EDUCATION
+  PROFESSIONAL_CAREER
+  AGRICULTURE
+  COMMUNITY_DEVELOPMENT
+  POLITICAL_JOURNEY
+}
+
+enum AchievementCategory {
+  AGRICULTURE
+  BUSINESS
+  TECHNOLOGY
+  YOUTH_EMPOWERMENT
+  EDUCATION
+  HUMANITARIAN_SUPPORT
+  COMMUNITY_DEVELOPMENT
+  ENTREPRENEURSHIP
+  SPORTS
+  PHILANTHROPY
+}
+
+enum ProgramCategory {
+  YOUTH_EMPOWERMENT
+  WOMEN_EMPOWERMENT
+  AGRICULTURE
+  EDUCATION
+  HUMANITARIAN
+}
+
+enum ProgramStatus {
+  UPCOMING
+  OPEN
+  ONGOING
+  CLOSED
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  ACCEPTED
+  REJECTED
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum FeedbackType {
+  IDEA
+  COMMUNITY_PROBLEM
+  SUGGESTION
+  QUESTION
+  PROGRAM_FEEDBACK
+  POLICY_FEEDBACK
+}
+
+enum FeedbackStatus {
+  RECEIVED
+  UNDER_REVIEW
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum IssueCategory {
+  ROADS
+  WATER
+  ELECTRICITY
+  HEALTHCARE
+  EDUCATION
+  AGRICULTURE
+  SECURITY
+  YOUTH_EMPLOYMENT
+  ENVIRONMENT
+  OTHER
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum MediaCenterCategory {
+  NEWS
+  PRESS_RELEASE
+  SPEECH
+  VIDEO
+  PHOTO
+  INTERVIEW
+  DOCUMENT
+  ANNOUNCEMENT
+}
+
+enum PublicRecordType {
+  OFFICIAL_STATEMENT
+  MANIFESTO_VERSION
+  POLICY_DOCUMENT
+  PROGRAM_REPORT
+  PROJECT_UPDATE
+  EVENT_RECORD
+  PUBLISHED_COMMITMENT
+  PRESS_RELEASE
+}
+
+enum NavLocation {
+  HEADER
+  FOOTER
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Identity & Auth
+// ─────────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String            @id @default(cuid())
+  username       String            @unique
+  email          String            @unique
+  emailVerified  DateTime?
+  passwordHash   String?
+  name           String
+  bio            String?           @db.Text
+  location       String?
+  avatarUrl      String?
+  coverImageUrl  String?
+  verification   VerificationBadge @default(NONE)
+  isOrganization Boolean           @default(false)
+  status         UserStatus        @default(ACTIVE)
+  suspendedUntil DateTime?
+  bannedAt       DateTime?
+  lastLoginAt    DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  posts               Post[]                   @relation("PostAuthor")
+  comments            Comment[]
+  postLikes           PostLike[]
+  commentLikes        CommentLike[]
+  reposts             Repost[]
+  bookmarks           Bookmark[]
+  following           Follow[]                 @relation("Follower")
+  followers           Follow[]                 @relation("Following")
+  pollVotes           PollVote[]
+  notifications       Notification[]           @relation("NotificationRecipient")
+  notificationsCaused Notification[]           @relation("NotificationActor")
+  notificationPref    NotificationPreference?
+  reportsFiled        Report[]                 @relation("Reporter")
+  reportsReceived     Report[]                 @relation("ReportedUser")
+  reportsReviewed     Report[]                 @relation("ReportReviewer")
+  moderationActionsBy ModerationAction[]       @relation("Moderator")
+  moderationActionsOn ModerationAction[]       @relation("ModerationTarget")
+  adminRoles          AdminRole[]              @relation("AdminRoleUser")
+  adminRolesGranted   AdminRole[]              @relation("AdminRoleGrantedBy")
+  auditLogs           AuditLog[]
+  programApplications ProgramApplication[]
+  eventRegistrations  EventRegistration[]
+  eventQuestions      EventQuestion[]
+  feedbackSubmissions FeedbackSubmission[]
+  feedbackUpdatesMade FeedbackUpdate[]
+  communityIssues     CommunityIssue[]
+  passwordResetTokens PasswordResetToken[]
+  emailVerifyTokens   EmailVerificationToken[]
+  sessions            Session[]
+
+  @@index([username])
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdminRole {
+  id          String        @id @default(cuid())
+  userId      String
+  role        AdminRoleName
+  grantedById String?
+  createdAt   DateTime      @default(now())
+
+  user      User  @relation("AdminRoleUser", fields: [userId], references: [id], onDelete: Cascade)
+  grantedBy User? @relation("AdminRoleGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
+
+  @@unique([userId, role])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Community: posts, comments, engagement
+// ─────────────────────────────────────────────────────────────────────────
+
+model Post {
+  id             String        @id @default(cuid())
+  authorId       String
+  type           PostType      @default(TEXT)
+  content        String?       @db.Text
+  linkUrl        String?
+  contentStatus  ContentStatus @default(COMMUNITY)
+  isDemoContent  Boolean       @default(false)
+  quoteOfId      String?
+  likesCount     Int           @default(0)
+  commentsCount  Int           @default(0)
+  repostsCount   Int           @default(0)
+  bookmarksCount Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+
+  author    User          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  quoteOf   Post?         @relation("QuoteOf", fields: [quoteOfId], references: [id], onDelete: SetNull)
+  quotedBy  Post[]        @relation("QuoteOf")
+  media     PostMedia[]
+  comments  Comment[]
+  likes     PostLike[]
+  reposts   Repost[]
+  bookmarks Bookmark[]
+  poll      Poll?
+  hashtags  PostHashtag[]
+  reports   Report[]
+
+  @@index([authorId, createdAt])
+  @@index([contentStatus])
+}
+
+model PostMedia {
+  id      String         @id @default(cuid())
+  postId  String
+  url     String
+  type    MediaAssetType
+  altText String?
+  width   Int?
+  height  Int?
+  order   Int            @default(0)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Hashtag {
+  id         String @id @default(cuid())
+  tag        String @unique
+  postsCount Int    @default(0)
+
+  posts PostHashtag[]
+}
+
+model PostHashtag {
+  postId    String
+  hashtagId String
+
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtag Hashtag @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, hashtagId])
+}
+
+model Comment {
+  id         String    @id @default(cuid())
+  postId     String
+  authorId   String
+  parentId   String?
+  content    String    @db.Text
+  likesCount Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent  Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[]     @relation("CommentReplies")
+  likes   CommentLike[]
+  reports Report[]
+
+  @@index([postId, createdAt])
+  @@index([parentId])
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model CommentLike {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+}
+
+model Repost {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Poll {
+  id                String                @id @default(cuid())
+  postId            String                @unique
+  question          String
+  allowMultiple     Boolean               @default(false)
+  resultsVisibility PollResultsVisibility @default(AFTER_VOTE)
+  isOfficial        Boolean               @default(false)
+  startAt           DateTime              @default(now())
+  endAt             DateTime
+  createdAt         DateTime              @default(now())
+
+  post    Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  options PollOption[]
+  votes   PollVote[]
+}
+
+model PollOption {
+  id         String @id @default(cuid())
+  pollId     String
+  text       String
+  order      Int    @default(0)
+  votesCount Int    @default(0)
+
+  poll  Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes PollVote[]
+}
+
+model PollVote {
+  id        String   @id @default(cuid())
+  pollId    String
+  optionId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, optionId, userId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  actorId   String?
+  type      NotificationType
+  postId    String?
+  commentId String?
+  message   String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user  User  @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor User? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([userId, read, createdAt])
+}
+
+model NotificationPreference {
+  id                 String  @id @default(cuid())
+  userId             String  @unique
+  likes              Boolean @default(true)
+  comments           Boolean @default(true)
+  follows            Boolean @default(true)
+  reposts            Boolean @default(true)
+  pollResults        Boolean @default(true)
+  eventReminders     Boolean @default(true)
+  programUpdates     Boolean @default(true)
+  adminAnnouncements Boolean @default(true)
+  feedbackUpdates    Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Moderation
+// ─────────────────────────────────────────────────────────────────────────
+
+model Report {
+  id             String           @id @default(cuid())
+  reporterId     String
+  targetType     ReportTargetType
+  postId         String?
+  commentId      String?
+  reportedUserId String?
+  reason         String
+  details        String?          @db.Text
+  status         ReportStatus     @default(PENDING)
+  reviewedById   String?
+  reviewedAt     DateTime?
+  createdAt      DateTime         @default(now())
+
+  reporter     User     @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  post         Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment      Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  reportedUser User?    @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reviewedBy   User?    @relation("ReportReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+}
+
+model ModerationAction {
+  id           String               @id @default(cuid())
+  moderatorId  String
+  actionType   ModerationActionType
+  targetUserId String?
+  postId       String?
+  commentId    String?
+  reason       String?
+  createdAt    DateTime             @default(now())
+
+  moderator  User  @relation("Moderator", fields: [moderatorId], references: [id], onDelete: Cascade)
+  targetUser User? @relation("ModerationTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+}
+
+model BlockedWord {
+  id        String   @id @default(cuid())
+  word      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Biography & timeline
+// ─────────────────────────────────────────────────────────────────────────
+
+model TimelineEvent {
+  id          String      @id @default(cuid())
+  era         TimelineEra
+  title       String
+  dateLabel   String
+  date        DateTime?
+  description String      @db.Text
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Achievements
+// ─────────────────────────────────────────────────────────────────────────
+
+model Achievement {
+  id               String              @id @default(cuid())
+  title            String
+  slug             String              @unique
+  category         AchievementCategory
+  year             String?
+  location         String?
+  summary          String
+  description      String              @db.Text
+  impact           String?             @db.Text
+  source           String?
+  sourceUrl        String?
+  contentStatus    ContentStatus       @default(DOCUMENTED)
+  relatedProgramId String?
+  featured         Boolean             @default(false)
+  order            Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  relatedProgram Program?              @relation(fields: [relatedProgramId], references: [id], onDelete: SetNull)
+  images         AchievementImage[]
+  documents      AchievementDocument[]
+}
+
+model AchievementImage {
+  id            String  @id @default(cuid())
+  achievementId String
+  url           String
+  caption       String?
+  order         Int     @default(0)
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+}
+
+model AchievementDocument {
+  id            String @id @default(cuid())
+  achievementId String
+  url           String
+  title         String
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Programs / empowerment
+// ─────────────────────────────────────────────────────────────────────────
+
+model Program {
+  id                  String          @id @default(cuid())
+  name                String
+  slug                String          @unique
+  category            ProgramCategory
+  description         String          @db.Text
+  targetBeneficiaries String?
+  location            String?
+  status              ProgramStatus   @default(UPCOMING)
+  startDate           DateTime?
+  applicationDeadline DateTime?
+  eligibility         String?         @db.Text
+  resultsImpact       String?         @db.Text
+  adminNotes          String?         @db.Text
+  contentStatus       ContentStatus   @default(DRAFT)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  images       ProgramImage[]
+  reports      ProgramReport[]
+  applications ProgramApplication[]
+  achievements Achievement[]
+
+  @@index([status, category])
+}
+
+model ProgramImage {
+  id        String  @id @default(cuid())
+  programId String
+  url       String
+  caption   String?
+  order     Int     @default(0)
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model ProgramReport {
+  id          String   @id @default(cuid())
+  programId   String
+  url         String
+  title       String
+  publishedAt DateTime @default(now())
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model ProgramApplication {
+  id        String            @id @default(cuid())
+  programId String
+  userId    String
+  fullName  String
+  phone     String
+  email     String
+  details   String?           @db.Text
+  status    ApplicationStatus @default(SUBMITTED)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([programId, status])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Manifesto & policy pillars
+// ─────────────────────────────────────────────────────────────────────────
+
+model Manifesto {
+  id              String   @id @default(cuid())
+  title           String
+  version         String
+  publicationDate DateTime
+  lastUpdatedDate DateTime @updatedAt
+  introduction    String   @db.Text
+  isCurrent       Boolean  @default(false)
+  pdfUrl          String?
+  createdAt       DateTime @default(now())
+
+  documents ManifestoDocument[]
+  pillars   ManifestoPillar[]
+}
+
+model ManifestoDocument {
+  id          String @id @default(cuid())
+  manifestoId String
+  url         String
+  title       String
+
+  manifesto Manifesto @relation(fields: [manifestoId], references: [id], onDelete: Cascade)
+}
+
+model PolicyPillar {
+  id               String        @id @default(cuid())
+  name             String
+  slug             String        @unique
+  category         String
+  problem          String?       @db.Text
+  currentSituation String?       @db.Text
+  proposedApproach String?       @db.Text
+  objectives       String?       @db.Text
+  proposedActions  String?       @db.Text
+  expectedOutcomes String?       @db.Text
+  contentStatus    ContentStatus @default(PROPOSED)
+  order            Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  manifestos ManifestoPillar[]
+}
+
+model ManifestoPillar {
+  manifestoId String
+  pillarId    String
+  order       Int    @default(0)
+
+  manifesto Manifesto    @relation(fields: [manifestoId], references: [id], onDelete: Cascade)
+  pillar    PolicyPillar @relation(fields: [pillarId], references: [id], onDelete: Cascade)
+
+  @@id([manifestoId, pillarId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Events
+// ─────────────────────────────────────────────────────────────────────────
+
+model Event {
+  id                   String      @id @default(cuid())
+  title                String
+  slug                 String      @unique
+  description          String      @db.Text
+  date                 DateTime
+  venue                String
+  lga                  String?
+  speaker              String?
+  imageUrl             String?
+  registrationRequired Boolean     @default(false)
+  capacity             Int?
+  eventType            String?
+  status               EventStatus @default(UPCOMING)
+  summary              String?     @db.Text
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  registrations EventRegistration[]
+  questions     EventQuestion[]
+  media         EventMedia[]
+
+  @@index([status, date])
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+model EventQuestion {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String
+  question  String   @db.Text
+  answer    String?  @db.Text
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EventMedia {
+  id      String         @id @default(cuid())
+  eventId String
+  url     String
+  type    MediaAssetType
+  caption String?
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Media Center
+// ─────────────────────────────────────────────────────────────────────────
+
+model MediaCenterItem {
+  id            String              @id @default(cuid())
+  title         String
+  slug          String              @unique
+  category      MediaCenterCategory
+  date          DateTime
+  author        String?
+  featuredImage String?
+  content       String              @db.Text
+  relatedTopic  String?
+  sourceUrl     String?
+  contentStatus ContentStatus       @default(OFFICIAL)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([category, date])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Public record (transparency)
+// ─────────────────────────────────────────────────────────────────────────
+
+model PublicRecordItem {
+  id            String           @id @default(cuid())
+  title         String
+  type          PublicRecordType
+  publishedDate DateTime
+  updatedDate   DateTime         @updatedAt
+  version       String?
+  source        String?
+  documentUrl   String?
+  content       String           @db.Text
+  createdAt     DateTime         @default(now())
+
+  @@index([type, publishedDate])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Citizen feedback & community issues
+// ─────────────────────────────────────────────────────────────────────────
+
+model FeedbackSubmission {
+  id           String         @id @default(cuid())
+  trackingId   String         @unique
+  userId       String
+  type         FeedbackType
+  subject      String
+  description  String         @db.Text
+  lga          String?
+  status       FeedbackStatus @default(RECEIVED)
+  assignedToId String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updates FeedbackUpdate[]
+
+  @@index([status, createdAt])
+}
+
+model FeedbackUpdate {
+  id          String         @id @default(cuid())
+  feedbackId  String
+  status      FeedbackStatus
+  note        String?        @db.Text
+  updatedById String
+  createdAt   DateTime       @default(now())
+
+  feedback  FeedbackSubmission @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  updatedBy User               @relation(fields: [updatedById], references: [id], onDelete: Cascade)
+}
+
+model CommunityIssue {
+  id           String        @id @default(cuid())
+  category     IssueCategory
+  title        String
+  description  String        @db.Text
+  lga          String
+  status       IssueStatus   @default(OPEN)
+  reportedById String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  reportedBy User @relation(fields: [reportedById], references: [id], onDelete: Cascade)
+
+  @@index([category, lga, status])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Site configuration / CMS
+// ─────────────────────────────────────────────────────────────────────────
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model HomepageSection {
+  id      String  @id @default(cuid())
+  key     String  @unique
+  title   String
+  order   Int     @default(0)
+  enabled Boolean @default(true)
+  config  Json?
+}
+
+model NavigationItem {
+  id       String      @id @default(cuid())
+  label    String
+  url      String
+  order    Int         @default(0)
+  location NavLocation
+  parentId String?
+
+  parent   NavigationItem?  @relation("NavChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children NavigationItem[] @relation("NavChildren")
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String
+  url      String
+  order    Int    @default(0)
+}
