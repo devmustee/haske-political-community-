@@ -5,7 +5,9 @@ import { Prisma } from "@prisma/client";
 function commentInclude(viewerId?: string) {
   return {
     author: true,
-    likes: viewerId ? { where: { userId: viewerId }, select: { id: true } } : false,
+    // Always keep the relation selected (see postInclude for why `false`
+    // for guests is unsafe) but match nothing when there's no viewer.
+    likes: { where: { userId: viewerId ?? "__no-viewer__" }, select: { id: true } },
   } satisfies Prisma.CommentInclude;
 }
 

@@ -257,6 +257,10 @@ async function main() {
   }
 
   // ── Manifesto (historical, publicly announced — not assumed current) ─
+  // Manifesto has no natural unique key, so re-seeding deletes and
+  // recreates it (cascades to ManifestoPillar/ManifestoDocument) rather
+  // than duplicating on every run.
+  await prisma.manifesto.deleteMany({ where: { title: "A.D.A.M.A.W.A First Agenda", version: "APC-era (2026)" } });
   const manifesto = await prisma.manifesto.create({
     data: {
       title: "A.D.A.M.A.W.A First Agenda",
@@ -300,6 +304,9 @@ async function main() {
   }
 
   // ── Public record ────────────────────────────────────────────────────
+  await prisma.publicRecordItem.deleteMany({
+    where: { title: { in: ["Abdulrahman Haske emerges as APM governorship candidate", "A.D.A.M.A.W.A First Agenda (historical)"] } },
+  });
   await prisma.publicRecordItem.createMany({
     data: [
       {
@@ -386,7 +393,61 @@ async function main() {
     },
   });
 
+  // ── Site settings: biography copy (admin-editable JSON) ──────────────
+  await prisma.siteSetting.upsert({
+    where: { key: "biography" },
+    update: {},
+    create: {
+      key: "biography",
+      value: {
+        heading: "Biography",
+        paragraphs: [
+          "Abdulrahman Bashir Haske is a Nigerian entrepreneur, philanthropist and politician from Adamawa State.",
+          "Public profiles describe him as having built his career primarily through entrepreneurship, business, community development and philanthropy before entering electoral politics.",
+          "He studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance according to the AA&R Investment Group profile.",
+          "His professional profile also identifies him as Executive Director at AA&R Investment Group and Executive Director at Haske & Williams Company, where he leads Northern Region operations from the Yola office.",
+          "His public profile includes experience in IT, software architecture, web technologies, applications, information security and assurance.",
+          "His public activities have also included entrepreneurship, agriculture, philanthropy, youth empowerment and community development.",
+        ],
+      },
+    },
+  });
+
+  // ── Site settings: experience & enterprise copy ───────────────────────
+  await prisma.siteSetting.upsert({
+    where: { key: "experience" },
+    update: {},
+    create: {
+      key: "experience",
+      value: {
+        heading: "Experience & Enterprise",
+        entries: [
+          {
+            organization: "AA&R Investment Group",
+            role: "Executive Director",
+            description: "Abdulrahman Bashir Haske is identified by AA&R Investment Group as an Executive Director.",
+          },
+          {
+            organization: "Haske & Williams Company",
+            role: "Executive Director, Northern Region",
+            description: "He is identified as Executive Director and Northern Region lead, leading operations from the Yola office.",
+          },
+          {
+            organization: "Technology",
+            role: "Software architecture & information security",
+            description: "His professional profile describes experience in software architecture, web technologies, applications, information security and security and assurance.",
+          },
+        ],
+      },
+    },
+  });
+
   // ── Demo community posts (clearly marked as demo content) ────────────
+  // Posts have no natural unique key either, so clear the seed accounts'
+  // prior posts before recreating them to keep re-seeding idempotent.
+  await prisma.post.deleteMany({ where: { authorId: { in: [haske.id, demoUser1.id, demoUser2.id] } } });
+  await prisma.hashtag.updateMany({ where: { tag: "adamawa2027" }, data: { postsCount: 0 } });
+
   const officialPost = await prisma.post.create({
     data: {
       authorId: haske.id,

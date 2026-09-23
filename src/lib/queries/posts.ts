@@ -2,6 +2,15 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+// A viewer-scoped filter that always keeps the relation selected (so the
+// result shape is stable and typed), but matches zero rows when there is no
+// signed-in viewer. Passing `false` for the relation instead would omit the
+// field from the result entirely rather than yielding `[]`, which crashes
+// any code that reads `.length` on it for guests.
+function viewerScoped(viewerId: string | undefined) {
+  return { userId: viewerId ?? "__no-viewer__" };
+}
+
 export function postInclude(viewerId?: string) {
   return {
     author: true,
@@ -9,7 +18,7 @@ export function postInclude(viewerId?: string) {
     poll: {
       include: {
         options: { orderBy: { order: "asc" as const } },
-        votes: viewerId ? { where: { userId: viewerId } } : false,
+        votes: { where: viewerScoped(viewerId) },
       },
     },
     quoteOf: {
@@ -18,9 +27,9 @@ export function postInclude(viewerId?: string) {
         media: { orderBy: { order: "asc" as const } },
       },
     },
-    likes: viewerId ? { where: { userId: viewerId }, select: { id: true } } : false,
-    reposts: viewerId ? { where: { userId: viewerId }, select: { id: true } } : false,
-    bookmarks: viewerId ? { where: { userId: viewerId }, select: { id: true } } : false,
+    likes: { where: viewerScoped(viewerId), select: { id: true } },
+    reposts: { where: viewerScoped(viewerId), select: { id: true } },
+    bookmarks: { where: viewerScoped(viewerId), select: { id: true } },
   } satisfies Prisma.PostInclude;
 }
 
