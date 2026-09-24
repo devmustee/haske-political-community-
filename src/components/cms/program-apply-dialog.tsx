@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,8 +35,18 @@ export function ProgramApplyDialog({ programId, programName }: { programId: stri
     formState: { errors },
   } = useForm<ProgramApplicationInput>({
     resolver: zodResolver(programApplicationSchema),
-    defaultValues: { programId, fullName: session?.user?.name ?? "", email: session?.user?.email ?? "" },
+    defaultValues: { programId, fullName: "", email: "" },
   });
+
+  // useSession() resolves asynchronously after this component's first
+  // render, so the name/email can't be captured via useForm's
+  // defaultValues (react-hook-form only reads those once, on mount) —
+  // reset() once the session data actually arrives instead.
+  useEffect(() => {
+    if (session?.user) {
+      reset({ programId, fullName: session.user.name ?? "", email: session.user.email ?? "" });
+    }
+  }, [session?.user, programId, reset]);
 
   async function onSubmit(values: ProgramApplicationInput) {
     setSubmitting(true);
@@ -64,7 +74,7 @@ export function ProgramApplyDialog({ programId, programName }: { programId: stri
         setOpen(v);
         if (!v) {
           setSubmitted(false);
-          reset();
+          reset({ programId, fullName: session?.user?.name ?? "", email: session?.user?.email ?? "" });
         }
       }}
     >
