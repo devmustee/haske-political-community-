@@ -63,7 +63,7 @@ export function FeedbackForm() {
           {trackingId}
           <Copy className="size-4 text-muted-foreground" />
         </button>
-        <p className="text-sm text-muted-foreground">Save this ID to track your submission's status below.</p>
+        <p className="text-sm text-muted-foreground">Save this ID to track your submission&apos;s status below.</p>
         <Button variant="outline" onClick={() => setTrackingId(null)}>
           Submit another
         </Button>

@@ -1,13 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col justify-between p-8 sm:p-12">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary font-serif text-base font-semibold text-primary-foreground">
-            H
-          </span>
+          <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={36} height={36} className="size-9 rounded-full" priority />
           <span className="font-serif text-lg font-semibold">Haske Community</span>
         </Link>
 
@@ -27,13 +26,23 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="relative flex h-full flex-col items-start justify-end gap-4 p-16">
-          <p className="font-serif text-3xl font-medium leading-snug text-primary-foreground text-balance">
-            &ldquo;Connect. Participate. Build Adamawa.&rdquo;
-          </p>
-          <p className="text-primary-foreground/70">
-            Join the public conversation shaping Adamawa&apos;s future.
-          </p>
+        <div className="relative flex h-full flex-col items-center justify-end gap-6 p-16">
+          <Image
+            src="/brand/portrait.png"
+            alt="Abdulrahman Bashir Haske"
+            width={280}
+            height={213}
+            className="w-64 drop-shadow-xl"
+            priority
+          />
+          <div className="text-center">
+            <p className="font-serif text-2xl font-medium leading-snug text-primary-foreground text-balance">
+              &ldquo;Connect. Participate. Build Adamawa.&rdquo;
+            </p>
+            <p className="mt-2 text-primary-foreground/70">
+              Join the public conversation shaping Adamawa&apos;s future.
+            </p>
+          </div>
         </div>
       </div>
     </div>

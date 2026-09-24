@@ -10,8 +10,8 @@ export default function PrivacyPage() {
       <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 prose-sm">
         <div className="flex flex-col gap-6 text-[15px] leading-relaxed text-foreground/90">
           <p>
-            Haske Community ("we", "us") is committed to protecting your privacy. This policy explains what information we
-            collect, how we use it, and the choices you have.
+            Haske Community (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is committed to protecting your privacy. This policy explains what
+            information we collect, how we use it, and the choices you have.
           </p>
           <Section title="Information we collect">
             Account details you provide (name, username, email, password), profile information you choose to add (bio,
@@ -37,8 +37,8 @@ export default function PrivacyPage() {
             obligations, resolve disputes, and enforce our agreements.
           </Section>
           <Section title="Contact">
-            For privacy questions or to request data deletion, use the "Speak to Haske" feedback form or contact the
-            campaign team through an official channel.
+            For privacy questions or to request data deletion, use the &ldquo;Speak to Haske&rdquo; feedback form or contact
+            the campaign team through an official channel.
           </Section>
         </div>
       </div>

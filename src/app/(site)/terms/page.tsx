@@ -32,7 +32,7 @@ export default function TermsPage() {
           </Section>
           <Section title="Moderation">
             We use a combination of automated filters and human moderators to review reported content. Moderation
-            decisions can be appealed through the "Speak to Haske" feedback form.
+            decisions can be appealed through the &ldquo;Speak to Haske&rdquo; feedback form.
           </Section>
           <Section title="Changes">
             We may update these terms from time to time. Continued use of the platform after changes constitutes

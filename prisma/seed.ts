@@ -19,7 +19,7 @@ async function main() {
 
   // ── Admin user ──────────────────────────────────────────────────────
   const adminPasswordHash = await bcrypt.hash("Admin123!", 12);
-  const admin = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "admin@haskecommunity.ng" },
     update: {},
     create: {

@@ -57,7 +57,7 @@ export function ReportDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Report content</DialogTitle>
-          <DialogDescription>Help us understand what's wrong. Reports are reviewed by moderators.</DialogDescription>
+          <DialogDescription>Help us understand what&apos;s wrong. Reports are reviewed by moderators.</DialogDescription>
         </DialogHeader>
 
         <RadioGroup value={reason} onValueChange={setReason} className="flex flex-col gap-2">

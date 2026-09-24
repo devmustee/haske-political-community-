@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getSiteSetting, type BiographySettings, type ExperienceSettings } from "@/lib/queries/settings";
 import { PageHero } from "@/components/cms/page-hero";
@@ -28,6 +29,15 @@ export default async function BiographyPage() {
       />
 
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+        <div className="float-right ml-6 mb-4 w-40 shrink-0 sm:w-48">
+          <Image
+            src="/brand/portrait.png"
+            alt="Abdulrahman Bashir Haske"
+            width={614}
+            height={466}
+            className="w-full rounded-2xl border border-border"
+          />
+        </div>
         <div className="mb-3">
           <ContentStatusBadge status="DOCUMENTED" />
         </div>

@@ -10,7 +10,7 @@ import type { ActionResult } from "@/lib/actions/auth";
 export async function resolveReport(reportId: string, action: "ACTIONED" | "DISMISSED"): Promise<ActionResult> {
   const admin = await requirePermission("moderation.review");
 
-  const report = await prisma.report.update({
+  await prisma.report.update({
     where: { id: reportId },
     data: { status: action, reviewedById: admin.id, reviewedAt: new Date() },
   });

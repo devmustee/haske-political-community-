@@ -22,7 +22,7 @@ export default async function NotificationsPage() {
       </div>
 
       {notifications.length === 0 ? (
-        <p className="py-16 text-center text-sm text-muted-foreground">You're all caught up.</p>
+        <p className="py-16 text-center text-sm text-muted-foreground">You&apos;re all caught up.</p>
       ) : (
         notifications.map((n) => <NotificationItem key={n.id} notification={n} />)
       )}

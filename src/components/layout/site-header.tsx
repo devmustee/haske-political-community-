@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Menu, X } from "lucide-react";
@@ -27,9 +28,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary font-serif text-base font-semibold text-primary-foreground">
-            H
-          </span>
+          <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={40} height={40} className="size-10 rounded-full" priority />
           <span className="hidden font-serif text-lg font-semibold sm:inline">Haske Community</span>
         </Link>
 

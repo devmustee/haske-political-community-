@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getSiteSetting, type BiographySettings, type MissionSettings, type VisionSettings } from "@/lib/queries/settings";
 import { getFeedPosts } from "@/lib/queries/posts";
@@ -35,26 +36,48 @@ export default async function HomePage() {
           className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px" }}
         />
-        <div className="relative mx-auto max-w-5xl px-4 py-20 text-center sm:px-6 sm:py-28">
-          <Badge className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground">
-            APM Governorship Candidate &middot; Adamawa 2027
-          </Badge>
-          <h1 className="mx-auto mt-5 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-6xl">
-            Abdulrahman Haske
-          </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-primary-foreground/85">
-            Building a more prosperous, inclusive and secure Adamawa.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg" variant="gold">
-              <Link href="/vision">Explore the Vision</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
-              <Link href="/community">Join Haske Community</Link>
-            </Button>
-            <Button asChild size="lg" variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
-              <Link href="/manifesto">Read the Agenda</Link>
-            </Button>
+        <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
+          <div className="text-center lg:text-left">
+            <div className="flex items-center justify-center gap-2.5 lg:justify-start">
+              <Image
+                src="/brand/apm-logo.png"
+                alt="Allied Peoples Movement"
+                width={36}
+                height={36}
+                className="size-9 rounded-full bg-white/90 p-0.5"
+              />
+              <Badge className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground">
+                APM Governorship Candidate &middot; Adamawa 2027
+              </Badge>
+            </div>
+            <h1 className="mx-auto mt-5 max-w-xl font-serif text-4xl font-semibold leading-tight sm:text-6xl lg:mx-0">
+              Abdulrahman Haske
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl text-lg text-primary-foreground/85 lg:mx-0">
+              Building a more prosperous, inclusive and secure Adamawa.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              <Button asChild size="lg" variant="gold">
+                <Link href="/vision">Explore the Vision</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
+                <Link href="/community">Join Haske Community</Link>
+              </Button>
+              <Button asChild size="lg" variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
+                <Link href="/manifesto">Read the Agenda</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="relative mx-auto w-full max-w-sm">
+            <div className="absolute inset-0 -z-10 rounded-full bg-accent/20 blur-3xl" />
+            <Image
+              src="/brand/portrait.png"
+              alt="Abdulrahman Bashir Haske"
+              width={614}
+              height={466}
+              className="mx-auto w-full max-w-xs drop-shadow-2xl sm:max-w-sm"
+              priority
+            />
           </div>
         </div>
       </section>
