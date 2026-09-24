@@ -68,16 +68,18 @@ export default async function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-sm">
-            <div className="absolute inset-0 -z-10 rounded-full bg-accent/20 blur-3xl" />
-            <Image
-              src="/brand/portrait.png"
-              alt="Abdulrahman Bashir Haske"
-              width={614}
-              height={466}
-              className="mx-auto w-full max-w-xs drop-shadow-2xl sm:max-w-sm"
-              priority
-            />
+          <div className="relative mx-auto w-full max-w-xs sm:max-w-sm">
+            <div className="absolute inset-0 -z-10 rounded-full bg-accent/25 blur-3xl" />
+            <div className="overflow-hidden rounded-3xl border-2 border-accent/40 bg-white shadow-2xl">
+              <Image
+                src="/brand/portrait.png"
+                alt="Abdulrahman Bashir Haske"
+                width={614}
+                height={466}
+                className="w-full"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -14,8 +14,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const permissions = Array.from(permissionsForRoles(roles));
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="hidden w-64 shrink-0 border-r border-border sm:block">
+    <div className="flex min-h-screen flex-col sm:flex-row">
+      <aside className="shrink-0 border-border sm:w-64 sm:border-r">
         <AdminSidebar roles={roles} permissions={permissions} />
       </aside>
       <main className="flex-1 bg-secondary/20">{children}</main>
