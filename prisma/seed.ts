@@ -158,18 +158,27 @@ async function main() {
     },
     {
       era: "POLITICAL_JOURNEY",
+      title: "Statewide grassroots engagement tour",
+      dateLabel: "11–15 May 2026",
+      date: new Date("2026-05-11"),
+      description:
+        "Undertook a five-day appreciation and engagement tour covering all 21 of Adamawa's local government areas, meeting traditional rulers, youth and women's groups, and party supporters at each stop.",
+      order: 7,
+    },
+    {
+      era: "POLITICAL_JOURNEY",
       title: "APC governorship primary",
       dateLabel: "2026",
       description:
         "Contested the APC governorship primary for Adamawa State, which he lost to Ahmed Galadima, according to Naija News reporting.",
-      order: 7,
+      order: 8,
     },
     {
       era: "POLITICAL_JOURNEY",
       title: "Resignation from the APC",
       dateLabel: "September 2026",
       description: "Resigned from the All Progressives Congress (APC).",
-      order: 8,
+      order: 9,
     },
     {
       era: "POLITICAL_JOURNEY",
@@ -177,7 +186,7 @@ async function main() {
       dateLabel: "September 2026",
       description:
         "Joined the Allied Peoples Movement (APM) and was unveiled in Yola as the party's governorship candidate for Adamawa State ahead of the 2027 election, at an event attended by APM leaders, traditional and community leaders, youth and women's groups, and supporters from Adamawa's 21 local government areas.",
-      order: 9,
+      order: 10,
     },
   ];
 
@@ -498,6 +507,30 @@ async function main() {
         "Thousands gathered at Mahmud Ribadu Square in Jimeta-Yola on 25 April 2026 — traditional rulers, religious leaders, youth and women's groups, diaspora representatives and APC stakeholders from all 21 local government areas — as Abdulrahman Haske formally declared his intention to contest the 2027 Adamawa governorship and unveiled the seven-point A.D.A.M.A.W.A First Agenda. Haske said he sought \"the honour to serve, not power for its own sake,\" describing his candidacy as a covenant with the people. Premium Times reported national APC dignitaries in attendance, including the party's National Youth Leader, Dayo Israel.",
       relatedTopic: "Political journey",
       sourceUrl: "https://www.premiumtimesng.com/promoted/874756-yola-agog-as-abdulrahman-haske-finally-declares-for-adamawa-governorship-race.html",
+      contentStatus: "THIRD_PARTY" as const,
+    },
+    {
+      title: "Haske launches statewide grassroots engagement tour of all 21 LGAs",
+      slug: "haske-statewide-grassroots-tour",
+      category: "NEWS" as const,
+      date: new Date("2026-05-11"),
+      content:
+        "Abdulrahman Haske embarked on a five-day statewide grassroots appreciation and engagement tour, beginning Monday 11 May 2026 and covering all 21 of Adamawa's local government areas: Ganye, Toungo, Jada and Mayo-Belwa on day one; Lamurde, Guyuk, Shelleng, Numan and Demsa on day two; Michika, Madagali, Mubi North and Mubi South on day three; Maiha, Hong, Gombi and Song on day four; and Girei, Fufure, Yola North and Yola South on day five. At each stop he was received by traditional rulers, youth and women's groups, party stakeholders and large crowds of supporters. \"Unity and collective effort are essential ingredients for a prosperous Adamawa State,\" he said. Coverage of the tour was independently reported by Freedom Online, Guardian Nigeria, TheCable, Blueprint, Arise News, 21st Century Chronicle and Tori.",
+      relatedTopic: "Political journey",
+      sourceUrl: "https://freedomonline.com.ng/adamawa-2027-haske-commences-statewide-grassroots-engagement-tour-reaffirms-inclusive-leadership-agenda/",
+      featuredImage: "https://freedomonline.com.ng/wp-content/uploads/2026/05/IMG-20260512-WA0183.jpg",
+      contentStatus: "THIRD_PARTY" as const,
+    },
+    {
+      title: "Photos: crowds greet Haske across Adamawa's local government areas",
+      slug: "haske-grassroots-tour-photos",
+      category: "PHOTO" as const,
+      date: new Date("2026-05-13"),
+      content:
+        "Photo coverage from Abdulrahman Haske's five-day statewide grassroots tour (11–15 May 2026), showing the large turnouts of traditional rulers, youth and women's groups, and party supporters that met him across Adamawa's 21 local government areas.",
+      relatedTopic: "Political journey",
+      sourceUrl: "https://www.tori.ng/news/321533/apc-governorship-aspirant-tours-adamawa-lgas-ahead.html",
+      featuredImage: "https://www.tori.ng/userfiles/image/2026/may/13/aabdul.jpg",
       contentStatus: "THIRD_PARTY" as const,
     },
   ];
