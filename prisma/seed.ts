@@ -107,7 +107,7 @@ async function main() {
   });
 
   // ── Biography timeline ──────────────────────────────────────────────
-  const timeline: { era: string; title: string; dateLabel: string; description: string; order: number }[] = [
+  const timeline: { era: string; title: string; dateLabel: string; date?: Date; description: string; order: number }[] = [
     {
       era: "EARLY_LIFE",
       title: "Early life in Adamawa",
@@ -150,8 +150,10 @@ async function main() {
     {
       era: "POLITICAL_JOURNEY",
       title: "Governorship declaration on the APC platform",
-      dateLabel: "2026",
-      description: "Declared intention to contest the Adamawa State governorship election on the All Progressives Congress (APC) platform.",
+      dateLabel: "25 April 2026",
+      date: new Date("2026-04-25"),
+      description:
+        "Declared intention to contest the Adamawa State governorship election on the All Progressives Congress (APC) platform, at Ribadu Square in Yola.",
       order: 6,
     },
     {
@@ -359,12 +361,12 @@ async function main() {
       contentStatus: "THIRD_PARTY" as const,
     },
     {
-      title: "Live coverage: Haske declares intention to run for Adamawa governor",
+      title: "Live coverage: Haske's declaration of intent, Ribadu Square, Yola",
       slug: "haske-declares-intention-video",
       category: "VIDEO" as const,
-      date: new Date("2026-09-12"),
+      date: new Date("2026-04-25"),
       content:
-        "Live video coverage of Abdulrahman Haske's declaration event in Adamawa State, where he formally announced his intention to run for governor. Watch on YouTube for the full unedited coverage.",
+        "Live video coverage of Abdulrahman Haske's declaration of intent to run for Governor of Adamawa State, on the APC platform, at Ribadu Square in Yola. Watch on YouTube for the full unedited coverage.",
       relatedTopic: "Political journey",
       sourceUrl: "https://www.youtube.com/watch?v=OaVqVah6Cpc",
       featuredImage: "https://img.youtube.com/vi/OaVqVah6Cpc/hqdefault.jpg",

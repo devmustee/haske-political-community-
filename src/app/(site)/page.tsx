@@ -277,7 +277,13 @@ export default async function HomePage() {
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {media.map((m) => (
               <Link key={m.id} href={`/media/${m.slug}`}>
-                <Card className="h-full card-link">
+                <Card className="h-full overflow-hidden card-link">
+                  {m.featuredImage && (
+                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.featuredImage} alt="" className="size-full object-cover" loading="lazy" />
+                    </div>
+                  )}
                   <CardContent className="p-5">
                     <Badge variant="secondary">{m.category.replaceAll("_", " ")}</Badge>
                     <p className="mt-2 font-medium">{m.title}</p>

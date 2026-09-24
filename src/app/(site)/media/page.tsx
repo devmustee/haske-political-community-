@@ -6,6 +6,7 @@ import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
+import { PlayCircle } from "lucide-react";
 
 export const metadata: Metadata = { title: "Media Center" };
 export const revalidate = 60;
@@ -54,7 +55,18 @@ export default async function MediaCenterPage({
           <div className="grid gap-5 sm:grid-cols-2">
             {items.map((item) => (
               <Link key={item.id} href={`/media/${item.slug}`}>
-                <Card className="h-full card-link">
+                <Card className="h-full overflow-hidden card-link">
+                  {item.featuredImage && (
+                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.featuredImage} alt="" className="size-full object-cover" loading="lazy" />
+                      {item.category === "VIDEO" && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                          <PlayCircle className="size-12 text-white drop-shadow" />
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <CardContent className="flex h-full flex-col p-5">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{CATEGORY_LABELS[item.category]}</Badge>
