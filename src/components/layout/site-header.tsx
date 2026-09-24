@@ -44,7 +44,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
                   aboutActive && "bg-muted text-foreground"
                 )}
               >
@@ -65,7 +65,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                "whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
                 pathname.startsWith(item.href) && "bg-muted text-foreground"
               )}
             >
@@ -74,18 +74,18 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-2 xl:flex">
+        <div className="hidden shrink-0 items-center gap-3 xl:flex">
           {session?.user ? (
             <Button asChild>
               <Link href="/community">Go to Community</Link>
             </Button>
           ) : (
             <>
-              <Button asChild variant="ghost">
-                <Link href="/login">Sign in</Link>
-              </Button>
+              <Link href="/login" className="whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground">
+                Sign in
+              </Link>
               <Button asChild>
-                <Link href="/register">Join Haske Community</Link>
+                <Link href="/register">Join</Link>
               </Button>
             </>
           )}

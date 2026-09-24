@@ -2,8 +2,18 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
+import { YouTubeEmbed } from "@/components/cms/youtube-embed";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
+
+const YOUTUBE_HOSTS = ["youtube.com", "youtu.be", "www.youtube.com"];
+function isYouTubeUrl(url: string) {
+  try {
+    return YOUTUBE_HOSTS.includes(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -29,9 +39,15 @@ export default async function MediaDetailPage({ params }: { params: Promise<{ sl
         {item.author ? ` · ${item.author}` : ""}
       </p>
 
-      {item.featuredImage && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.featuredImage} alt="" className="mt-6 w-full rounded-2xl border border-border object-cover" />
+      {item.category === "VIDEO" && item.sourceUrl && isYouTubeUrl(item.sourceUrl) ? (
+        <div className="mt-6">
+          <YouTubeEmbed url={item.sourceUrl} title={item.title} />
+        </div>
+      ) : (
+        item.featuredImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.featuredImage} alt="" className="mt-6 w-full rounded-2xl border border-border object-cover" />
+        )
       )}
 
       <p className="mt-6 whitespace-pre-wrap text-lg leading-relaxed">{item.content}</p>
