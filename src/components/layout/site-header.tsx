@@ -33,18 +33,18 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={40} height={40} className="size-10 rounded-full" priority />
-          <span className="hidden font-serif text-lg font-semibold sm:inline">Haske Community</span>
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={40} height={40} className="size-10 shrink-0 rounded-full" priority />
+          <span className="hidden whitespace-nowrap font-serif text-lg font-semibold sm:inline">Haske Community</span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex xl:gap-1">
+        <nav className="hidden min-w-0 items-center gap-0.5 xl:flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground xl:px-3.5",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
                   aboutActive && "bg-muted text-foreground"
                 )}
               >
@@ -65,7 +65,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground xl:px-3.5",
+                "whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
                 pathname.startsWith(item.href) && "bg-muted text-foreground"
               )}
             >
@@ -74,7 +74,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 xl:flex">
           {session?.user ? (
             <Button asChild>
               <Link href="/community">Go to Community</Link>
@@ -91,13 +91,13 @@ export function SiteHeader() {
           )}
         </div>
 
-        <button className="p-2 lg:hidden" onClick={() => setOpen((v) => !v)}>
+        <button className="shrink-0 p-2 xl:hidden" onClick={() => setOpen((v) => !v)}>
           {open ? <X className="size-6" /> : <Menu className="size-6" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border px-4 pb-4 pt-2 lg:hidden">
+        <div className="border-t border-border px-4 pb-4 pt-2 xl:hidden">
           <nav className="flex flex-col gap-1">
             <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">About</p>
             {ABOUT_ITEMS.map((item) => (
