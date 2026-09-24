@@ -187,21 +187,24 @@ async function main() {
   });
 
   // ── Achievements ─────────────────────────────────────────────────────
+  const hwRiceData = {
+    title: "H&W Rice Company",
+    category: "AGRICULTURE" as const,
+    location: "Adamawa State",
+    summary: "A rice-processing investment associated with Abdulrahman Haske, strengthening agricultural value chains.",
+    description:
+      "H&W Rice Company is a rice-processing investment associated with Abdulrahman Haske, designed to strengthen agricultural value chains by connecting farmers to processing and market opportunities in Adamawa State. Public reporting describes it as an integrated rice-processing operation connecting smallholder farmers with value-added processing.",
+    source: "Public reporting on H&W Rice Company / Haske & Williams Company",
+    contentStatus: "DOCUMENTED" as const,
+    featured: true,
+    order: 1,
+  };
   const hwRice = await prisma.achievement.upsert({
     where: { slug: "hw-rice-company" },
-    update: {},
+    update: hwRiceData,
     create: {
-      title: "H&W Rice Company",
+      ...hwRiceData,
       slug: "hw-rice-company",
-      category: "AGRICULTURE",
-      location: "Adamawa State",
-      summary: "A rice-processing investment associated with Abdulrahman Haske, strengthening agricultural value chains.",
-      description:
-        "H&W Rice Company is a rice-processing investment associated with Abdulrahman Haske, designed to strengthen agricultural value chains by connecting farmers to processing and market opportunities in Adamawa State. Public reporting describes it as an integrated rice-processing operation connecting smallholder farmers with value-added processing.",
-      source: "Public reporting on H&W Rice Company / Haske & Williams Company",
-      contentStatus: "DOCUMENTED",
-      featured: true,
-      order: 1,
     },
   });
 
@@ -212,7 +215,7 @@ async function main() {
       slug: "youth-empowerment-initiative",
       category: "YOUTH_EMPOWERMENT" as const,
       description:
-        "The campaign has indicated youth skills, entrepreneurship, technology and employment support will be a focus area of its empowerment agenda. Full program design, eligibility and application windows will be published here once confirmed.",
+        "Under the \"Meaningful Youth Inclusion\" plank of the A.D.A.M.A.W.A First Agenda, the campaign has indicated youth entrepreneurship, innovation, skills development and job creation will be a focus area. Full program design, eligibility and application windows for a citizen-facing program have not yet been published — this placeholder will be replaced once one is confirmed.",
     },
     {
       name: "Women's Empowerment Programme",
@@ -226,36 +229,30 @@ async function main() {
       slug: "agribusiness-support-programme",
       category: "AGRICULTURE" as const,
       description:
-        "The campaign has indicated support for farmers, agricultural inputs, processing and market access will be a focus area of its agenda, building on existing agriculture investment experience. Full program design will be published here once confirmed.",
+        "The A.D.A.M.A.W.A First Agenda proposes a N200 billion agricultural guarantee fund and mechanisation, agro-processing and market-expansion support aimed at an export-grade agricultural economy. Full program design for a citizen-facing application process has not yet been published — this placeholder will be replaced once one is confirmed.",
     },
     {
       name: "Education & Skills Programme",
       slug: "education-skills-programme",
       category: "EDUCATION" as const,
       description:
-        "The campaign has indicated scholarships, skills training and technology education will be a focus area of its agenda. Full program design will be published here once confirmed.",
+        "The A.D.A.M.A.W.A First Agenda proposes rehabilitating 500 schools and recruiting and training 3,000 STEM-qualified teachers under its \"Access to Social Development\" plank. Full program design for a citizen-facing application process has not yet been published — this placeholder will be replaced once one is confirmed.",
     },
     {
       name: "Humanitarian Support Programme",
       slug: "humanitarian-support-programme",
       category: "HUMANITARIAN" as const,
       description:
-        "The campaign has indicated food assistance and community support for vulnerable people will be a focus area of its agenda. Full program design will be published here once confirmed.",
+        "The A.D.A.M.A.W.A First Agenda proposes expanding the Adamawa Health Insurance Scheme to cover at least 1 million residents within three years. Full program design for a citizen-facing application process has not yet been published — this placeholder will be replaced once one is confirmed.",
     },
   ];
 
   for (const p of programSeeds) {
+    const data = { name: p.name, category: p.category, description: p.description, status: "UPCOMING" as const, contentStatus: "PROPOSED" as const };
     await prisma.program.upsert({
       where: { slug: p.slug },
-      update: {},
-      create: {
-        name: p.name,
-        slug: p.slug,
-        category: p.category,
-        description: p.description,
-        status: "UPCOMING",
-        contentStatus: "PROPOSED",
-      },
+      update: data,
+      create: { ...data, slug: p.slug },
     });
   }
 
