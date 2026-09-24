@@ -54,7 +54,7 @@ export default async function MediaCenterPage({
           <div className="grid gap-5 sm:grid-cols-2">
             {items.map((item) => (
               <Link key={item.id} href={`/media/${item.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full card-link">
                   <CardContent className="flex h-full flex-col p-5">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{CATEGORY_LABELS[item.category]}</Badge>

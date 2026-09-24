@@ -86,7 +86,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">About Haske</p>
+            <p className="section-eyebrow">About Haske</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">Who is Abdulrahman Bashir Haske?</h2>
             <p className="mt-4 text-muted-foreground">{bio?.paragraphs[0]}</p>
             <p className="mt-3 text-muted-foreground">{bio?.paragraphs[1]}</p>
@@ -108,7 +108,7 @@ export default async function HomePage() {
       {timeline.length > 0 && (
         <section className="border-t border-border bg-secondary/20">
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">His Journey</p>
+            <p className="section-eyebrow">His Journey</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">An interactive timeline</h2>
             <div className="mt-8">
               <Timeline items={timeline} />
@@ -125,7 +125,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-primary">Achievements</p>
+              <p className="section-eyebrow">Achievements</p>
               <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">What has he actually done?</h2>
             </div>
             <Link href="/achievements" className="hidden text-sm font-medium text-primary hover:underline sm:block">
@@ -135,7 +135,7 @@ export default async function HomePage() {
           <div className="mt-8 grid gap-5 sm:grid-cols-3">
             {achievements.map((a) => (
               <Link key={a.id} href={`/achievements/${a.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full card-link">
                   <CardContent className="p-5">
                     <ContentStatusBadge status={a.contentStatus} />
                     <h3 className="mt-3 font-serif font-semibold">{a.title}</h3>
@@ -152,12 +152,12 @@ export default async function HomePage() {
       {programs.length > 0 && (
         <section className="border-t border-border bg-secondary/20">
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Empowerment</p>
+            <p className="section-eyebrow">Empowerment</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">Programs for Adamawa citizens</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {programs.map((p) => (
                 <Link key={p.id} href={`/programs/${p.slug}`}>
-                  <Card className="h-full transition-shadow hover:shadow-md">
+                  <Card className="h-full card-link">
                     <CardContent className="p-5">
                       <Badge variant="secondary">{p.category.replaceAll("_", " ")}</Badge>
                       <h3 className="mt-2 font-medium">{p.name}</h3>
@@ -175,7 +175,7 @@ export default async function HomePage() {
 
       {/* Mission & Vision */}
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">Mission &amp; Vision</p>
+        <p className="section-eyebrow">Mission &amp; Vision</p>
         <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">Development priorities</h2>
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Card>
@@ -203,7 +203,7 @@ export default async function HomePage() {
       {pillars.length > 0 && (
         <section className="border-t border-border bg-secondary/20">
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Policy Agenda</p>
+            <p className="section-eyebrow">Policy Agenda</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">What does he propose?</h2>
             <div className="mt-8 flex flex-wrap gap-2.5">
               {pillars.map((pillar) => (
@@ -224,7 +224,7 @@ export default async function HomePage() {
       {/* Community preview */}
       <section className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">Community</p>
+          <p className="section-eyebrow">Community</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">What do citizens think?</h2>
           <p className="mt-2 text-muted-foreground">A live look at the public conversation in Haske Community.</p>
         </div>
@@ -246,12 +246,12 @@ export default async function HomePage() {
       {upcomingEvents.length > 0 && (
         <section className="border-t border-border bg-secondary/20">
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">Follow</p>
+            <p className="section-eyebrow">Follow</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">Upcoming events</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {upcomingEvents.map((e) => (
                 <Link key={e.id} href={`/events/${e.slug}`}>
-                  <Card className="h-full transition-shadow hover:shadow-md">
+                  <Card className="h-full card-link">
                     <CardContent className="p-5">
                       <p className="font-medium">{e.title}</p>
                       <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -272,12 +272,12 @@ export default async function HomePage() {
       {/* Media */}
       {media.length > 0 && (
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">Latest Media</p>
+          <p className="section-eyebrow">Latest Media</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">News, videos and speeches</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {media.map((m) => (
               <Link key={m.id} href={`/media/${m.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full card-link">
                   <CardContent className="p-5">
                     <Badge variant="secondary">{m.category.replaceAll("_", " ")}</Badge>
                     <p className="mt-2 font-medium">{m.title}</p>

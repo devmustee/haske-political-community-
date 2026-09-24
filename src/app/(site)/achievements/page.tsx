@@ -44,7 +44,7 @@ export default async function AchievementsPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             {achievements.map((a) => (
               <Link key={a.id} href={`/achievements/${a.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full card-link">
                   <CardContent className="flex h-full flex-col p-5">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{CATEGORY_LABELS[a.category] ?? a.category}</Badge>

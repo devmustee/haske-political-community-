@@ -56,7 +56,7 @@ export default async function EventsPage() {
 function EventRow({ event }: { event: { id: string; slug: string; title: string; date: Date; venue: string; status: string } }) {
   return (
     <Link href={`/events/${event.slug}`}>
-      <Card className="transition-shadow hover:shadow-md">
+      <Card className="card-link">
         <CardContent className="flex items-center justify-between gap-4 p-4">
           <div>
             <div className="flex items-center gap-2">

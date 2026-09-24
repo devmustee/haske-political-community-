@@ -46,7 +46,7 @@ export default async function ProgramsPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             {programs.map((p) => (
               <Link key={p.id} href={`/programs/${p.slug}`}>
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full card-link">
                   <CardContent className="flex h-full flex-col p-5">
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary">{CATEGORY_LABELS[p.category] ?? p.category}</Badge>

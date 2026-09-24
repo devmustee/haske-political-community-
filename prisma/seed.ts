@@ -158,7 +158,8 @@ async function main() {
       era: "POLITICAL_JOURNEY",
       title: "APC governorship primary",
       dateLabel: "2026",
-      description: "Participated in the APC governorship primary for Adamawa State.",
+      description:
+        "Contested the APC governorship primary for Adamawa State, which he lost to Ahmed Galadima, according to Naija News reporting.",
       order: 7,
     },
     {
@@ -173,7 +174,7 @@ async function main() {
       title: "Emerged as APM governorship candidate",
       dateLabel: "September 2026",
       description:
-        "Joined the Allied Peoples Movement (APM) and emerged as the party's governorship candidate for Adamawa State ahead of the 2027 election.",
+        "Joined the Allied Peoples Movement (APM) and was unveiled in Yola as the party's governorship candidate for Adamawa State ahead of the 2027 election, at an event attended by APM leaders, traditional and community leaders, youth and women's groups, and supporters from Adamawa's 21 local government areas.",
       order: 9,
     },
   ];
@@ -331,27 +332,61 @@ async function main() {
   });
 
   // ── Media center ─────────────────────────────────────────────────────
-  await prisma.mediaCenterItem.upsert({
-    where: { slug: "haske-joins-apm-emerges-governorship-candidate" },
-    update: {},
-    create: {
+  // Sourced from public reporting (Leadership, Naija News, TVC, Blueprint,
+  // Politics Nigeria, Per Second News, Prima News — September 2026) on the
+  // APM unveiling, and the live YouTube coverage of the declaration event.
+  const mediaSeeds = [
+    {
       title: "Haske joins APM, emerges as Adamawa governorship candidate",
       slug: "haske-joins-apm-emerges-governorship-candidate",
-      category: "NEWS",
-      date: new Date("2026-09-01"),
+      category: "NEWS" as const,
+      date: new Date("2026-09-12"),
       content:
-        "Abdulrahman Bashir Haske resigned from the All Progressives Congress (APC) and joined the Allied Peoples Movement (APM) in September 2026, where he emerged as the party's governorship candidate for Adamawa State for the 2027 election.",
+        "Abdulrahman Bashir Haske resigned from the All Progressives Congress (APC) and joined the Allied Peoples Movement (APM) in September 2026, where he emerged as the party's governorship candidate for Adamawa State for the 2027 election. He was formally unveiled in Yola at an event attended by APM leaders, stakeholders, traditional and community leaders, youth and women's groups, and supporters from all 21 local government areas of the state.",
       relatedTopic: "Political journey",
-      sourceUrl: null,
-      contentStatus: "THIRD_PARTY",
+      sourceUrl: "https://leadership.ng/2027-haske-resigns-from-apc-joins-apm-as-adamawa-governorship-candidate/",
+      contentStatus: "THIRD_PARTY" as const,
     },
-  });
+    {
+      title: "\"Strengthening a movement\": Haske's APM declaration speech",
+      slug: "haske-apm-declaration-speech",
+      category: "SPEECH" as const,
+      date: new Date("2026-09-12"),
+      content:
+        "At his unveiling as the APM's Adamawa governorship candidate, Haske framed the move as \"strengthening a movement dedicated to the future of Adamawa State,\" rather than a simple party switch, and pledged a government where young people have room to succeed. APM National Chairman Yusuf Mamman Dantalle endorsed Haske's alignment with the party's people-centred governance ideals, while Adamawa State APM Chair Badejo Bello described him as a bridgebuilder who understands the state's local developmental challenges.",
+      relatedTopic: "Political journey",
+      sourceUrl: "https://leadership.ng/2027-haske-resigns-from-apc-joins-apm-as-adamawa-governorship-candidate/",
+      contentStatus: "THIRD_PARTY" as const,
+    },
+    {
+      title: "Live coverage: Haske declares intention to run for Adamawa governor",
+      slug: "haske-declares-intention-video",
+      category: "VIDEO" as const,
+      date: new Date("2026-09-12"),
+      content:
+        "Live video coverage of Abdulrahman Haske's declaration event in Adamawa State, where he formally announced his intention to run for governor. Watch on YouTube for the full unedited coverage.",
+      relatedTopic: "Political journey",
+      sourceUrl: "https://www.youtube.com/watch?v=OaVqVah6Cpc",
+      featuredImage: "https://img.youtube.com/vi/OaVqVah6Cpc/hqdefault.jpg",
+      contentStatus: "THIRD_PARTY" as const,
+    },
+  ];
 
-  // ── Site settings: mission & vision copy (admin-editable JSON) ───────
-  await prisma.siteSetting.upsert({
-    where: { key: "mission" },
-    update: {},
-    create: {
+  for (const item of mediaSeeds) {
+    await prisma.mediaCenterItem.upsert({
+      where: { slug: item.slug },
+      update: item,
+      create: item,
+    });
+  }
+
+  // ── Site settings: mission / vision / biography / experience copy ────
+  // Re-seeding refreshes these to the canonical baseline copy below —
+  // hand-edits made via the admin Site Settings editor will be overwritten
+  // by the next `npm run db:seed`, which is the intended behavior while
+  // this baseline is still being assembled from verified sources.
+  const siteSettingSeeds: { key: string; value: Record<string, unknown> }[] = [
+    {
       key: "mission",
       value: {
         heading: "Our Mission",
@@ -372,12 +407,7 @@ async function main() {
         ],
       },
     },
-  });
-
-  await prisma.siteSetting.upsert({
-    where: { key: "vision" },
-    update: {},
-    create: {
+    {
       key: "vision",
       value: {
         heading: "Our Vision",
@@ -391,41 +421,30 @@ async function main() {
         ],
       },
     },
-  });
-
-  // ── Site settings: biography copy (admin-editable JSON) ──────────────
-  await prisma.siteSetting.upsert({
-    where: { key: "biography" },
-    update: {},
-    create: {
+    {
       key: "biography",
       value: {
         heading: "Biography",
         paragraphs: [
           "Abdulrahman Bashir Haske is a Nigerian entrepreneur, philanthropist and politician from Adamawa State.",
           "Public profiles describe him as having built his career primarily through entrepreneurship, business, community development and philanthropy before entering electoral politics.",
-          "He studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance according to the AA&R Investment Group profile.",
-          "His professional profile also identifies him as Executive Director at AA&R Investment Group and Executive Director at Haske & Williams Company, where he leads Northern Region operations from the Yola office.",
+          "He studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance according to the AA&R Investment Group profile, and AA&R's own leadership page lists him as pursuing an MSc in Computer Science at Nigerian Turkish Nile University, Abuja.",
+          "His professional profile also identifies him as Group Executive Director at AA&R Investment Group and Executive Director at Haske & Williams Company, where he leads Northern Region operations from the Yola office.",
           "His public profile includes experience in IT, software architecture, web technologies, applications, information security and assurance.",
           "His public activities have also included entrepreneurship, agriculture, philanthropy, youth empowerment and community development.",
         ],
       },
     },
-  });
-
-  // ── Site settings: experience & enterprise copy ───────────────────────
-  await prisma.siteSetting.upsert({
-    where: { key: "experience" },
-    update: {},
-    create: {
+    {
       key: "experience",
       value: {
         heading: "Experience & Enterprise",
         entries: [
           {
             organization: "AA&R Investment Group",
-            role: "Executive Director",
-            description: "Abdulrahman Bashir Haske is identified by AA&R Investment Group as an Executive Director.",
+            role: "Group Executive Director",
+            description:
+              "AA&R Investment Group's own leadership page identifies Abdulrahman Bashir Haske as Group Executive Director, an IT professional with a BSc in Information Systems from AUN who is pursuing an MSc in Computer Science at Nigerian Turkish Nile University, Abuja.",
           },
           {
             organization: "Haske & Williams Company",
@@ -440,7 +459,15 @@ async function main() {
         ],
       },
     },
-  });
+  ];
+
+  for (const setting of siteSettingSeeds) {
+    await prisma.siteSetting.upsert({
+      where: { key: setting.key },
+      update: { value: setting.value as never },
+      create: { key: setting.key, value: setting.value as never },
+    });
+  }
 
   // ── Demo community posts (clearly marked as demo content) ────────────
   // Posts have no natural unique key either, so clear the seed accounts'

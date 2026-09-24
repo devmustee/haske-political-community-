@@ -46,7 +46,7 @@ export default async function ManifestoPage() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {allPillars.map((pillar) => (
                     <Link key={pillar.id} href={`/policies/${pillar.slug}`}>
-                      <Card className="h-full transition-shadow hover:shadow-md">
+                      <Card className="h-full card-link">
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-xs font-medium text-muted-foreground">{pillar.category}</p>
@@ -129,7 +129,7 @@ function ManifestoBlock({
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {manifesto.pillars.map(({ pillar }) => (
           <Link key={pillar.id} href={`/policies/${pillar.slug}`}>
-            <Card className="h-full transition-shadow hover:shadow-md">
+            <Card className="h-full card-link">
               <CardContent className="p-4">
                 <p className="text-xs font-medium text-muted-foreground">{pillar.category}</p>
                 <p className="mt-1 font-medium">{pillar.name}</p>

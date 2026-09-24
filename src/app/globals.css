@@ -165,4 +165,18 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .card-link {
+    @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg;
+  }
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary;
+  }
+  .section-eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-accent;
+  }
+  .hero-dot-pattern {
+    background-image: radial-gradient(circle at 1px 1px, currentcolor 1px, transparent 0);
+    background-size: 28px 28px;
+  }
 }
