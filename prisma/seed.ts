@@ -260,44 +260,147 @@ async function main() {
   }
 
   // ── Manifesto (historical, publicly announced — not assumed current) ─
+  // Sourced from Vanguard and AllAfrica coverage of the 25 April 2026
+  // declaration at Mahmud Ribadu Square, Jimeta-Yola. This was announced
+  // on the APC platform, before Haske's September 2026 move to the APM —
+  // retained here as a historical agenda version, not assumed to carry
+  // over unchanged to the current APM candidacy.
+  //
   // Manifesto has no natural unique key, so re-seeding deletes and
   // recreates it (cascades to ManifestoPillar/ManifestoDocument) rather
   // than duplicating on every run.
-  await prisma.manifesto.deleteMany({ where: { title: "A.D.A.M.A.W.A First Agenda", version: "APC-era (2026)" } });
+  await prisma.manifesto.deleteMany({ where: { title: "A.D.A.M.A.W.A First Agenda" } });
   const manifesto = await prisma.manifesto.create({
     data: {
       title: "A.D.A.M.A.W.A First Agenda",
       version: "APC-era (2026)",
-      publicationDate: new Date("2026-01-01"),
+      publicationDate: new Date("2026-04-25"),
       introduction:
-        "The \"A.D.A.M.A.W.A First Agenda\" was publicly announced in connection with Abdulrahman Haske's earlier governorship bid on the APC platform. It is retained here as a historical / publicly announced agenda version. It is not assumed to be the current manifesto following the move to the Allied Peoples Movement (APM) — administrators can publish an updated, current manifesto at any time.",
+        "Unveiled on 25 April 2026 at Mahmud Ribadu Square in Jimeta-Yola, when Haske formally declared his intention to contest the Adamawa State governorship on the All Progressives Congress (APC) platform, the \"A.D.A.M.A.W.A First Agenda\" is a seven-point development blueprint — one plank for each letter of A-D-A-M-A-W-A. Haske described the ambition as a covenant with the people, built on unity, transparency and shared prosperity. It is retained here as a historical, publicly announced agenda version from his APC-era candidacy — it is not assumed to be the current manifesto following his September 2026 move to the Allied Peoples Movement (APM). Administrators can publish an updated, current manifesto at any time.",
       isCurrent: false,
     },
   });
 
-  // ── Policy pillars (category shells — no invented policy specifics) ──
+  // ── Policy pillars ───────────────────────────────────────────────────
+  // The seven planks of the A.D.A.M.A.W.A First Agenda, with the specific
+  // commitments and figures reported by Vanguard and AllAfrica. Framed
+  // throughout as PROPOSED (an announced campaign commitment, not a
+  // delivered outcome) and tied to its APC-era origin.
+  const APC_ERA_NOTE =
+    "Announced as part of the APC-era \"A.D.A.M.A.W.A First Agenda\" (25 April 2026). Not yet confirmed as carried over to the current APM candidacy.";
+
+  await prisma.policyPillar.deleteMany({
+    where: {
+      slug: {
+        in: [
+          "agriculture-agribusiness",
+          "education-human-capital",
+          "healthcare",
+          "youth-economic-empowerment",
+          "good-governance-accountability",
+          "infrastructure",
+          "security",
+        ],
+      },
+    },
+  });
+
   const pillarSeeds = [
-    { name: "Agriculture & Agribusiness", slug: "agriculture-agribusiness", category: "Agriculture" },
-    { name: "Education & Human Capital", slug: "education-human-capital", category: "Education" },
-    { name: "Healthcare", slug: "healthcare", category: "Healthcare" },
-    { name: "Youth & Economic Empowerment", slug: "youth-economic-empowerment", category: "Youth & Economy" },
-    { name: "Infrastructure", slug: "infrastructure", category: "Infrastructure" },
-    { name: "Security", slug: "security", category: "Security" },
-    { name: "Good Governance & Accountability", slug: "good-governance-accountability", category: "Governance" },
+    {
+      name: "Agriculture & Agro-Industry",
+      slug: "agriculture-agro-industry",
+      category: "Agriculture (A)",
+      problem:
+        "Adamawa's agricultural sector has significant untapped potential, with limited mechanisation, weak value chains and minimal agro-processing capacity relative to its scale.",
+      currentSituation:
+        "Smallholder farming still dominates, with most produce leaving the state unprocessed and little organized access to guarantee financing.",
+      proposedApproach:
+        "Reposition agriculture as a wealth-creating industry through mechanisation, value chain development, agro-processing and market expansion, aiming to make Adamawa a leading agro-industrial hub.",
+      objectives: "Grow agriculture into an export-grade economy worth an estimated N300 billion.",
+      proposedActions:
+        "Establish a N200 billion agricultural guarantee fund to de-risk lending to farmers and agribusinesses; invest in mechanisation and agro-processing infrastructure across the state's local government areas.",
+      expectedOutcomes: "An estimated 1 million jobs created across the agricultural value chain.",
+    },
+    {
+      name: "Development & Infrastructure",
+      slug: "development-infrastructure",
+      category: "Infrastructure (D)",
+      problem: "Road networks, water supply, energy access and digital connectivity remain uneven across Adamawa's 21 local government areas.",
+      proposedApproach: "Equitable, LGA-by-LGA infrastructure investment rather than concentrating development in a few urban centres.",
+      objectives: "Rehabilitate at least 25 kilometres of roads annually in every local government area.",
+      proposedActions: "Expand renewable energy access, improve water supply infrastructure, and strengthen digital connectivity statewide.",
+      expectedOutcomes: "More reliable roads, power, water and connectivity reaching rural and urban LGAs alike.",
+    },
+    {
+      name: "Access to Social Development",
+      slug: "access-social-development",
+      category: "Social Development (A)",
+      problem: "Many communities are excluded from quality education and affordable healthcare due to distance or cost.",
+      proposedApproach: "Treat education and healthcare as a single access problem — no community excluded because of where it is or what it can afford.",
+      objectives: "Rehabilitate 500 schools and expand the Adamawa Health Insurance Scheme to cover at least 1 million residents within three years.",
+      proposedActions: "Recruit and train 3,000 STEM-qualified teachers to rebuild classroom capacity alongside the school rehabilitation program.",
+      expectedOutcomes: "Broader, more affordable access to both education and healthcare across the state.",
+    },
+    {
+      name: "Meaningful Youth Inclusion",
+      slug: "meaningful-youth-inclusion",
+      category: "Youth Inclusion (M)",
+      problem: "Young people make up much of Adamawa's population but have limited structured pathways into entrepreneurship and skilled work.",
+      proposedApproach:
+        "Haske has framed the state's youth as its greatest asset, centering their inclusion — not just employment — as a governance priority.",
+      objectives: "Expand entrepreneurship support, innovation programs, job creation and skills development specifically targeted at youth.",
+      proposedActions: "Build out skills-development and innovation programs in coordination with the Wealth Creation plank below.",
+      expectedOutcomes: "More young people in Adamawa with a structured path into entrepreneurship or skilled employment.",
+    },
+    {
+      name: "Accountable & Inclusive Governance",
+      slug: "accountable-inclusive-governance",
+      category: "Governance (A)",
+      problem: "Public trust in state governance depends on transparency and the equitable distribution of resources across all communities.",
+      proposedApproach: "Transparency and accountability as organizing principles of government, not just campaign language.",
+      objectives: "Equitable distribution of public resources across Adamawa's 21 local government areas.",
+      proposedActions: "Full detail on specific transparency and accountability mechanisms has not yet been published.",
+      expectedOutcomes: "A state government residents can hold accountable, with resources reaching every LGA.",
+    },
+    {
+      name: "Wealth Creation & Economic Empowerment",
+      slug: "wealth-creation-economic-empowerment",
+      category: "Wealth Creation (W)",
+      problem: "Economic opportunity in Adamawa is not evenly distributed across all 21 local government areas.",
+      proposedApproach: "Attract investment and pair it with skills training and access to finance, so job creation reaches every LGA rather than a few urban centres.",
+      objectives: "Broaden access to finance and skills training statewide, alongside the agricultural job-creation target under the Agriculture plank.",
+      proposedActions: "Investment attraction paired with local skills-training programs across all 21 local government areas.",
+      expectedOutcomes: "More broadly distributed economic opportunity, measured across LGAs rather than concentrated growth.",
+    },
+    {
+      name: "Assurance of Security",
+      slug: "assurance-of-security",
+      category: "Security (A)",
+      problem: "Security is treated as the precondition for farming, trading and community life to function safely.",
+      proposedApproach: "Modernized security operations paired with intelligence-led policing, rather than a purely reactive posture.",
+      objectives: "Fund and stand up dedicated state security infrastructure separate from routine budget allocations.",
+      proposedActions: "Establish an Adamawa Security Trust Fund to resource modernized operations and intelligence-led policing.",
+      expectedOutcomes: "Safer conditions for farming, trading and daily community life across the state.",
+    },
   ];
 
   for (const [i, pillar] of pillarSeeds.entries()) {
+    const data = {
+      name: pillar.name,
+      category: pillar.category,
+      problem: pillar.problem,
+      currentSituation: "currentSituation" in pillar ? pillar.currentSituation : null,
+      proposedApproach: pillar.proposedApproach,
+      objectives: pillar.objectives,
+      proposedActions: pillar.proposedActions,
+      expectedOutcomes: `${pillar.expectedOutcomes} ${APC_ERA_NOTE}`,
+      contentStatus: "PROPOSED" as const,
+      order: i + 1,
+    };
     const created = await prisma.policyPillar.upsert({
       where: { slug: pillar.slug },
-      update: {},
-      create: {
-        name: pillar.name,
-        slug: pillar.slug,
-        category: pillar.category,
-        problem: "Full policy detail for this pillar has not yet been published by the campaign.",
-        contentStatus: "DRAFT",
-        order: i + 1,
-      },
+      update: data,
+      create: { ...data, slug: pillar.slug },
     });
     await prisma.manifestoPillar.upsert({
       where: { manifestoId_pillarId: { manifestoId: manifesto.id, pillarId: created.id } },
@@ -308,7 +411,15 @@ async function main() {
 
   // ── Public record ────────────────────────────────────────────────────
   await prisma.publicRecordItem.deleteMany({
-    where: { title: { in: ["Abdulrahman Haske emerges as APM governorship candidate", "A.D.A.M.A.W.A First Agenda (historical)"] } },
+    where: {
+      title: {
+        in: [
+          "Abdulrahman Haske emerges as APM governorship candidate",
+          "A.D.A.M.A.W.A First Agenda (historical)",
+          "Declaration of intent — Mahmud Ribadu Square, Jimeta-Yola",
+        ],
+      },
+    },
   });
   await prisma.publicRecordItem.createMany({
     data: [
@@ -324,11 +435,20 @@ async function main() {
       {
         title: "A.D.A.M.A.W.A First Agenda (historical)",
         type: "MANIFESTO_VERSION",
-        publishedDate: new Date("2026-01-01"),
+        publishedDate: new Date("2026-04-25"),
         version: "APC-era (2026)",
-        source: "Publicly announced campaign material, APC-era candidacy",
+        source: "Vanguard News and AllAfrica, 25 April 2026",
         content:
-          "The \"A.D.A.M.A.W.A First Agenda\" was the publicly announced agenda associated with Abdulrahman Haske's earlier governorship bid on the APC platform. Retained here for the public record; not assumed to be the current APM manifesto.",
+          "The \"A.D.A.M.A.W.A First Agenda\" — a seven-point blueprint spanning agriculture, infrastructure, social development, youth inclusion, governance, wealth creation and security — was unveiled at Mahmud Ribadu Square, Jimeta-Yola, when Haske declared his intention to contest the Adamawa governorship on the APC platform. Retained here for the public record; not assumed to be the current APM manifesto.",
+      },
+      {
+        title: "Declaration of intent — Mahmud Ribadu Square, Jimeta-Yola",
+        type: "EVENT_RECORD",
+        publishedDate: new Date("2026-04-25"),
+        version: "1.0",
+        source: "Vanguard News, 25 April 2026",
+        content:
+          "On 25 April 2026, Abdulrahman Haske formally declared his intention to contest the 2027 Adamawa State governorship election, on the APC platform, at Mahmud Ribadu Square in Jimeta-Yola. He described the ambition as a covenant with the people, and pledged leadership centred on unity, transparency and shared prosperity.",
       },
     ],
   });
@@ -372,6 +492,17 @@ async function main() {
       featuredImage: "https://img.youtube.com/vi/OaVqVah6Cpc/hqdefault.jpg",
       contentStatus: "THIRD_PARTY" as const,
     },
+    {
+      title: "Haske unveils A.D.A.M.A.W.A First Agenda at Mahmud Ribadu Square",
+      slug: "adamawa-first-agenda-unveiling",
+      category: "PRESS_RELEASE" as const,
+      date: new Date("2026-04-25"),
+      content:
+        "Thousands gathered at Mahmud Ribadu Square in Jimeta-Yola on 25 April 2026 — traditional rulers, religious leaders, youth and women's groups, diaspora representatives and APC stakeholders from all 21 local government areas — as Abdulrahman Haske formally declared his intention to contest the 2027 Adamawa governorship and unveiled the seven-point A.D.A.M.A.W.A First Agenda. Haske said he sought \"the honour to serve, not power for its own sake,\" describing his candidacy as a covenant with the people. Premium Times reported national APC dignitaries in attendance, including the party's National Youth Leader, Dayo Israel.",
+      relatedTopic: "Political journey",
+      sourceUrl: "https://www.premiumtimesng.com/promoted/874756-yola-agog-as-abdulrahman-haske-finally-declares-for-adamawa-governorship-race.html",
+      contentStatus: "THIRD_PARTY" as const,
+    },
   ];
 
   for (const item of mediaSeeds) {
@@ -393,19 +524,16 @@ async function main() {
       value: {
         heading: "Our Mission",
         statement:
-          "A people-centred approach to governance focused on economic empowerment, youth participation, sustainable development, agriculture, infrastructure, education, healthcare, security and accountable governance.",
-        note: "These are the campaign's stated political priorities and proposed agenda — not existing government achievements.",
+          "A people-centred approach to governance built around seven priorities — agriculture, infrastructure, social development, youth inclusion, governance, wealth creation and security — first announced publicly as the A.D.A.M.A.W.A First Agenda.",
+        note: "These are the campaign's stated political priorities and proposed agenda — not existing government achievements. The A.D.A.M.A.W.A First Agenda was announced during Haske's APC-era candidacy; see Our Agenda for the full historical text and current status.",
         priorities: [
-          "People-centred governance",
-          "Economic empowerment",
-          "Youth participation",
-          "Sustainable development",
-          "Agriculture",
-          "Infrastructure",
-          "Education",
-          "Healthcare",
-          "Security",
-          "Accountable governance",
+          "Agriculture & agro-industry",
+          "Development & infrastructure",
+          "Access to social development",
+          "Meaningful youth inclusion",
+          "Accountable & inclusive governance",
+          "Wealth creation & economic empowerment",
+          "Assurance of security",
         ],
       },
     },
@@ -414,12 +542,26 @@ async function main() {
       value: {
         heading: "Our Vision",
         statement: "Building a more prosperous, inclusive and secure Adamawa.",
-        note: "This phrase has been used in public statements surrounding the APM candidacy.",
+        note: "This phrase has been used in public statements surrounding the APM candidacy. Haske has described his broader ambition as a covenant with the people, built on unity, transparency and shared prosperity.",
         themes: [
-          { title: "Prosperity", description: "Economic opportunity, agriculture, entrepreneurship and investment." },
-          { title: "Inclusion", description: "Youth, women, communities and citizens participating in development." },
-          { title: "Security", description: "Safer communities and stronger institutions." },
-          { title: "Accountability", description: "Transparent management of public resources." },
+          {
+            title: "Prosperity",
+            description:
+              "Economic opportunity, agriculture and investment — including a proposed N300 billion export-grade agricultural economy and an estimated 1 million jobs, per the A.D.A.M.A.W.A First Agenda.",
+          },
+          {
+            title: "Inclusion",
+            description:
+              "Youth, women, communities and citizens participating in development, with youth described as Adamawa's greatest asset.",
+          },
+          {
+            title: "Security",
+            description: "Safer communities and stronger institutions, anchored by a proposed Adamawa Security Trust Fund.",
+          },
+          {
+            title: "Accountability",
+            description: "Transparent management of public resources, distributed equitably across all 21 local government areas.",
+          },
         ],
       },
     },
