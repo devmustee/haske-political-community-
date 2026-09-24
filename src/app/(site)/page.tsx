@@ -40,7 +40,7 @@ export default async function HomePage() {
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center gap-2.5 lg:justify-start">
               <Image
-                src="/brand/apm-logo.png"
+                src="/brand/apm-logo-official.png"
                 alt="Allied Peoples Movement"
                 width={36}
                 height={36}

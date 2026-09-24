@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getSiteSetting, type VisionSettings } from "@/lib/queries/settings";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +14,13 @@ export default async function VisionPage() {
     <div>
       <div className="border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto max-w-5xl px-4 py-20 text-center sm:px-6">
+          <Image
+            src="/brand/adamawa-state-seal.png"
+            alt="Adamawa State"
+            width={72}
+            height={72}
+            className="mx-auto mb-5 size-16 rounded-full bg-white/95 p-1.5"
+          />
           <p className="text-sm font-semibold uppercase tracking-wider text-primary-foreground/70">Our Vision</p>
           <h1 className="mx-auto mt-3 max-w-3xl font-serif text-3xl font-semibold leading-tight sm:text-5xl">
             {vision?.statement}
