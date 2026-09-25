@@ -5,7 +5,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = { title: "Events" };
 export const revalidate = 30;
@@ -24,14 +24,17 @@ export default async function EventsPage() {
 
   return (
     <div>
-      <PageHero eyebrow="Follow" title="Events" description="Public events, town halls and campaign activities." />
+      <PageHero eyebrow="Follow" title="Events" description="Public events, town halls and campaign activities." watermark="Events" />
 
-      <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
-        <h2 className="font-serif text-xl font-semibold">Upcoming</h2>
+      <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
+        <h2 className="font-serif text-2xl font-semibold sm:text-3xl">Upcoming</h2>
         {upcoming.length === 0 ? (
-          <p className="mt-3 text-muted-foreground">No upcoming events scheduled yet. Check back soon.</p>
+          <div className="mt-6 rounded-2xl border border-dashed border-border p-12 text-center">
+            <Calendar className="mx-auto size-10 text-muted-foreground/40" />
+            <p className="mt-4 text-muted-foreground">No upcoming events scheduled yet. Check back soon.</p>
+          </div>
         ) : (
-          <div className="mt-4 flex flex-col gap-3">
+          <div className="mt-6 flex flex-col gap-4">
             {upcoming.map((e) => (
               <EventRow key={e.id} event={e} />
             ))}
@@ -39,9 +42,9 @@ export default async function EventsPage() {
         )}
 
         {past.length > 0 && (
-          <div className="mt-12">
-            <h2 className="font-serif text-xl font-semibold">Past events</h2>
-            <div className="mt-4 flex flex-col gap-3">
+          <div className="mt-16">
+            <h2 className="font-serif text-2xl font-semibold sm:text-3xl">Past events</h2>
+            <div className="mt-6 flex flex-col gap-4">
               {past.map((e) => (
                 <EventRow key={e.id} event={e} />
               ))}
@@ -56,18 +59,19 @@ export default async function EventsPage() {
 function EventRow({ event }: { event: { id: string; slug: string; title: string; date: Date; venue: string; status: string } }) {
   return (
     <Link href={`/events/${event.slug}`}>
-      <Card className="card-link">
-        <CardContent className="flex items-center justify-between gap-4 p-4">
+      <Card className="group card-link overflow-hidden">
+        <CardContent className="flex items-center justify-between gap-4 p-5">
           <div>
             <div className="flex items-center gap-2">
               <Badge variant={STATUS_VARIANT[event.status] ?? "outline"}>{event.status}</Badge>
             </div>
-            <p className="mt-1.5 font-medium">{event.title}</p>
-            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Calendar className="size-3.5" /> {formatDate(event.date)}</span>
-              <span className="flex items-center gap-1"><MapPin className="size-3.5" /> {event.venue}</span>
+            <p className="mt-2 text-lg font-medium group-hover:text-primary transition-colors">{event.title}</p>
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
+              <span className="flex items-center gap-2"><Calendar className="size-4 text-primary/60" /> {formatDate(event.date)}</span>
+              <span className="flex items-center gap-2"><MapPin className="size-4 text-primary/60" /> {event.venue}</span>
             </div>
           </div>
+          <ArrowRight className="size-5 shrink-0 text-muted-foreground/40 transition-all group-hover:text-primary group-hover:translate-x-1" />
         </CardContent>
       </Card>
     </Link>

@@ -9,19 +9,19 @@ const CONFIG: Record<
 > = {
   OFFICIAL: {
     label: "Official",
-    className: "border-transparent bg-primary text-primary-foreground",
+    className: "border-primary/15 bg-primary/10 text-primary",
     icon: CheckCircle2,
     helpText: "Published by the official Haske Community account or campaign team.",
   },
   DOCUMENTED: {
     label: "Documented Record",
-    className: "border-transparent bg-emerald-700 text-white",
+    className: "border-emerald-500/15 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
     icon: FileText,
     helpText: "Something Haske has already done or that is publicly documented.",
   },
   PROPOSED: {
     label: "Proposed Agenda",
-    className: "border-transparent bg-accent text-accent-foreground",
+    className: "border-accent/25 bg-accent/15 text-amber-800 dark:text-accent",
     icon: Sparkles,
     helpText: "A proposal for what Haske intends to do if elected — not yet delivered.",
   },

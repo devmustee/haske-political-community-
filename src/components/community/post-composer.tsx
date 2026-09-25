@@ -219,7 +219,7 @@ export function PostComposer({
                       id="poll-duration"
                       value={pollDuration}
                       onChange={(e) => setPollDuration(Number(e.target.value))}
-                      className="rounded-md border border-input bg-transparent px-2 py-1 text-sm"
+                      className="rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm shadow-xs transition-colors focus-visible:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <option value={1}>1 hour</option>
                       <option value={24}>1 day</option>

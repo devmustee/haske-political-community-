@@ -40,23 +40,55 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-secondary/30">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="flex flex-wrap items-start justify-between gap-8">
-          <div className="flex items-center gap-3">
-            <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={44} height={44} className="size-11 rounded-full" />
-            <Image src="/brand/apm-logo-official.png" alt="Allied Peoples Movement" width={40} height={40} className="size-10 rounded-full" />
-            <div className="mx-1 h-8 w-px bg-border" />
-            <Image src="/brand/adamawa-state-seal.png" alt="Adamawa State" width={40} height={40} className="size-10 opacity-80" />
+    <footer className="relative border-t border-border bg-gradient-to-b from-secondary/40 to-secondary/20">
+      {/* Top accent gradient */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
+        <div className="flex flex-wrap items-start justify-between gap-10">
+          {/* Logos */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/brand/haske-logo.png"
+                alt="Abdulrahman Bashir Haske"
+                width={48}
+                height={48}
+                className="size-12 rounded-full shadow-sm ring-2 ring-primary/10"
+              />
+              <Image
+                src="/brand/apm-logo-official.png"
+                alt="Allied Peoples Movement"
+                width={44}
+                height={44}
+                className="size-11 rounded-full shadow-sm"
+              />
+              <div className="mx-1 h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+              <Image
+                src="/brand/adamawa-state-seal.png"
+                alt="Adamawa State"
+                width={44}
+                height={44}
+                className="size-11 opacity-70"
+              />
+            </div>
+            <p className="max-w-[220px] text-xs text-muted-foreground leading-relaxed">
+              The official public platform for Adamawa&apos;s future.
+            </p>
           </div>
+
+          {/* Link columns */}
           <div className="grid grow grid-cols-2 gap-8 sm:grow-0 sm:grid-cols-4">
             {COLUMNS.map((col) => (
               <div key={col.title}>
-                <h3 className="text-sm font-semibold">{col.title}</h3>
-                <ul className="mt-3 flex flex-col gap-2">
+                <h3 className="text-sm font-semibold tracking-tight">{col.title}</h3>
+                <ul className="mt-4 flex flex-col gap-2.5">
                   {col.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors duration-200 hover:text-primary"
+                      >
                         {link.label}
                       </Link>
                     </li>
@@ -66,11 +98,13 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:flex-row sm:items-center">
+
+        {/* Bottom bar */}
+        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 sm:flex-row sm:items-center">
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} Haske Community. Connect. Participate. Build Adamawa.
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground/70">
             Content is labeled by type — documented record, proposed agenda, or community content — throughout this site.
           </p>
         </div>

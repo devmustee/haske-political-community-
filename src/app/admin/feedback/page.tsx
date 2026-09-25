@@ -33,12 +33,12 @@ export default async function AdminFeedbackPage() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="font-serif text-2xl font-semibold">Citizen Feedback</h1>
+      <h1 className="text-h1">Citizen Feedback</h1>
       <p className="mt-1 text-sm text-muted-foreground">{submissions.length} submissions via Speak to Haske.</p>
 
       <div className="mt-6 flex flex-col gap-2">
         {submissions.map((f) => (
-          <div key={f.id} className="rounded-xl border border-border bg-background p-4">
+          <div key={f.id} className="admin-row rounded-xl border border-border bg-background p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-sm font-semibold">{f.trackingId}</span>

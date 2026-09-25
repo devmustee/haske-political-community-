@@ -14,7 +14,7 @@ export default async function AdminSettingsPage() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="font-serif text-2xl font-semibold">Site Settings</h1>
+      <h1 className="text-h1">Site Settings</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Edit homepage-facing copy as structured JSON. Changes apply immediately to the public site.
       </p>

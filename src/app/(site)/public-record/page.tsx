@@ -29,6 +29,7 @@ export default async function PublicRecordPage() {
         eyebrow="Verify"
         title="Public Record"
         description="A transparency archive. Old information is never silently replaced — every item shows its publication and update history."
+        watermark="Record"
       />
 
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">

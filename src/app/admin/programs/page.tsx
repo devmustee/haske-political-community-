@@ -20,7 +20,7 @@ export default async function AdminProgramsPage() {
     <div className="p-6 sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Programs</h1>
+          <h1 className="text-h1">Programs</h1>
           <p className="mt-1 text-sm text-muted-foreground">{programs.length} programs.</p>
         </div>
         <ProgramFormDialog />
@@ -28,7 +28,7 @@ export default async function AdminProgramsPage() {
 
       <div className="mt-6 flex flex-col gap-4">
         {programs.map((p) => (
-          <div key={p.id} className="rounded-xl border border-border bg-background p-4">
+          <div key={p.id} className="admin-row rounded-xl border border-border bg-background p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">

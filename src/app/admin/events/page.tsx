@@ -18,7 +18,7 @@ export default async function AdminEventsPage() {
     <div className="p-6 sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Events</h1>
+          <h1 className="text-h1">Events</h1>
           <p className="mt-1 text-sm text-muted-foreground">{events.length} events.</p>
         </div>
         <EventFormDialog />
@@ -26,7 +26,7 @@ export default async function AdminEventsPage() {
 
       <div className="mt-6 flex flex-col gap-2">
         {events.map((e) => (
-          <div key={e.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
+          <div key={e.id} className="admin-row flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline">{e.status}</Badge>

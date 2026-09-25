@@ -15,12 +15,12 @@ export default async function AdminAuditLogPage() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="font-serif text-2xl font-semibold">Audit Log</h1>
+      <h1 className="text-h1">Audit Log</h1>
       <p className="mt-1 text-sm text-muted-foreground">Every administrative action is recorded here.</p>
 
       <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-background">
-        <table className="w-full min-w-[600px] text-sm">
-          <thead className="border-b border-border bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
+        <table className="admin-table w-full min-w-[600px] text-sm">
+          <thead className="border-b border-border bg-secondary/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
             <tr>
               <th className="px-4 py-3">Admin</th>
               <th className="px-4 py-3">Action</th>

@@ -15,7 +15,7 @@ export default async function AdminAchievementsPage() {
     <div className="p-6 sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Achievements</h1>
+          <h1 className="text-h1">Achievements</h1>
           <p className="mt-1 text-sm text-muted-foreground">{achievements.length} entries.</p>
         </div>
         <AchievementFormDialog />
@@ -23,7 +23,7 @@ export default async function AdminAchievementsPage() {
 
       <div className="mt-6 flex flex-col gap-2">
         {achievements.map((a) => (
-          <div key={a.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
+          <div key={a.id} className="admin-row flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">{a.category.replaceAll("_", " ")}</Badge>

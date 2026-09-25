@@ -55,7 +55,7 @@ export async function RightSidebar() {
           <CardContent className="flex flex-col gap-3 pt-0">
             {trending.map((tag) => (
               <Link key={tag.id} href={`/community/explore?q=%23${tag.tag}`} className="flex items-center gap-2.5 group">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Hash className="size-4" />
                 </span>
                 <div className="min-w-0">
@@ -76,7 +76,7 @@ export async function RightSidebar() {
           <CardContent className="flex flex-col gap-3 pt-0">
             {events.map((event) => (
               <Link key={event.id} href={`/events/${event.slug}`} className="flex items-start gap-2.5 group">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-amber-700 dark:text-accent">
                   <Calendar className="size-4" />
                 </span>
                 <div className="min-w-0">

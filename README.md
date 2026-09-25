@@ -66,6 +66,14 @@ Seeded accounts (all local dev-only — **change these before any real deploymen
 | Campaign team | `team@haskecommunity.ng` | `Team1234!` | Organization verified |
 | Demo user | `demo.fatima@example.com` | `Demo1234!` | — |
 | Demo user | `demo.ibrahim@example.com` | `Demo1234!` | — |
+| Demo user | `demo.aisha@example.com` | `Demo1234!` | — |
+| Demo user | `demo.yakubu@example.com` | `Demo1234!` | — |
+| Demo user | `demo.grace@example.com` | `Demo1234!` | — |
+| Demo user | `demo.suleiman@example.com` | `Demo1234!` | — |
+
+Demo users get generated (non-photographic) placeholder avatars via DiceBear, seeded
+deterministically from their username — no real photos of real people are used for
+these fictional accounts.
 
 ### 5. Run the dev server
 

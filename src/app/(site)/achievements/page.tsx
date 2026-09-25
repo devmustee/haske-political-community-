@@ -5,6 +5,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Award } from "lucide-react";
 
 export const metadata: Metadata = { title: "Achievements", description: "Documented achievements of Abdulrahman Bashir Haske." };
 export const revalidate = 60;
@@ -35,28 +36,36 @@ export default async function AchievementsPage() {
         eyebrow="Verify"
         title="Achievements"
         description="What has Abdulrahman Haske actually done? Documented, source-attributed achievements — distinct from proposed plans."
+        watermark="Record"
       />
 
-      <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         {achievements.length === 0 ? (
-          <p className="py-16 text-center text-muted-foreground">No achievements published yet.</p>
+          <div className="py-20 text-center">
+            <Award className="mx-auto size-12 text-muted-foreground/30" />
+            <p className="mt-4 text-muted-foreground">No achievements published yet.</p>
+          </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             {achievements.map((a) => (
               <Link key={a.id} href={`/achievements/${a.slug}`}>
-                <Card className="h-full card-link">
-                  <CardContent className="flex h-full flex-col p-5">
-                    <div className="flex items-center gap-2">
+                <Card className="group h-full card-link overflow-hidden">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                  <CardContent className="flex h-full flex-col p-6">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary">{CATEGORY_LABELS[a.category] ?? a.category}</Badge>
                       <ContentStatusBadge status={a.contentStatus} />
                     </div>
-                    <h2 className="mt-3 font-serif text-lg font-semibold">{a.title}</h2>
+                    <h2 className="mt-4 font-serif text-lg font-semibold group-hover:text-primary transition-colors">{a.title}</h2>
                     {(a.year || a.location) && (
-                      <p className="mt-1 text-sm text-muted-foreground">
+                      <p className="mt-1.5 text-sm text-primary/70 font-medium">
                         {[a.year, a.location].filter(Boolean).join(" · ")}
                       </p>
                     )}
-                    <p className="mt-2 flex-1 text-sm text-muted-foreground">{a.summary}</p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{a.summary}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                      View details <ArrowRight className="size-3.5" />
+                    </span>
                   </CardContent>
                 </Card>
               </Link>

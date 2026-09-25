@@ -14,6 +14,14 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+/**
+ * Deterministic, generated (non-photographic) avatar for fictional demo
+ * community accounts — never used for real people/accounts.
+ */
+function demoAvatar(seed: string): string {
+  return `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3a4,c7f0d8,ffd699,fbe7a1,d1d4f9`;
+}
+
 async function main() {
   console.log("Seeding Haske Community...");
 
@@ -39,7 +47,7 @@ async function main() {
   const hasePasswordHash = await bcrypt.hash("Haske123!", 12);
   const haske = await prisma.user.upsert({
     where: { email: "office@haskecommunity.ng" },
-    update: {},
+    update: { avatarUrl: "/brand/portrait.png" },
     create: {
       name: "Abdulrahman Bashir Haske",
       username: "AbdulrahmanHaske",
@@ -49,6 +57,7 @@ async function main() {
       verification: "OFFICIAL",
       bio: "Businessman, entrepreneur, philanthropist and politician from Adamawa State. APM Governorship Candidate for Adamawa State, 2027.",
       location: "Yola, Adamawa State",
+      avatarUrl: "/brand/portrait.png",
       status: "ACTIVE",
       notificationPref: { create: {} },
       adminRoles: { create: { role: AdminRoleName.CONTENT_ADMIN } },
@@ -57,7 +66,7 @@ async function main() {
 
   const campaignTeam = await prisma.user.upsert({
     where: { email: "team@haskecommunity.ng" },
-    update: {},
+    update: { avatarUrl: "/brand/haske-logo.png" },
     create: {
       name: "Haske Campaign Team",
       username: "HaskeCampaignTeam",
@@ -68,15 +77,18 @@ async function main() {
       isOrganization: true,
       bio: "Official campaign team account for Abdulrahman Bashir Haske's 2027 Adamawa governorship bid.",
       status: "ACTIVE",
+      avatarUrl: "/brand/haske-logo.png",
       notificationPref: { create: {} },
     },
   });
 
-  // A couple of ordinary demo community members, so demo posts read as
-  // genuine community content rather than campaign-authored content.
+  // A handful of ordinary demo community members (fictional, generated
+  // avatars — never real photos), so demo posts read as genuine community
+  // content rather than campaign-authored content, and the feed doesn't
+  // look empty in a fresh install.
   const demoUser1 = await prisma.user.upsert({
     where: { email: "demo.fatima@example.com" },
-    update: {},
+    update: { avatarUrl: demoAvatar("fatima_b") },
     create: {
       name: "Fatima Bello",
       username: "fatima_b",
@@ -85,6 +97,7 @@ async function main() {
       emailVerified: new Date(),
       bio: "Small business owner, Yola. Interested in youth and women's empowerment programs.",
       location: "Yola, Adamawa",
+      avatarUrl: demoAvatar("fatima_b"),
       status: "ACTIVE",
       notificationPref: { create: {} },
     },
@@ -92,7 +105,7 @@ async function main() {
 
   const demoUser2 = await prisma.user.upsert({
     where: { email: "demo.ibrahim@example.com" },
-    update: {},
+    update: { avatarUrl: demoAvatar("ibrahim_s") },
     create: {
       name: "Ibrahim Sanda",
       username: "ibrahim_s",
@@ -101,10 +114,81 @@ async function main() {
       emailVerified: new Date(),
       bio: "Agriculture student, Mubi. Following the agribusiness agenda closely.",
       location: "Mubi, Adamawa",
+      avatarUrl: demoAvatar("ibrahim_s"),
       status: "ACTIVE",
       notificationPref: { create: {} },
     },
   });
+
+  const demoUser3 = await prisma.user.upsert({
+    where: { email: "demo.aisha@example.com" },
+    update: { avatarUrl: demoAvatar("aisha_teaches") },
+    create: {
+      name: "Aisha Umar",
+      username: "aisha_teaches",
+      email: "demo.aisha@example.com",
+      passwordHash: await bcrypt.hash("Demo1234!", 12),
+      emailVerified: new Date(),
+      bio: "Primary school teacher, Mubi. Watching the education and healthcare access plans closely.",
+      location: "Mubi, Adamawa",
+      avatarUrl: demoAvatar("aisha_teaches"),
+      status: "ACTIVE",
+      notificationPref: { create: {} },
+    },
+  });
+
+  const demoUser4 = await prisma.user.upsert({
+    where: { email: "demo.yakubu@example.com" },
+    update: { avatarUrl: demoAvatar("yakubu_m") },
+    create: {
+      name: "Yakubu Musa",
+      username: "yakubu_m",
+      email: "demo.yakubu@example.com",
+      passwordHash: await bcrypt.hash("Demo1234!", 12),
+      emailVerified: new Date(),
+      bio: "Young entrepreneur running a small agro-processing outfit in Numan.",
+      location: "Numan, Adamawa",
+      avatarUrl: demoAvatar("yakubu_m"),
+      status: "ACTIVE",
+      notificationPref: { create: {} },
+    },
+  });
+
+  const demoUser5 = await prisma.user.upsert({
+    where: { email: "demo.grace@example.com" },
+    update: { avatarUrl: demoAvatar("grace_e") },
+    create: {
+      name: "Grace Emmanuel",
+      username: "grace_e",
+      email: "demo.grace@example.com",
+      passwordHash: await bcrypt.hash("Demo1234!", 12),
+      emailVerified: new Date(),
+      bio: "Community health worker, Ganye. Focused on the health insurance scheme expansion.",
+      location: "Ganye, Adamawa",
+      avatarUrl: demoAvatar("grace_e"),
+      status: "ACTIVE",
+      notificationPref: { create: {} },
+    },
+  });
+
+  const demoUser6 = await prisma.user.upsert({
+    where: { email: "demo.suleiman@example.com" },
+    update: { avatarUrl: demoAvatar("suleiman_a") },
+    create: {
+      name: "Suleiman Abba",
+      username: "suleiman_a",
+      email: "demo.suleiman@example.com",
+      passwordHash: await bcrypt.hash("Demo1234!", 12),
+      emailVerified: new Date(),
+      bio: "Civil servant, Yola. Interested in transparency and accountable governance.",
+      location: "Yola, Adamawa",
+      avatarUrl: demoAvatar("suleiman_a"),
+      status: "ACTIVE",
+      notificationPref: { create: {} },
+    },
+  });
+
+  const demoUsers = [demoUser1, demoUser2, demoUser3, demoUser4, demoUser5, demoUser6];
 
   // ── Biography timeline ──────────────────────────────────────────────
   const timeline: { era: string; title: string; dateLabel: string; date?: Date; description: string; order: number }[] = [
@@ -188,6 +272,14 @@ async function main() {
         "Joined the Allied Peoples Movement (APM) and was unveiled in Yola as the party's governorship candidate for Adamawa State ahead of the 2027 election, at an event attended by APM leaders, traditional and community leaders, youth and women's groups, and supporters from Adamawa's 21 local government areas.",
       order: 10,
     },
+    {
+      era: "POLITICAL_JOURNEY",
+      title: "APM unveils running mate Engr. Safriel Judson Glah",
+      dateLabel: "September 2026",
+      description:
+        "The APM presented retired NNPC senior executive Engr. Safriel Judson Glah as Haske's running mate, with the party framing the ticket as pairing private-sector entrepreneurship with public-sector experience.",
+      order: 11,
+    },
   ];
 
   await prisma.timelineEvent.deleteMany({});
@@ -214,6 +306,31 @@ async function main() {
     create: {
       ...hwRiceData,
       slug: "hw-rice-company",
+    },
+  });
+
+  const ramadanOutreachData = {
+    title: "Ramadan Humanitarian Outreach — Haske Foundation",
+    category: "HUMANITARIAN_SUPPORT" as const,
+    year: "2026",
+    location: "Adamawa State (all 21 LGAs)",
+    summary:
+      "The Haske Foundation's Ramadan welfare drive distributed roughly 80,000 bags of rice and grains and about ₦220 million in cash assistance across Adamawa State.",
+    description:
+      "During Ramadan 2026, the Haske Foundation ran a welfare distribution across all 21 local government areas of Adamawa State: roughly 80,000 bags of rice and other grains, about ₦220 million in cash assistance, plus 10 vehicles and 50 motorcycles, flagged off in Yola. The foundation described it as a recurring festive-season tradition. Haske said: \"We do this every festive season to celebrate with our loved ones and to see how we can support families.\"",
+    impact: "Reported to have reached an estimated 40,000–80,000 residents, particularly low-income households.",
+    source: "Leadership, Daily Trust and Kowa Duniya reporting on the Haske Foundation's Ramadan outreach",
+    sourceUrl: "https://leadership.ng/ramadan-haske-foundation-launches-welfare-drive-distributes-80000-bags-of-rice-in-adamawa/",
+    contentStatus: "THIRD_PARTY" as const,
+    featured: false,
+    order: 2,
+  };
+  await prisma.achievement.upsert({
+    where: { slug: "ramadan-humanitarian-outreach" },
+    update: ramadanOutreachData,
+    create: {
+      ...ramadanOutreachData,
+      slug: "ramadan-humanitarian-outreach",
     },
   });
 
@@ -533,6 +650,18 @@ async function main() {
       featuredImage: "https://www.tori.ng/userfiles/image/2026/may/13/aabdul.jpg",
       contentStatus: "THIRD_PARTY" as const,
     },
+    {
+      title: "Haske: \"I built billion-dollar businesses, now I want to build my state\"",
+      slug: "haske-billion-dollar-businesses-interview",
+      category: "NEWS" as const,
+      date: new Date("2026-09-22"),
+      content:
+        "In an interview, Haske explained his rationale for entering politics: \"If we can excel in businesses and build multi-billion-dollar businesses, why can't we be trusted with governance?\" On his campaign's timeline, he said: \"I started this journey in August of 2024. I've been dedicated, I've been consistent and my messaging has been the same.\" Addressing questions about his age relative to other contenders, he said: \"Don't vote my age, vote my pedigree and what I have done for people.\" He added that he does not see the role as a route to personal wealth: \"I am not coming into government to make wealth. Alhamdulillah, I'm okay.\"",
+      relatedTopic: "Political journey",
+      sourceUrl:
+        "https://tgnews.com.ng/why-im-contesting-adamawa-governorship-haske-says-i-built-billion-dollar-businesses-now-i-want-to-build-my-state/",
+      contentStatus: "THIRD_PARTY" as const,
+    },
   ];
 
   for (const item of mediaSeeds) {
@@ -645,8 +774,10 @@ async function main() {
 
   // ── Demo community posts (clearly marked as demo content) ────────────
   // Posts have no natural unique key either, so clear the seed accounts'
-  // prior posts before recreating them to keep re-seeding idempotent.
-  await prisma.post.deleteMany({ where: { authorId: { in: [haske.id, demoUser1.id, demoUser2.id] } } });
+  // prior posts/follows before recreating them to keep re-seeding idempotent.
+  const demoUserIds = demoUsers.map((u) => u.id);
+  await prisma.post.deleteMany({ where: { authorId: { in: [haske.id, ...demoUserIds] } } });
+  await prisma.follow.deleteMany({ where: { followerId: { in: demoUserIds } } });
   await prisma.hashtag.updateMany({ where: { tag: "adamawa2027" }, data: { postsCount: 0 } });
 
   const officialPost = await prisma.post.create({
@@ -671,32 +802,70 @@ async function main() {
     },
   });
 
-  await prisma.post.create({
-    data: {
-      authorId: demoUser1.id,
-      type: "TEXT",
-      content: "Looking forward to seeing more detail on the youth empowerment programs. [Demo community post]",
-      contentStatus: "COMMUNITY",
-      isDemoContent: true,
+  const demoPostSeeds = [
+    { author: demoUser1, content: "Looking forward to seeing more detail on the youth empowerment programs." },
+    {
+      author: demoUser2,
+      content: "The agribusiness agenda matters a lot to farmers here in Mubi. Hoping for real market access support.",
     },
-  });
+    {
+      author: demoUser3,
+      content: "Hoping the school rehabilitation plan reaches Mubi soon — some of our classrooms really need it.",
+    },
+    {
+      author: demoUser4,
+      content: "Access to affordable financing would change everything for small agro-processors like us in Numan.",
+    },
+    {
+      author: demoUser5,
+      content: "The health insurance scheme expansion could make a real difference for families here in Ganye.",
+    },
+    {
+      author: demoUser6,
+      content: "Would like to see how resources will be tracked and reported across all 21 LGAs, not just announced.",
+    },
+  ];
 
-  await prisma.post.create({
-    data: {
-      authorId: demoUser2.id,
-      type: "TEXT",
-      content: "The agribusiness agenda matters a lot to farmers here in Mubi. Hoping for real market access support. [Demo community post]",
-      contentStatus: "COMMUNITY",
-      isDemoContent: true,
-    },
-  });
+  const demoPosts = [officialPost];
+  for (const { author, content } of demoPostSeeds) {
+    const post = await prisma.post.create({
+      data: {
+        authorId: author.id,
+        type: "TEXT",
+        content: `${content} [Demo community post]`,
+        contentStatus: "COMMUNITY",
+        isDemoContent: true,
+      },
+    });
+    demoPosts.push(post);
+  }
+
+  // A few likes so the feed doesn't read as completely inert (idempotent —
+  // the posts/likes above are freshly recreated every seed run).
+  const likeSeeds: [typeof demoUser1, (typeof demoPosts)[number]][] = [
+    [demoUser1, officialPost],
+    [demoUser2, officialPost],
+    [demoUser3, officialPost],
+    [demoUser4, demoPosts[1]],
+    [demoUser5, demoPosts[2]],
+    [demoUser6, demoPosts[3]],
+  ];
+  for (const [user, post] of likeSeeds) {
+    await prisma.postLike.create({ data: { userId: user.id, postId: post.id } });
+    await prisma.post.update({ where: { id: post.id }, data: { likesCount: { increment: 1 } } });
+  }
+
+  // Every demo account follows the official Haske account.
+  for (const user of demoUsers) {
+    await prisma.follow.create({ data: { followerId: user.id, followingId: haske.id } });
+  }
 
   console.log("Seed complete.");
   console.log(`- Achievements: ${hwRice.title}`);
   console.log(`- Programs: ${programSeeds.length} placeholders`);
   console.log(`- Manifesto: ${manifesto.title} (historical)`);
   console.log(`- Policy pillars: ${pillarSeeds.length}`);
-  console.log(`- Accounts: admin, ${haske.username}, ${campaignTeam.username}, ${demoUser1.username}, ${demoUser2.username}`);
+  console.log(`- Accounts: admin, ${haske.username}, ${campaignTeam.username}, ${demoUsers.map((u) => u.username).join(", ")}`);
 }
 
 main()

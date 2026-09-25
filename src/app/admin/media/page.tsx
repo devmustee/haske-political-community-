@@ -16,7 +16,7 @@ export default async function AdminMediaPage() {
     <div className="p-6 sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Media Center</h1>
+          <h1 className="text-h1">Media Center</h1>
           <p className="mt-1 text-sm text-muted-foreground">{items.length} items.</p>
         </div>
         <MediaFormDialog />
@@ -24,7 +24,7 @@ export default async function AdminMediaPage() {
 
       <div className="mt-6 flex flex-col gap-2">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
+          <div key={item.id} className="admin-row flex items-center justify-between gap-3 rounded-xl border border-border bg-background p-4">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">{item.category.replaceAll("_", " ")}</Badge>

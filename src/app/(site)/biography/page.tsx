@@ -6,6 +6,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { Timeline } from "@/components/cms/timeline";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Briefcase } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Biography",
@@ -26,37 +27,46 @@ export default async function BiographyPage() {
         eyebrow="Learn"
         title="Biography"
         description="Who is Abdulrahman Bashir Haske? Publicly documented background, education and career."
+        watermark="Haske"
       />
 
-      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-        <div className="float-right ml-6 mb-4 w-40 shrink-0 sm:w-48">
-          <Image
-            src="/brand/portrait.png"
-            alt="Abdulrahman Bashir Haske"
-            width={614}
-            height={466}
-            className="w-full rounded-2xl border border-border"
-          />
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+        <div className="float-right ml-8 mb-6 w-44 shrink-0 sm:w-56">
+          <div className="overflow-hidden rounded-2xl border border-border shadow-elevated">
+            <Image
+              src="/brand/portrait.png"
+              alt="Abdulrahman Bashir Haske"
+              width={614}
+              height={466}
+              className="w-full"
+            />
+          </div>
         </div>
-        <div className="mb-3">
+        <div className="mb-4">
           <ContentStatusBadge status="DOCUMENTED" />
         </div>
-        <div className="flex flex-col gap-4 text-[17px] leading-relaxed text-foreground/90">
+        <div className="flex flex-col gap-5 text-[17px] leading-[1.8] text-foreground/90">
           {bio?.paragraphs.map((p, i) => <p key={i}>{p}</p>) ?? <p>Biography content is being prepared.</p>}
         </div>
       </div>
 
       {experience && (
-        <div className="border-t border-border bg-secondary/20">
-          <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-            <h2 className="font-serif text-2xl font-semibold">{experience.heading}</h2>
-            <div className="mt-6 flex flex-col gap-4">
+        <div className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
+          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Briefcase className="size-5" />
+              </div>
+              <h2 className="font-serif text-2xl font-semibold sm:text-3xl">{experience.heading}</h2>
+            </div>
+            <div className="flex flex-col gap-4">
               {experience.entries.map((e, i) => (
-                <Card key={i}>
-                  <CardContent className="p-5">
-                    <p className="font-semibold">{e.organization}</p>
-                    <p className="text-sm text-primary">{e.role}</p>
-                    <p className="mt-2 text-sm text-muted-foreground">{e.description}</p>
+                <Card key={i} className="group overflow-hidden hover:shadow-elevated transition-all duration-300">
+                  <CardContent className="p-6">
+                    <p className="text-lg font-semibold group-hover:text-primary transition-colors">{e.organization}</p>
+                    <p className="mt-1 text-sm font-medium text-primary">{e.role}</p>
+                    <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{e.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -66,10 +76,10 @@ export default async function BiographyPage() {
       )}
 
       <div className="border-t border-border">
-        <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-          <h2 className="font-serif text-2xl font-semibold">His Journey</h2>
-          <p className="mt-2 text-muted-foreground">An interactive timeline from early life to the 2027 governorship candidacy.</p>
-          <div className="mt-8">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+          <h2 className="font-serif text-2xl font-semibold sm:text-3xl">His Journey</h2>
+          <p className="mt-3 text-lg text-muted-foreground">An interactive timeline from early life to the 2027 governorship candidacy.</p>
+          <div className="mt-10">
             <Timeline items={timeline} />
           </div>
         </div>

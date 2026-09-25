@@ -19,7 +19,7 @@ export default async function AdminManifestoPage() {
     <div className="p-6 sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Manifesto &amp; Policy</h1>
+          <h1 className="text-h1">Manifesto &amp; Policy</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage policy pillars and publish manifesto versions.</p>
         </div>
         <PublishManifestoDialog pillars={pillars.map((p) => ({ id: p.id, name: p.name }))} />

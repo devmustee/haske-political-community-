@@ -33,7 +33,7 @@ export default async function ModerationPage() {
 
   return (
     <div className="p-6 sm:p-8">
-      <h1 className="font-serif text-2xl font-semibold">Moderation Queue</h1>
+      <h1 className="text-h1">Moderation Queue</h1>
       <p className="mt-1 text-sm text-muted-foreground">{reports.length} pending report{reports.length === 1 ? "" : "s"}.</p>
 
       <div className="mt-6 flex flex-col gap-4">
