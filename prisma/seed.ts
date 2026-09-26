@@ -308,6 +308,15 @@ async function main() {
       slug: "hw-rice-company",
     },
   });
+  await prisma.achievementImage.deleteMany({ where: { achievementId: hwRice.id } });
+  await prisma.achievementImage.create({
+    data: {
+      achievementId: hwRice.id,
+      url: "/brand/illustrations/rice-field.svg",
+      caption: "Illustration of a rice paddy field",
+      order: 0,
+    },
+  });
 
   const ramadanOutreachData = {
     title: "Ramadan Humanitarian Outreach — Haske Foundation",
