@@ -10,6 +10,8 @@ import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { PostCard } from "@/components/community/post-card";
 import { Timeline } from "@/components/cms/timeline";
 import { AgendaTabs } from "@/components/cms/agenda-tabs";
+import { Reveal } from "@/components/motion/reveal";
+import { AnimatedCounter } from "@/components/motion/animated-counter";
 import { formatDate } from "@/lib/utils";
 import { ArrowRight, Calendar, MapPin, Star, Users, BookOpen, Play, ChevronRight } from "lucide-react";
 
@@ -129,7 +131,7 @@ export default async function HomePage() {
         <p className="watermark-text inset-x-0 top-0 text-center">Haske</p>
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-            <div>
+            <Reveal>
               <p className="eyebrow-bar">About Haske</p>
               <h2 className="mt-5 font-serif text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
                 Who is Abdulrahman Bashir Haske?
@@ -140,8 +142,8 @@ export default async function HomePage() {
                 Read the full biography
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </Link>
-            </div>
-            <div className="rounded-2xl border border-border bg-gradient-to-br from-secondary/50 to-secondary/20 p-7 shadow-soft backdrop-blur-sm">
+            </Reveal>
+            <Reveal variant="scale" delay={120} className="rounded-2xl border border-border bg-gradient-to-br from-secondary/50 to-secondary/20 p-7 shadow-soft backdrop-blur-sm">
               <ContentStatusBadge status="DOCUMENTED" />
               <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
                 Businessman, entrepreneur, philanthropist and politician from Adamawa State. Studied Information Systems at
@@ -150,15 +152,15 @@ export default async function HomePage() {
               <div className="mt-5 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
               <div className="mt-5 grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-primary">21</p>
+                  <p className="text-2xl font-bold text-primary"><AnimatedCounter value={21} /></p>
                   <p className="text-xs text-muted-foreground">LGAs statewide</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-accent">7</p>
+                  <p className="text-2xl font-bold text-accent"><AnimatedCounter value={7} /></p>
                   <p className="text-xs text-muted-foreground">Policy Pillars</p>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -169,8 +171,10 @@ export default async function HomePage() {
           {/* Decorative top gradient line */}
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
           <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-24">
-            <p className="section-eyebrow">His Journey</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">An interactive timeline</h2>
+            <Reveal>
+              <p className="section-eyebrow">His Journey</p>
+              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">An interactive timeline</h2>
+            </Reveal>
             <div className="mt-10">
               <Timeline items={timeline} />
             </div>
@@ -184,7 +188,7 @@ export default async function HomePage() {
       {/* ═══════════════════ ACHIEVEMENTS ═══════════════════ */}
       {achievements.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-          <div className="flex items-end justify-between">
+          <Reveal className="flex items-end justify-between">
             <div>
               <p className="section-eyebrow">Achievements</p>
               <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">What has he actually done?</h2>
@@ -192,22 +196,24 @@ export default async function HomePage() {
             <Link href="/achievements" className="group hidden items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors sm:flex">
               View all <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-          </div>
+          </Reveal>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {achievements.map((a, i) => (
-              <Link key={a.id} href={`/achievements/${a.slug}`} className={`animate-slide-up animation-delay-${(i + 1) * 100}`}>
-                <Card className="group h-full card-link overflow-hidden">
-                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity group-hover:opacity-100" />
-                  <CardContent className="p-6">
-                    <ContentStatusBadge status={a.contentStatus} />
-                    <h3 className="mt-4 font-serif text-lg font-semibold">{a.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.summary}</p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                      Learn more <ArrowRight className="size-3.5" />
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
+              <Reveal key={a.id} variant="scale" delay={i * 100}>
+                <Link href={`/achievements/${a.slug}`}>
+                  <Card className="group h-full card-link overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                    <CardContent className="p-6">
+                      <ContentStatusBadge status={a.contentStatus} />
+                      <h3 className="mt-4 font-serif text-lg font-semibold">{a.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.summary}</p>
+                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                        Learn more <ArrowRight className="size-3.5" />
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -218,21 +224,25 @@ export default async function HomePage() {
         <section className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-            <p className="section-eyebrow">Empowerment</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Programs for Adamawa citizens</h2>
+            <Reveal>
+              <p className="section-eyebrow">Empowerment</p>
+              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Programs for Adamawa citizens</h2>
+            </Reveal>
             <div className="mt-10 grid gap-5 sm:grid-cols-2">
-              {programs.map((p) => (
-                <Link key={p.id} href={`/programs/${p.slug}`}>
-                  <Card className="group h-full card-link overflow-hidden">
-                    <CardContent className="p-6">
-                      <Badge variant="secondary">{p.category.replaceAll("_", " ")}</Badge>
-                      <h3 className="mt-3 text-lg font-medium group-hover:text-primary transition-colors">{p.name}</h3>
-                      <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                        Explore <ArrowRight className="size-3.5" />
-                      </span>
-                    </CardContent>
-                  </Card>
-                </Link>
+              {programs.map((p, i) => (
+                <Reveal key={p.id} variant="scale" delay={i * 100}>
+                  <Link href={`/programs/${p.slug}`}>
+                    <Card className="group h-full card-link overflow-hidden">
+                      <CardContent className="p-6">
+                        <Badge variant="secondary">{p.category.replaceAll("_", " ")}</Badge>
+                        <h3 className="mt-3 text-lg font-medium group-hover:text-primary transition-colors">{p.name}</h3>
+                        <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                          Explore <ArrowRight className="size-3.5" />
+                        </span>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </Reveal>
               ))}
             </div>
             <Link href="/programs" className="group mt-8 inline-flex items-center gap-2 font-medium text-primary hover:text-primary/80 transition-colors">
@@ -244,35 +254,41 @@ export default async function HomePage() {
 
       {/* ═══════════════════ MISSION & VISION ═══════════════════ */}
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-        <p className="section-eyebrow">Mission &amp; Vision</p>
-        <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Development priorities</h2>
+        <Reveal>
+          <p className="section-eyebrow">Mission &amp; Vision</p>
+          <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Development priorities</h2>
+        </Reveal>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          <Card className="group overflow-hidden border-border/60 transition-all duration-300 hover:shadow-elevated">
-            <CardContent className="p-8">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-5">
-                <BookOpen className="size-5" />
-              </div>
-              <h3 className="font-serif text-xl font-semibold">{mission?.heading}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{mission?.statement}</p>
-              <Link href="/mission" className="group/link mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-                Read the mission <ArrowRight className="size-4 transition-transform group-hover/link:translate-x-1" />
-              </Link>
-            </CardContent>
-          </Card>
-          <Card className="group relative overflow-hidden bg-primary text-primary-foreground border-primary/80 transition-all duration-300 hover:shadow-glow-primary">
-            {/* Subtle shimmer overlay */}
-            <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px" }} />
-            <CardContent className="relative p-8">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-accent/20 text-accent mb-5">
-                <Star className="size-5" />
-              </div>
-              <h3 className="font-serif text-xl font-semibold">{vision?.heading}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-primary-foreground/75">{vision?.statement}</p>
-              <Link href="/vision" className="group/link mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors">
-                Explore the vision <ArrowRight className="size-4 transition-transform group-hover/link:translate-x-1" />
-              </Link>
-            </CardContent>
-          </Card>
+          <Reveal variant="scale">
+            <Card className="group overflow-hidden border-border/60 transition-all duration-300 hover:shadow-elevated">
+              <CardContent className="p-8">
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-5">
+                  <BookOpen className="size-5" />
+                </div>
+                <h3 className="font-serif text-xl font-semibold">{mission?.heading}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{mission?.statement}</p>
+                <Link href="/mission" className="group/link mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                  Read the mission <ArrowRight className="size-4 transition-transform group-hover/link:translate-x-1" />
+                </Link>
+              </CardContent>
+            </Card>
+          </Reveal>
+          <Reveal variant="scale" delay={120}>
+            <Card className="group relative overflow-hidden bg-primary text-primary-foreground border-primary/80 transition-all duration-300 hover:shadow-glow-primary">
+              {/* Subtle shimmer overlay */}
+              <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px" }} />
+              <CardContent className="relative p-8">
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-accent/20 text-accent mb-5">
+                  <Star className="size-5" />
+                </div>
+                <h3 className="font-serif text-xl font-semibold">{vision?.heading}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-primary-foreground/75">{vision?.statement}</p>
+                <Link href="/vision" className="group/link mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors">
+                  Explore the vision <ArrowRight className="size-4 transition-transform group-hover/link:translate-x-1" />
+                </Link>
+              </CardContent>
+            </Card>
+          </Reveal>
         </div>
       </section>
 
@@ -294,17 +310,19 @@ export default async function HomePage() {
           <div className="absolute left-0 top-1/3 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
 
           <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
-            <p className="eyebrow-bar border-accent text-accent">The A.D.A.M.A.W.A First Agenda</p>
-            <h2 className="mt-5 text-mega">
-              The <span className="text-gradient-gold">Agenda.</span>
-            </h2>
-            <p className="mt-6 max-w-2xl text-lg text-primary-foreground/70">
-              Seven proposed priorities for Adamawa State, first announced publicly as the A.D.A.M.A.W.A First Agenda —
-              not yet delivered, and clearly marked as proposed.
-            </p>
-            <div className="mt-12">
+            <Reveal>
+              <p className="eyebrow-bar border-accent text-accent">The A.D.A.M.A.W.A First Agenda</p>
+              <h2 className="mt-5 text-mega">
+                The <span className="text-gradient-gold">Agenda.</span>
+              </h2>
+              <p className="mt-6 max-w-2xl text-lg text-primary-foreground/70">
+                Seven proposed priorities for Adamawa State, first announced publicly as the A.D.A.M.A.W.A First Agenda —
+                not yet delivered, and clearly marked as proposed.
+              </p>
+            </Reveal>
+            <Reveal delay={150} className="mt-12">
               <AgendaTabs pillars={pillars} />
-            </div>
+            </Reveal>
             <Link href="/manifesto" className="group mt-10 inline-flex items-center gap-2 font-medium text-accent hover:text-accent/80 transition-colors">
               Read the full manifesto <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
@@ -317,12 +335,12 @@ export default async function HomePage() {
       {/* ═══════════════════ COMMUNITY PREVIEW ═══════════════════ */}
       <section className="relative py-20 sm:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="section-eyebrow mx-auto">Community</p>
             <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">What do citizens think?</h2>
             <p className="mt-3 text-lg text-muted-foreground">A live look at the public conversation in Haske Community.</p>
-          </div>
-          <div className="mt-10 overflow-hidden rounded-2xl border border-border shadow-soft">
+          </Reveal>
+          <Reveal delay={120} className="mt-10 overflow-hidden rounded-2xl border border-border shadow-soft">
             {feedPosts.length === 0 ? (
               <div className="p-12 text-center">
                 <Users className="mx-auto size-10 text-muted-foreground/40" />
@@ -331,7 +349,7 @@ export default async function HomePage() {
             ) : (
               feedPosts.map((post) => <PostCard key={post.id} post={post} />)
             )}
-          </div>
+          </Reveal>
           <div className="mt-8 text-center">
             <Button asChild size="lg" className="shadow-glow-primary">
               <Link href="/community">
@@ -348,25 +366,29 @@ export default async function HomePage() {
         <section className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-            <p className="section-eyebrow">Follow</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Upcoming events</h2>
+            <Reveal>
+              <p className="section-eyebrow">Follow</p>
+              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Upcoming events</h2>
+            </Reveal>
             <div className="mt-10 grid gap-5 sm:grid-cols-3">
-              {upcomingEvents.map((e) => (
-                <Link key={e.id} href={`/events/${e.slug}`}>
-                  <Card className="group h-full card-link overflow-hidden">
-                    <CardContent className="p-6">
-                      <p className="text-lg font-medium group-hover:text-primary transition-colors">{e.title}</p>
-                      <div className="mt-4 space-y-2">
-                        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Calendar className="size-4 text-primary/60" /> {formatDate(e.date)}
-                        </p>
-                        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <MapPin className="size-4 text-primary/60" /> {e.venue}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+              {upcomingEvents.map((e, i) => (
+                <Reveal key={e.id} variant="scale" delay={i * 100}>
+                  <Link href={`/events/${e.slug}`}>
+                    <Card className="group h-full card-link overflow-hidden">
+                      <CardContent className="p-6">
+                        <p className="text-lg font-medium group-hover:text-primary transition-colors">{e.title}</p>
+                        <div className="mt-4 space-y-2">
+                          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Calendar className="size-4 text-primary/60" /> {formatDate(e.date)}
+                          </p>
+                          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <MapPin className="size-4 text-primary/60" /> {e.venue}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -376,28 +398,32 @@ export default async function HomePage() {
       {/* ═══════════════════ MEDIA ═══════════════════ */}
       {media.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-          <p className="section-eyebrow">Latest Media</p>
-          <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">News, videos and speeches</h2>
+          <Reveal>
+            <p className="section-eyebrow">Latest Media</p>
+            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">News, videos and speeches</h2>
+          </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
-            {media.map((m) => (
-              <Link key={m.id} href={`/media/${m.slug}`}>
-                <Card className="group h-full overflow-hidden card-link">
-                  {m.featuredImage && (
-                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={m.featuredImage} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                      {/* Play button overlay for videos */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
-                        <Play className="size-10 text-white opacity-0 transition-opacity group-hover:opacity-80 drop-shadow-lg" />
+            {media.map((m, i) => (
+              <Reveal key={m.id} variant="scale" delay={i * 100}>
+                <Link href={`/media/${m.slug}`}>
+                  <Card className="group h-full overflow-hidden card-link">
+                    {m.featuredImage && (
+                      <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={m.featuredImage} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                        {/* Play button overlay for videos */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
+                          <Play className="size-10 text-white opacity-0 transition-opacity group-hover:opacity-80 drop-shadow-lg" />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <CardContent className="p-6">
-                    <Badge variant="secondary">{m.category.replaceAll("_", " ")}</Badge>
-                    <p className="mt-3 font-medium group-hover:text-primary transition-colors">{m.title}</p>
-                  </CardContent>
-                </Card>
-              </Link>
+                    )}
+                    <CardContent className="p-6">
+                      <Badge variant="secondary">{m.category.replaceAll("_", " ")}</Badge>
+                      <p className="mt-3 font-medium group-hover:text-primary transition-colors">{m.title}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -407,7 +433,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-t border-border bg-primary text-primary-foreground">
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
         <div className="absolute left-1/2 top-0 -translate-x-1/2 h-64 w-[600px] rounded-full bg-accent/10 blur-[100px]" />
-        <div className="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6 sm:py-28">
+        <Reveal as="div" variant="scale" className="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6 sm:py-28">
           <h2 className="font-serif text-3xl font-semibold sm:text-4xl">Join the Community</h2>
           <p className="mt-4 text-lg text-primary-foreground/80">
             Connect with fellow citizens, follow updates, vote in polls and make your voice heard.
@@ -415,7 +441,7 @@ export default async function HomePage() {
           <Button asChild size="lg" variant="gold" className="mt-8 shadow-glow-gold">
             <Link href="/register">Create your free account</Link>
           </Button>
-        </div>
+        </Reveal>
         <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
       </section>
     </div>

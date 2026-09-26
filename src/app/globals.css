@@ -182,6 +182,17 @@
   html {
     scroll-behavior: smooth;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "cv11", "ss01";
@@ -316,6 +327,12 @@
   .reveal.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+  .reveal-scale {
+    transform: translateY(16px) scale(0.96);
+  }
+  .reveal-scale.visible {
+    transform: translateY(0) scale(1);
   }
 
   /* ─── Admin surfaces ─── */
