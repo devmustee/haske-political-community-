@@ -334,12 +334,21 @@ async function main() {
     featured: false,
     order: 2,
   };
-  await prisma.achievement.upsert({
+  const ramadanOutreach = await prisma.achievement.upsert({
     where: { slug: "ramadan-humanitarian-outreach" },
     update: ramadanOutreachData,
     create: {
       ...ramadanOutreachData,
       slug: "ramadan-humanitarian-outreach",
+    },
+  });
+  await prisma.achievementImage.deleteMany({ where: { achievementId: ramadanOutreach.id } });
+  await prisma.achievementImage.create({
+    data: {
+      achievementId: ramadanOutreach.id,
+      url: "/brand/illustrations/ramadan-outreach.svg",
+      caption: "Illustration of grain sacks and a Ramadan crescent moon",
+      order: 0,
     },
   });
 
