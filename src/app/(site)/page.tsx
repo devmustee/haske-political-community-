@@ -60,7 +60,7 @@ export default async function HomePage() {
                 height={40}
                 className="size-10 rounded-full bg-white/90 object-contain p-0.5 shadow-lg"
               />
-              <Badge className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground backdrop-blur-sm">
+              <Badge className="min-w-0 whitespace-normal text-center border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground backdrop-blur-sm sm:whitespace-nowrap">
                 APM Governorship Candidate &middot; Adamawa 2027
               </Badge>
             </div>

@@ -249,7 +249,7 @@
     @apply font-serif text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl;
   }
   .text-mega {
-    @apply font-sans text-5xl font-black uppercase leading-[0.9] tracking-tight sm:text-7xl lg:text-8xl;
+    @apply font-sans text-4xl font-black uppercase leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl;
   }
   .text-gradient-gold {
     @apply bg-gradient-to-r from-primary-foreground via-accent to-primary-foreground bg-clip-text text-transparent;
