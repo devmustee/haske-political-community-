@@ -13,6 +13,7 @@ import { AgendaTabs } from "@/components/cms/agenda-tabs";
 import { Reveal } from "@/components/motion/reveal";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
 import { SectionDivider } from "@/components/ui/section-divider";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { DotRing } from "@/components/ui/dot-ring";
 import { formatDate } from "@/lib/utils";
 import { ArrowRight, Calendar, MapPin, Star, Users, BookOpen, Play, ChevronRight } from "lucide-react";
@@ -180,8 +181,7 @@ export default async function HomePage() {
           <SectionDivider tone="primary" opacity={20} position="absolute-top" />
           <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
-              <p className="section-eyebrow">His Journey</p>
-              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">An interactive timeline</h2>
+              <SectionHeading eyebrow="His Journey" title="An interactive timeline" />
             </Reveal>
             <div className="mt-10">
               <Timeline items={timeline} />
@@ -197,10 +197,7 @@ export default async function HomePage() {
       {achievements.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
           <Reveal className="flex items-end justify-between">
-            <div>
-              <p className="section-eyebrow">Achievements</p>
-              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">What has he actually done?</h2>
-            </div>
+            <SectionHeading eyebrow="Achievements" title="What has he actually done?" />
             <Link href="/achievements" className="group hidden items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors sm:flex">
               View all <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
@@ -233,8 +230,7 @@ export default async function HomePage() {
           <SectionDivider tone="accent" opacity={30} position="absolute-top" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
-              <p className="section-eyebrow">Empowerment</p>
-              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Programs for Adamawa citizens</h2>
+              <SectionHeading eyebrow="Empowerment" title="Programs for Adamawa citizens" />
             </Reveal>
             <div className="mt-10 grid gap-5 sm:grid-cols-2">
               {programs.map((p, i) => (
@@ -263,8 +259,7 @@ export default async function HomePage() {
       {/* ═══════════════════ MISSION & VISION ═══════════════════ */}
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
         <Reveal>
-          <p className="section-eyebrow">Mission &amp; Vision</p>
-          <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Development priorities</h2>
+          <SectionHeading eyebrow="Mission & Vision" title="Development priorities" />
         </Reveal>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <Reveal variant="scale">
@@ -344,9 +339,12 @@ export default async function HomePage() {
       <section className="relative py-20 sm:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6">
           <Reveal className="text-center">
-            <p className="section-eyebrow mx-auto">Community</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">What do citizens think?</h2>
-            <p className="mt-3 text-lg text-muted-foreground">A live look at the public conversation in Haske Community.</p>
+            <SectionHeading
+              eyebrow="Community"
+              title="What do citizens think?"
+              description="A live look at the public conversation in Haske Community."
+              centered
+            />
           </Reveal>
           <Reveal delay={120} className="mt-10 overflow-hidden rounded-2xl border border-border shadow-soft">
             {feedPosts.length === 0 ? (
@@ -375,8 +373,7 @@ export default async function HomePage() {
           <SectionDivider tone="primary" opacity={20} position="absolute-top" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
-              <p className="section-eyebrow">Follow</p>
-              <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">Upcoming events</h2>
+              <SectionHeading eyebrow="Follow" title="Upcoming events" />
             </Reveal>
             <div className="mt-10 grid gap-5 sm:grid-cols-3">
               {upcomingEvents.map((e, i) => (
@@ -407,8 +404,7 @@ export default async function HomePage() {
       {media.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
           <Reveal>
-            <p className="section-eyebrow">Latest Media</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl lg:text-4xl">News, videos and speeches</h2>
+            <SectionHeading eyebrow="Latest Media" title="News, videos and speeches" />
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {media.map((m, i) => (
