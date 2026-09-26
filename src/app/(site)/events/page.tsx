@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { PageHero } from "@/components/cms/page-hero";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/motion/reveal";
 import { formatDate } from "@/lib/utils";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 
@@ -35,8 +36,10 @@ export default async function EventsPage() {
           </div>
         ) : (
           <div className="mt-6 flex flex-col gap-4">
-            {upcoming.map((e) => (
-              <EventRow key={e.id} event={e} />
+            {upcoming.map((e, i) => (
+              <Reveal key={e.id} delay={Math.min(i, 5) * 80}>
+                <EventRow event={e} />
+              </Reveal>
             ))}
           </div>
         )}
@@ -45,8 +48,10 @@ export default async function EventsPage() {
           <div className="mt-16">
             <h2 className="font-serif text-2xl font-semibold sm:text-3xl">Past events</h2>
             <div className="mt-6 flex flex-col gap-4">
-              {past.map((e) => (
-                <EventRow key={e.id} event={e} />
+              {past.map((e, i) => (
+                <Reveal key={e.id} delay={Math.min(i, 5) * 80}>
+                  <EventRow event={e} />
+                </Reveal>
               ))}
             </div>
           </div>

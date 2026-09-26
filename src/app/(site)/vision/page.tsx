@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getSiteSetting, type VisionSettings } from "@/lib/queries/settings";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Reveal } from "@/components/motion/reveal";
 import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = { title: "Vision", description: "The stated vision of the Haske campaign for Adamawa State." };
@@ -60,16 +61,18 @@ export default async function VisionPage() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           {vision?.themes.map((t, i) => (
-            <Card key={t.title} className="group overflow-hidden hover:shadow-elevated transition-all duration-300">
-              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity group-hover:opacity-100" />
-              <CardContent className="p-7">
-                <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <span className="text-lg font-bold">{i + 1}</span>
-                </div>
-                <h2 className="font-serif text-xl font-semibold text-primary">{t.title}</h2>
-                <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{t.description}</p>
-              </CardContent>
-            </Card>
+            <Reveal key={t.title} variant="scale" delay={Math.min(i, 5) * 80}>
+              <Card className="group overflow-hidden hover:shadow-elevated transition-all duration-300">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                <CardContent className="p-7">
+                  <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <span className="text-lg font-bold">{i + 1}</span>
+                  </div>
+                  <h2 className="font-serif text-xl font-semibold text-primary">{t.title}</h2>
+                  <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{t.description}</p>
+                </CardContent>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </div>

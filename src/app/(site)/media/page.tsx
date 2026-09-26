@@ -5,6 +5,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/motion/reveal";
 import { formatDate } from "@/lib/utils";
 import { PlayCircle, Image as ImageIcon } from "lucide-react";
 
@@ -62,31 +63,33 @@ export default async function MediaCenterPage({
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => (
-              <Link key={item.id} href={`/media/${item.slug}`}>
-                <Card className="group h-full overflow-hidden card-link">
-                  {item.featuredImage && (
-                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.featuredImage} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                      {item.category === "VIDEO" && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
-                          <PlayCircle className="size-14 text-white drop-shadow-lg opacity-80 transition-all group-hover:opacity-100 group-hover:scale-110" />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <CardContent className="flex h-full flex-col p-6">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary">{CATEGORY_LABELS[item.category]}</Badge>
-                      <ContentStatusBadge status={item.contentStatus} />
-                    </div>
-                    <h2 className="mt-3 font-serif text-lg font-semibold group-hover:text-primary transition-colors">{item.title}</h2>
-                    <p className="mt-1.5 text-sm text-primary/60 font-medium">{formatDate(item.date)}</p>
-                    <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground">{item.content}</p>
-                  </CardContent>
-                </Card>
-              </Link>
+            {items.map((item, i) => (
+              <Reveal key={item.id} variant="scale" delay={Math.min(i, 5) * 80}>
+                <Link href={`/media/${item.slug}`}>
+                  <Card className="group h-full overflow-hidden card-link">
+                    {item.featuredImage && (
+                      <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={item.featuredImage} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                        {item.category === "VIDEO" && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
+                            <PlayCircle className="size-14 text-white drop-shadow-lg opacity-80 transition-all group-hover:opacity-100 group-hover:scale-110" />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <CardContent className="flex h-full flex-col p-6">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary">{CATEGORY_LABELS[item.category]}</Badge>
+                        <ContentStatusBadge status={item.contentStatus} />
+                      </div>
+                      <h2 className="mt-3 font-serif text-lg font-semibold group-hover:text-primary transition-colors">{item.title}</h2>
+                      <p className="mt-1.5 text-sm text-primary/60 font-medium">{formatDate(item.date)}</p>
+                      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground">{item.content}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </Reveal>
             ))}
           </div>
         )}

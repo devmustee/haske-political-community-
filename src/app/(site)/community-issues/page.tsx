@@ -7,6 +7,7 @@ import { CommunityIssueForm } from "@/components/cms/community-issue-form";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
 import { formatRelativeTime } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Community Issues", description: "Public directory of community-reported issues by LGA and category." };
@@ -30,21 +31,23 @@ export default async function CommunityIssuesPage() {
             {issues.length === 0 ? (
               <p className="text-muted-foreground">No issues reported yet.</p>
             ) : (
-              issues.map((issue) => (
-                <Card key={issue.id}>
-                  <CardContent className="p-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary">{issue.category.replaceAll("_", " ")}</Badge>
-                      <Badge variant="outline">{issue.lga}</Badge>
-                      <Badge>{issue.status.replace("_", " ")}</Badge>
-                    </div>
-                    <p className="mt-2 font-medium">{issue.title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{issue.description}</p>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Reported by {issue.reportedBy.name} &middot; {formatRelativeTime(issue.createdAt)}
-                    </p>
-                  </CardContent>
-                </Card>
+              issues.map((issue, i) => (
+                <Reveal key={issue.id} delay={Math.min(i, 5) * 60}>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary">{issue.category.replaceAll("_", " ")}</Badge>
+                        <Badge variant="outline">{issue.lga}</Badge>
+                        <Badge>{issue.status.replace("_", " ")}</Badge>
+                      </div>
+                      <p className="mt-2 font-medium">{issue.title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{issue.description}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Reported by {issue.reportedBy.name} &middot; {formatRelativeTime(issue.createdAt)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Reveal>
               ))
             )}
           </div>

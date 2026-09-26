@@ -4,6 +4,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { AgendaTabs } from "@/components/cms/agenda-tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { Reveal } from "@/components/motion/reveal";
 import { formatDate } from "@/lib/utils";
 import { FileText, Archive } from "lucide-react";
 import type { PolicyPillar } from "@prisma/client";
@@ -33,19 +34,21 @@ export default async function ManifestoPage() {
       />
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
-        {current ? (
-          <ManifestoIntro manifesto={current} />
-        ) : (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center gap-3 p-10 text-center text-muted-foreground">
-              <FileText className="size-10 text-muted-foreground/30" />
-              <p>
-                A current manifesto for the Allied Peoples Movement candidacy has not yet been published. Check back soon, or
-                see the pillars below and the historical agenda further down.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <Reveal>
+          {current ? (
+            <ManifestoIntro manifesto={current} />
+          ) : (
+            <Card className="border-dashed">
+              <CardContent className="flex flex-col items-center gap-3 p-10 text-center text-muted-foreground">
+                <FileText className="size-10 text-muted-foreground/30" />
+                <p>
+                  A current manifesto for the Allied Peoples Movement candidacy has not yet been published. Check back soon, or
+                  see the pillars below and the historical agenda further down.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </Reveal>
       </div>
 
       {agendaPillars.length > 0 && (
@@ -63,17 +66,19 @@ export default async function ManifestoPage() {
           />
           <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
           <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-            <p className="eyebrow-bar border-accent text-accent">The A.D.A.M.A.W.A First Agenda</p>
-            <h2 className="mt-5 text-mega">
-              Policy <span className="text-gradient-gold">Pillars.</span>
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg text-primary-foreground/70">
-              Category framework the campaign has indicated it will address — full policy detail, published pillar by
-              pillar.
-            </p>
-            <div className="mt-12">
+            <Reveal>
+              <p className="eyebrow-bar border-accent text-accent">The A.D.A.M.A.W.A First Agenda</p>
+              <h2 className="mt-5 text-mega">
+                Policy <span className="text-gradient-gold">Pillars.</span>
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg text-primary-foreground/70">
+                Category framework the campaign has indicated it will address — full policy detail, published pillar by
+                pillar.
+              </p>
+            </Reveal>
+            <Reveal delay={150} className="mt-12">
               <AgendaTabs pillars={agendaPillars} />
-            </div>
+            </Reveal>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
         </section>
@@ -91,18 +96,20 @@ export default async function ManifestoPage() {
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            {historical.map((m) => (
-              <Card key={m.id} className="group hover:shadow-elevated transition-all duration-300">
-                <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
-                  <div>
-                    <p className="text-lg font-medium group-hover:text-primary transition-colors">{m.title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Version {m.version} &middot; Published {formatDate(m.publicationDate)}
-                    </p>
-                  </div>
-                  <ContentStatusBadge status="ARCHIVED" />
-                </CardContent>
-              </Card>
+            {historical.map((m, i) => (
+              <Reveal key={m.id} delay={Math.min(i, 5) * 80}>
+                <Card className="group hover:shadow-elevated transition-all duration-300">
+                  <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
+                    <div>
+                      <p className="text-lg font-medium group-hover:text-primary transition-colors">{m.title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Version {m.version} &middot; Published {formatDate(m.publicationDate)}
+                      </p>
+                    </div>
+                    <ContentStatusBadge status="ARCHIVED" />
+                  </CardContent>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>

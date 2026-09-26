@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PageHero } from "@/components/cms/page-hero";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/motion/reveal";
 import { formatDate } from "@/lib/utils";
 import { FileText } from "lucide-react";
 
@@ -37,26 +38,28 @@ export default async function PublicRecordPage() {
           <p className="py-16 text-center text-muted-foreground">No public record items published yet.</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {items.map((item) => (
-              <Card key={item.id}>
-                <CardContent className="p-5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="secondary">{TYPE_LABELS[item.type] ?? item.type}</Badge>
-                    {item.version && <Badge variant="outline">v{item.version}</Badge>}
-                  </div>
-                  <h2 className="mt-2 font-serif text-lg font-semibold">{item.title}</h2>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Published {formatDate(item.publishedDate)} &middot; Updated {formatDate(item.updatedDate)}
-                    {item.source ? ` · Source: ${item.source}` : ""}
-                  </p>
-                  <p className="mt-3 text-[15px] text-foreground/90">{item.content}</p>
-                  {item.documentUrl && (
-                    <a href={item.documentUrl} className="mt-3 flex w-fit items-center gap-1.5 text-sm text-primary hover:underline">
-                      <FileText className="size-4" /> View document
-                    </a>
-                  )}
-                </CardContent>
-              </Card>
+            {items.map((item, i) => (
+              <Reveal key={item.id} delay={Math.min(i, 5) * 80}>
+                <Card>
+                  <CardContent className="p-5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="secondary">{TYPE_LABELS[item.type] ?? item.type}</Badge>
+                      {item.version && <Badge variant="outline">v{item.version}</Badge>}
+                    </div>
+                    <h2 className="mt-2 font-serif text-lg font-semibold">{item.title}</h2>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Published {formatDate(item.publishedDate)} &middot; Updated {formatDate(item.updatedDate)}
+                      {item.source ? ` · Source: ${item.source}` : ""}
+                    </p>
+                    <p className="mt-3 text-[15px] text-foreground/90">{item.content}</p>
+                    {item.documentUrl && (
+                      <a href={item.documentUrl} className="mt-3 flex w-fit items-center gap-1.5 text-sm text-primary hover:underline">
+                        <FileText className="size-4" /> View document
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
+              </Reveal>
             ))}
           </div>
         )}

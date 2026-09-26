@@ -6,6 +6,7 @@ import { PageHero } from "@/components/cms/page-hero";
 import { Timeline } from "@/components/cms/timeline";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Reveal } from "@/components/motion/reveal";
 import { Briefcase } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -42,33 +43,37 @@ export default async function BiographyPage() {
             />
           </div>
         </div>
-        <div className="mb-4">
-          <ContentStatusBadge status="DOCUMENTED" />
-        </div>
-        <div className="flex flex-col gap-5 text-[17px] leading-[1.8] text-foreground/90">
-          {bio?.paragraphs.map((p, i) => <p key={i}>{p}</p>) ?? <p>Biography content is being prepared.</p>}
-        </div>
+        <Reveal>
+          <div className="mb-4">
+            <ContentStatusBadge status="DOCUMENTED" />
+          </div>
+          <div className="flex flex-col gap-5 text-[17px] leading-[1.8] text-foreground/90">
+            {bio?.paragraphs.map((p, i) => <p key={i}>{p}</p>) ?? <p>Biography content is being prepared.</p>}
+          </div>
+        </Reveal>
       </div>
 
       {experience && (
         <div className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
-            <div className="flex items-center gap-3 mb-8">
+            <Reveal className="flex items-center gap-3 mb-8">
               <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Briefcase className="size-5" />
               </div>
               <h2 className="font-serif text-2xl font-semibold sm:text-3xl">{experience.heading}</h2>
-            </div>
+            </Reveal>
             <div className="flex flex-col gap-4">
               {experience.entries.map((e, i) => (
-                <Card key={i} className="group overflow-hidden hover:shadow-elevated transition-all duration-300">
-                  <CardContent className="p-6">
-                    <p className="text-lg font-semibold group-hover:text-primary transition-colors">{e.organization}</p>
-                    <p className="mt-1 text-sm font-medium text-primary">{e.role}</p>
-                    <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{e.description}</p>
-                  </CardContent>
-                </Card>
+                <Reveal key={i} delay={Math.min(i, 5) * 80}>
+                  <Card className="group overflow-hidden hover:shadow-elevated transition-all duration-300">
+                    <CardContent className="p-6">
+                      <p className="text-lg font-semibold group-hover:text-primary transition-colors">{e.organization}</p>
+                      <p className="mt-1 text-sm font-medium text-primary">{e.role}</p>
+                      <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{e.description}</p>
+                    </CardContent>
+                  </Card>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -77,8 +82,10 @@ export default async function BiographyPage() {
 
       <div className="border-t border-border">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
-          <h2 className="font-serif text-2xl font-semibold sm:text-3xl">His Journey</h2>
-          <p className="mt-3 text-lg text-muted-foreground">An interactive timeline from early life to the 2027 governorship candidacy.</p>
+          <Reveal>
+            <h2 className="font-serif text-2xl font-semibold sm:text-3xl">His Journey</h2>
+            <p className="mt-3 text-lg text-muted-foreground">An interactive timeline from early life to the 2027 governorship candidacy.</p>
+          </Reveal>
           <div className="mt-10">
             <Timeline items={timeline} />
           </div>
