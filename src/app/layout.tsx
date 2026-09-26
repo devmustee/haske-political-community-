@@ -22,7 +22,10 @@ const fraunces = localFont({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+// `||` (not `??`) deliberately — Vercel projects sometimes have this env var
+// present but set to an empty string rather than unset, and `??` only falls
+// back on null/undefined, so `new URL("")` below would still throw.
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
