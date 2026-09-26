@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { MediaFormDialog } from "@/components/admin/media-form-dialog";
@@ -10,6 +11,7 @@ export const metadata: Metadata = { title: "Admin · Media" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminMediaPage() {
+  await requireAdminPagePermission("cms.media");
   const items = await prisma.mediaCenterItem.findMany({ orderBy: { date: "desc" } });
 
   return (

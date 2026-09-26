@@ -22,6 +22,7 @@ export function postInclude(viewerId?: string) {
       },
     },
     quoteOf: {
+      where: { deletedAt: null },
       include: {
         author: true,
         media: { orderBy: { order: "asc" as const } },

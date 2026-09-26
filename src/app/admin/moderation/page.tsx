@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,6 +12,7 @@ export const metadata: Metadata = { title: "Moderation" };
 export const dynamic = "force-dynamic";
 
 export default async function ModerationPage() {
+  await requireAdminPagePermission("moderation.review");
   const [reports, blockedWords, recentActions] = await Promise.all([
     prisma.report.findMany({
       where: { status: "PENDING" },

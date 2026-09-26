@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { PolicyPillarFormDialog } from "@/components/admin/policy-pillar-form-dialog";
@@ -10,6 +11,7 @@ export const metadata: Metadata = { title: "Admin · Manifesto & Policy" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminManifestoPage() {
+  await requireAdminPagePermission("cms.manifesto");
   const [pillars, manifestos] = await Promise.all([
     prisma.policyPillar.findMany({ orderBy: { order: "asc" } }),
     prisma.manifesto.findMany({ orderBy: { publicationDate: "desc" } }),

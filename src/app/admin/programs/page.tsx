@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { ProgramFormDialog } from "@/components/admin/program-form-dialog";
@@ -11,6 +12,7 @@ export const metadata: Metadata = { title: "Admin · Programs" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminProgramsPage() {
+  await requireAdminPagePermission("cms.programs");
   const programs = await prisma.program.findMany({
     orderBy: { createdAt: "desc" },
     include: { applications: { include: { user: true }, orderBy: { createdAt: "desc" } } },

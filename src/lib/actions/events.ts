@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import type { ActionResult } from "@/lib/actions/auth";
@@ -8,10 +9,7 @@ import type { ActionResult } from "@/lib/actions/auth";
 export async function registerForEvent(eventId: string): Promise<ActionResult<{ registered: boolean }>> {
   const user = await requireUser();
 
-  const event = await prisma.event.findUnique({
-    where: { id: eventId },
-    include: { _count: { select: { registrations: true } } },
-  });
+  const event = await prisma.event.findUnique({ where: { id: eventId } });
   if (!event) return { ok: false, error: "Event not found." };
 
   const existing = await prisma.eventRegistration.findUnique({
@@ -23,11 +21,26 @@ export async function registerForEvent(eventId: string): Promise<ActionResult<{ 
     return { ok: true, data: { registered: false } };
   }
 
-  if (event.capacity && event._count.registrations >= event.capacity) {
+  try {
+    await prisma.$transaction(
+      async (tx) => {
+        if (event.capacity) {
+          const count = await tx.eventRegistration.count({ where: { eventId } });
+          if (count >= event.capacity) throw new Error("AT_CAPACITY");
+        }
+        await tx.eventRegistration.create({ data: { eventId, userId: user.id } });
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+    );
+  } catch (err) {
+    if (err instanceof Error && err.message === "AT_CAPACITY") {
+      return { ok: false, error: "This event has reached capacity." };
+    }
+    // Serialization failure from a concurrent registration racing the same
+    // capacity check — safe to report as "full" rather than oversell.
     return { ok: false, error: "This event has reached capacity." };
   }
 
-  await prisma.eventRegistration.create({ data: { eventId, userId: user.id } });
   revalidatePath(`/events/${event.slug}`);
   return { ok: true, data: { registered: true } };
 }

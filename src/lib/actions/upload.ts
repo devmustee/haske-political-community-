@@ -6,8 +6,12 @@ import { rateLimit } from "@/lib/rate-limit";
 
 export type UploadedFile = { url: string; contentType: string };
 
+const ALLOWED_FOLDERS = new Set(["posts", "avatars", "covers"]);
+
 export async function uploadFile(formData: FormData, folder: string): Promise<{ ok: true; data: UploadedFile } | { ok: false; error: string }> {
   const user = await requireUser();
+
+  if (!ALLOWED_FOLDERS.has(folder)) return { ok: false, error: "Invalid upload destination." };
 
   const limited = rateLimit(`upload:${user.id}`, 30, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many uploads. Slow down a little." };
@@ -29,6 +33,7 @@ export async function uploadFile(formData: FormData, folder: string): Promise<{ 
     });
     return { ok: true, data: { url: result.url, contentType: file.type } };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Upload failed." };
+    console.error("Upload failed:", err);
+    return { ok: false, error: "Upload failed. Please try again." };
   }
 }

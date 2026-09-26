@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { AchievementFormDialog } from "@/components/admin/achievement-form-dialog";
@@ -9,6 +10,7 @@ export const metadata: Metadata = { title: "Admin · Achievements" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminAchievementsPage() {
+  await requireAdminPagePermission("cms.achievements");
   const achievements = await prisma.achievement.findMany({ orderBy: [{ featured: "desc" }, { order: "asc" }] });
 
   return (

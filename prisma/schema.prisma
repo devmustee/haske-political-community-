@@ -237,6 +237,7 @@ model User {
   email          String            @unique
   emailVerified  DateTime?
   passwordHash   String?
+  passwordChangedAt DateTime?
   name           String
   bio            String?           @db.Text
   location       String?
@@ -742,6 +743,7 @@ model ProgramApplication {
   program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([programId, userId])
   @@index([programId, status])
 }
 

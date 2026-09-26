@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { EventFormDialog } from "@/components/admin/event-form-dialog";
 import { EventRowActions } from "@/components/admin/event-row-actions";
@@ -9,6 +10,7 @@ export const metadata: Metadata = { title: "Admin · Events" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminEventsPage() {
+  await requireAdminPagePermission("events.manage");
   const events = await prisma.event.findMany({
     orderBy: { date: "desc" },
     include: { _count: { select: { registrations: true, questions: true } } },

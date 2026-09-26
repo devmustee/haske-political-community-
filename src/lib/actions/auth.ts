@@ -43,7 +43,14 @@ export async function registerUser(input: RegisterInput): Promise<ActionResult<{
   });
   if (existing) {
     if (existing.email === email) {
-      return { ok: false, error: "An account with this email already exists.", fieldErrors: { email: ["Already in use"] } };
+      // Deliberately soft — avoids flatly confirming this email is
+      // registered (account-enumeration), matching the non-enumerating
+      // behavior of requestPasswordReset below.
+      return {
+        ok: false,
+        error: "This email may already be registered. Try signing in, or reset your password if you've forgotten it.",
+        fieldErrors: { email: ["Check this address"] },
+      };
     }
     return { ok: false, error: "This username is taken.", fieldErrors: { username: ["Already in use"] } };
   }
@@ -134,7 +141,7 @@ export async function resetPassword(input: ResetPasswordInput): Promise<ActionRe
 
   const passwordHash = await bcrypt.hash(password, 12);
   await prisma.$transaction([
-    prisma.user.update({ where: { id: record.userId }, data: { passwordHash } }),
+    prisma.user.update({ where: { id: record.userId }, data: { passwordHash, passwordChangedAt: new Date() } }),
     prisma.passwordResetToken.update({ where: { token }, data: { usedAt: new Date() } }),
   ]);
 

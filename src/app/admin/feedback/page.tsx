@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { FeedbackStatusControl } from "@/components/admin/feedback-status-control";
 import { formatRelativeTime } from "@/lib/utils";
@@ -17,6 +18,7 @@ const STATUS_VARIANT: Record<string, "outline" | "secondary" | "default" | "succ
 };
 
 export default async function AdminFeedbackPage() {
+  await requireAdminPagePermission("feedback.manage");
   const submissions = await prisma.feedbackSubmission.findMany({
     orderBy: { createdAt: "desc" },
     include: { user: true },

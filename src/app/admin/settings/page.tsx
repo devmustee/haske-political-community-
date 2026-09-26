@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SiteSettingEditor } from "@/components/admin/site-setting-editor";
 
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 const EDITABLE_KEYS = ["biography", "experience", "mission", "vision"];
 
 export default async function AdminSettingsPage() {
+  await requireAdminPagePermission("cms.settings");
   const settings = await prisma.siteSetting.findMany({ where: { key: { in: EDITABLE_KEYS } } });
   const byKey = new Map(settings.map((s) => [s.key, s.value]));
 

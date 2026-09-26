@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUser, requirePermission } from "@/lib/session";
 import { notify } from "@/lib/notify";
+import { logAudit } from "@/lib/audit";
 import { feedbackSchema, communityIssueSchema, type FeedbackInput, type CommunityIssueInput } from "@/lib/validations/feedback";
 import type { ActionResult } from "@/lib/actions/auth";
 
@@ -74,7 +75,7 @@ export async function submitCommunityIssue(input: CommunityIssueInput): Promise<
 }
 
 export async function assignFeedback(feedbackId: string, assignedToId: string | null, note?: string): Promise<ActionResult> {
-  const admin = await requireUser();
+  const admin = await requirePermission("feedback.manage");
   const feedback = await prisma.feedbackSubmission.update({
     where: { id: feedbackId },
     data: { assignedToId, status: assignedToId ? "ASSIGNED" : undefined },
@@ -82,6 +83,7 @@ export async function assignFeedback(feedbackId: string, assignedToId: string | 
   await prisma.feedbackUpdate.create({
     data: { feedbackId, status: feedback.status, note, updatedById: admin.id },
   });
+  await logAudit(admin.id, "feedback.assign", "FeedbackSubmission", feedbackId, { assignedToId });
   await notify({ userId: feedback.userId, type: "FEEDBACK_STATUS", message: `Your feedback ${feedback.trackingId} was updated.` });
   return { ok: true, data: undefined };
 }
@@ -91,9 +93,10 @@ export async function updateFeedbackStatus(
   status: "RECEIVED" | "UNDER_REVIEW" | "ASSIGNED" | "IN_PROGRESS" | "RESOLVED" | "CLOSED",
   note?: string
 ): Promise<ActionResult> {
-  const admin = await requireUser();
+  const admin = await requirePermission("feedback.manage");
   const feedback = await prisma.feedbackSubmission.update({ where: { id: feedbackId }, data: { status } });
   await prisma.feedbackUpdate.create({ data: { feedbackId, status, note, updatedById: admin.id } });
+  await logAudit(admin.id, "feedback.update_status", "FeedbackSubmission", feedbackId, { status });
   await notify({ userId: feedback.userId, type: "FEEDBACK_STATUS", message: `Your feedback ${feedback.trackingId} is now "${status.replace("_", " ")}".` });
   return { ok: true, data: undefined };
 }

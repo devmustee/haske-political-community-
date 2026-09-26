@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { requireAdminPagePermission } from "@/lib/session";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/utils";
 
@@ -7,6 +8,7 @@ export const metadata: Metadata = { title: "Admin · Audit Log" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminAuditLogPage() {
+  await requireAdminPagePermission("admin.manage_roles");
   const logs = await prisma.auditLog.findMany({
     orderBy: { createdAt: "desc" },
     take: 200,

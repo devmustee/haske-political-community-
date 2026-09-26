@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { notify } from "@/lib/notify";
@@ -21,13 +22,25 @@ export async function votePoll(pollId: string, optionIds: string[]): Promise<Act
   const validIds = new Set(poll.options.map((o) => o.id));
   if (!optionIds.every((id) => validIds.has(id))) return { ok: false, error: "Invalid poll option." };
 
-  const existingVotes = await prisma.pollVote.findMany({ where: { pollId, userId: user.id } });
-  if (existingVotes.length > 0) return { ok: false, error: "You've already voted in this poll." };
+  try {
+    await prisma.$transaction(
+      async (tx) => {
+        const existingVotes = await tx.pollVote.findMany({ where: { pollId, userId: user.id } });
+        if (existingVotes.length > 0) throw new Error("ALREADY_VOTED");
 
-  await prisma.$transaction([
-    prisma.pollVote.createMany({ data: optionIds.map((optionId) => ({ pollId, optionId, userId: user.id })) }),
-    ...optionIds.map((optionId) => prisma.pollOption.update({ where: { id: optionId }, data: { votesCount: { increment: 1 } } })),
-  ]);
+        await tx.pollVote.createMany({ data: optionIds.map((optionId) => ({ pollId, optionId, userId: user.id })) });
+        for (const optionId of optionIds) {
+          await tx.pollOption.update({ where: { id: optionId }, data: { votesCount: { increment: 1 } } });
+        }
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+    );
+  } catch {
+    // Either the "already voted" check failed, or Postgres aborted this
+    // transaction because it conflicted with a concurrent vote from the
+    // same user (serialization failure) — both mean the same thing here.
+    return { ok: false, error: "You've already voted in this poll." };
+  }
 
   await notify({ userId: poll.post.authorId, actorId: user.id, type: "POLL_RESULT", postId: poll.post.id });
 

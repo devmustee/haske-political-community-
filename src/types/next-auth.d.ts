@@ -7,6 +7,7 @@ declare module "next-auth" {
       username: string;
       verification: string;
       status: string;
+      isEmailVerified: boolean;
       adminRoles: string[];
     } & DefaultSession["user"];
   }
@@ -18,7 +19,10 @@ declare module "next-auth/jwt" {
     username?: string;
     verification?: string;
     status?: string;
+    isEmailVerified?: boolean;
     adminRoles?: string[];
     rolesLoadedAt?: number;
+    /** Set when this token was minted before a subsequent password reset. */
+    invalid?: boolean;
   }
 }
