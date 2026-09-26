@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SectionDivider } from "@/components/ui/section-divider";
 
 export function DetailHeader({
   backHref,
@@ -33,7 +34,7 @@ export function DetailHeader({
         {meta && <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">{meta}</div>}
       </div>
       {/* Bottom gradient line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
+      <SectionDivider tone="primary" opacity={15} position="absolute-bottom" />
     </div>
   );
 }

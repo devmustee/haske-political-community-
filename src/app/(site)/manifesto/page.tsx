@@ -5,6 +5,7 @@ import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { AgendaTabs } from "@/components/cms/agenda-tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/motion/reveal";
+import { SectionDivider } from "@/components/ui/section-divider";
 import { formatDate } from "@/lib/utils";
 import { FileText, Archive } from "lucide-react";
 import type { PolicyPillar } from "@prisma/client";
@@ -80,7 +81,7 @@ export default async function ManifestoPage() {
               <AgendaTabs pillars={agendaPillars} />
             </Reveal>
           </div>
-          <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+          <SectionDivider tone="accent" opacity={40} />
         </section>
       )}
 

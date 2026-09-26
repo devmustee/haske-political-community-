@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SectionDivider } from "@/components/ui/section-divider";
 
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
@@ -42,7 +43,7 @@ export function SiteFooter() {
   return (
     <footer className="relative border-t border-border bg-gradient-to-b from-secondary/40 to-secondary/20">
       {/* Top accent gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      <SectionDivider tone="primary" opacity={20} position="absolute-top" />
 
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-start justify-between gap-10">

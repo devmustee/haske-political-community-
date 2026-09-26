@@ -12,6 +12,8 @@ import { Timeline } from "@/components/cms/timeline";
 import { AgendaTabs } from "@/components/cms/agenda-tabs";
 import { Reveal } from "@/components/motion/reveal";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
+import { SectionDivider } from "@/components/ui/section-divider";
+import { DotRing } from "@/components/ui/dot-ring";
 import { formatDate } from "@/lib/utils";
 import { ArrowRight, Calendar, MapPin, Star, Users, BookOpen, Play, ChevronRight } from "lucide-react";
 
@@ -62,7 +64,7 @@ export default async function HomePage() {
                 height={40}
                 className="size-10 rounded-full bg-white/90 object-contain p-0.5 shadow-lg"
               />
-              <Badge className="min-w-0 whitespace-normal text-center border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground backdrop-blur-sm sm:whitespace-nowrap">
+              <Badge className="min-w-0 whitespace-normal text-center border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground backdrop-blur-sm ring-1 ring-accent/50 ring-offset-2 ring-offset-primary sm:whitespace-nowrap">
                 APM Governorship Candidate &middot; Adamawa 2027
               </Badge>
             </div>
@@ -123,7 +125,7 @@ export default async function HomePage() {
         </div>
 
         {/* Bottom gradient border */}
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+        <SectionDivider tone="accent" opacity={50} />
       </section>
 
       {/* ═══════════════════ ABOUT ═══════════════════ */}
@@ -152,12 +154,18 @@ export default async function HomePage() {
               <div className="mt-5 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
               <div className="mt-5 grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-primary"><AnimatedCounter value={21} /></p>
-                  <p className="text-xs text-muted-foreground">LGAs statewide</p>
+                  <div className="relative mx-auto flex size-16 items-center justify-center">
+                    <DotRing count={21} size={64} className="absolute inset-0" dotClassName="fill-primary/40" />
+                    <p className="text-2xl font-bold text-primary"><AnimatedCounter value={21} /></p>
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground">LGAs statewide</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-accent"><AnimatedCounter value={7} /></p>
-                  <p className="text-xs text-muted-foreground">Policy Pillars</p>
+                  <div className="relative mx-auto flex size-16 items-center justify-center">
+                    <DotRing count={7} size={64} className="absolute inset-0" dotClassName="fill-accent/50" />
+                    <p className="text-2xl font-bold text-accent"><AnimatedCounter value={7} /></p>
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground">Policy Pillars</p>
                 </div>
               </div>
             </Reveal>
@@ -169,7 +177,7 @@ export default async function HomePage() {
       {timeline.length > 0 && (
         <section className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
           {/* Decorative top gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          <SectionDivider tone="primary" opacity={20} position="absolute-top" />
           <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
               <p className="section-eyebrow">His Journey</p>
@@ -222,7 +230,7 @@ export default async function HomePage() {
       {/* ═══════════════════ EMPOWERMENT ═══════════════════ */}
       {programs.length > 0 && (
         <section className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+          <SectionDivider tone="accent" opacity={30} position="absolute-top" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
               <p className="section-eyebrow">Empowerment</p>
@@ -328,7 +336,7 @@ export default async function HomePage() {
             </Link>
           </div>
           {/* Bottom gradient line */}
-          <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+          <SectionDivider tone="accent" opacity={40} />
         </section>
       )}
 
@@ -364,7 +372,7 @@ export default async function HomePage() {
       {/* ═══════════════════ EVENTS ═══════════════════ */}
       {upcomingEvents.length > 0 && (
         <section className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          <SectionDivider tone="primary" opacity={20} position="absolute-top" />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
             <Reveal>
               <p className="section-eyebrow">Follow</p>
@@ -431,7 +439,7 @@ export default async function HomePage() {
 
       {/* ═══════════════════ JOIN CTA ═══════════════════ */}
       <section className="relative overflow-hidden border-t border-border bg-primary text-primary-foreground">
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+        <div className="pattern-diamonds absolute inset-0 text-accent opacity-[0.06]" />
         <div className="absolute left-1/2 top-0 -translate-x-1/2 h-64 w-[600px] rounded-full bg-accent/10 blur-[100px]" />
         <Reveal as="div" variant="scale" className="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6 sm:py-28">
           <h2 className="font-serif text-3xl font-semibold sm:text-4xl">Join the Community</h2>
@@ -442,7 +450,7 @@ export default async function HomePage() {
             <Link href="/register">Create your free account</Link>
           </Button>
         </Reveal>
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+        <SectionDivider tone="accent" opacity={40} />
       </section>
     </div>
   );

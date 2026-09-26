@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { SectionDivider } from "@/components/ui/section-divider";
 
 export function PageHero({
   eyebrow,
@@ -31,7 +32,7 @@ export function PageHero({
         )}
       </div>
       {/* Bottom gradient line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
+      <SectionDivider tone="primary" opacity={15} position="absolute-bottom" />
     </div>
   );
 }

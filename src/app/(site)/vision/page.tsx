@@ -4,6 +4,7 @@ import { getSiteSetting, type VisionSettings } from "@/lib/queries/settings";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/motion/reveal";
+import { SectionDivider } from "@/components/ui/section-divider";
 import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = { title: "Vision", description: "The stated vision of the Haske campaign for Adamawa State." };
@@ -48,7 +49,7 @@ export default async function VisionPage() {
             <p className="mx-auto mt-6 max-w-xl text-lg text-primary-foreground/75 animate-slide-up animation-delay-300">{vision.note}</p>
           )}
         </div>
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+        <SectionDivider tone="accent" opacity={40} />
       </div>
 
       {/* Vision themes */}

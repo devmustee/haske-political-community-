@@ -7,6 +7,7 @@ import { Timeline } from "@/components/cms/timeline";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/motion/reveal";
+import { SectionDivider } from "@/components/ui/section-divider";
 import { Briefcase } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -55,7 +56,7 @@ export default async function BiographyPage() {
 
       {experience && (
         <div className="relative border-t border-border bg-gradient-to-b from-secondary/30 to-background">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
+          <SectionDivider tone="primary" opacity={15} position="absolute-top" />
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
             <Reveal className="flex items-center gap-3 mb-8">
               <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">

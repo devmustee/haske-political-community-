@@ -247,6 +247,14 @@
     background-size: 32px 32px;
   }
 
+  /* ─── Diamond/argyle pattern — a more ceremonial alternative to the dot pattern ─── */
+  .pattern-diamonds {
+    background-image:
+      linear-gradient(45deg, currentcolor 1px, transparent 1px),
+      linear-gradient(-45deg, currentcolor 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
   /* ─── Watermark text ─── */
   .watermark-text {
     @apply pointer-events-none absolute select-none font-sans text-[8rem] font-black uppercase leading-none tracking-tight text-foreground/[0.025] sm:text-[11rem] lg:text-[14rem];
