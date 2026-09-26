@@ -28,7 +28,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground shadow-sm">
             {ERA_LABELS[item.era] ?? item.era}
           </span>
-          <p className="mt-2 text-sm font-medium text-primary">{item.dateLabel}</p>
+          {item.dateLabel && <p className="mt-2 text-sm font-medium text-primary">{item.dateLabel}</p>}
           <h3 className="mt-1 font-serif text-xl font-semibold">{item.title}</h3>
           <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">{item.description}</p>
         </Reveal>

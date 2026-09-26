@@ -195,14 +195,14 @@ async function main() {
     {
       era: "EARLY_LIFE",
       title: "Early life in Adamawa",
-      dateLabel: "Early life",
+      dateLabel: "",
       description: "Abdulrahman Bashir Haske is from Adamawa State, Nigeria, with roots and background in Yola.",
       order: 1,
     },
     {
       era: "EDUCATION",
       title: "American University of Nigeria",
-      dateLabel: "Education",
+      dateLabel: "",
       description:
         "Studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance, according to the AA&R Investment Group profile.",
       order: 2,
@@ -210,7 +210,7 @@ async function main() {
     {
       era: "PROFESSIONAL_CAREER",
       title: "Technology, business and entrepreneurship",
-      dateLabel: "Professional career",
+      dateLabel: "",
       description:
         "Built a professional career spanning technology, business and entrepreneurship, with public profile experience in IT, software architecture, web technologies, applications, information security and assurance.",
       order: 3,
@@ -218,7 +218,7 @@ async function main() {
     {
       era: "AGRICULTURE",
       title: "H&W Rice Company",
-      dateLabel: "Agriculture",
+      dateLabel: "",
       description:
         "Associated with a rice-processing investment in Adamawa (H&W Rice Company), an integrated operation designed to connect smallholder farmers with value-added processing and market opportunities.",
       order: 4,
@@ -226,7 +226,7 @@ async function main() {
     {
       era: "COMMUNITY_DEVELOPMENT",
       title: "Community development and philanthropy",
-      dateLabel: "Community development",
+      dateLabel: "",
       description:
         "Public activities have included humanitarian and empowerment work spanning youth empowerment, entrepreneurship support and community development across Adamawa State.",
       order: 5,
