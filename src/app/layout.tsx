@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import localFont from "next/font/local";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const inter = Inter({
+// Self-hosted (not next/font/google): Vercel's Turbopack build image doesn't
+// reliably resolve the google-font fetch helper for this Next.js version,
+// which breaks production builds there even though local `next build` works
+// fine. Self-hosting the same variable-font files sidesteps that entirely —
+// see src/app/fonts/README.md.
+const inter = localFont({
+  src: "./fonts/Inter-Variable.woff2",
   variable: "--font-inter",
-  subsets: ["latin"],
+  weight: "100 900",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const fraunces = localFont({
+  src: "./fonts/Fraunces-Variable.woff2",
   variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "400 700",
   display: "swap",
 });
 

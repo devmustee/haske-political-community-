@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             alt="Abdulrahman Bashir Haske"
             width={40}
             height={40}
-            className="size-10 rounded-full shadow-sm ring-2 ring-primary/10 transition-all group-hover:ring-primary/25"
+            className="size-10 rounded-full bg-white object-contain shadow-sm ring-2 ring-primary/10 transition-all group-hover:ring-primary/25"
             priority
           />
           <span className="font-serif text-lg font-semibold tracking-tight">Haske Community</span>

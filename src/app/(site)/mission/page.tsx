@@ -28,7 +28,7 @@ export default async function MissionPage() {
           <div className="mt-12">
             <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-6">Development Priorities</h2>
             <div className="grid gap-3 sm:grid-cols-2">
-              {mission.priorities.map((p, i) => (
+              {mission.priorities.map((p) => (
                 <div
                   key={p}
                   className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-soft transition-all duration-300 hover:shadow-elevated hover:-translate-y-0.5 hover:border-primary/20"

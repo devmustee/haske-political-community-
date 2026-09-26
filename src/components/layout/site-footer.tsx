@@ -48,28 +48,28 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-start justify-between gap-10">
           {/* Logos */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3.5">
               <Image
                 src="/brand/haske-logo.png"
                 alt="Abdulrahman Bashir Haske"
                 width={48}
                 height={48}
-                className="size-12 rounded-full shadow-sm ring-2 ring-primary/10"
+                className="size-12 shrink-0 rounded-full bg-white object-contain shadow-sm ring-2 ring-primary/15"
               />
               <Image
                 src="/brand/apm-logo-official.png"
                 alt="Allied Peoples Movement"
-                width={44}
-                height={44}
-                className="size-11 rounded-full shadow-sm"
+                width={48}
+                height={48}
+                className="size-12 shrink-0 rounded-full bg-white object-contain shadow-sm ring-1 ring-border"
               />
-              <div className="mx-1 h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+              <div className="h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-border to-transparent" />
               <Image
                 src="/brand/adamawa-state-seal.png"
                 alt="Adamawa State"
-                width={44}
-                height={44}
-                className="size-11 opacity-70"
+                width={48}
+                height={48}
+                className="size-12 shrink-0 rounded-full bg-white object-contain shadow-sm ring-1 ring-border"
               />
             </div>
             <p className="max-w-[220px] text-xs text-muted-foreground leading-relaxed">

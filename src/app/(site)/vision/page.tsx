@@ -37,7 +37,7 @@ export default async function VisionPage() {
             alt="Adamawa State"
             width={80}
             height={80}
-            className="mx-auto mb-6 size-20 rounded-full bg-white/95 p-2 shadow-lg ring-2 ring-accent/20 animate-slide-up"
+            className="mx-auto mb-6 size-20 rounded-full bg-white/95 object-contain p-2 shadow-lg ring-2 ring-accent/20 animate-slide-up"
           />
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-accent animate-slide-up animation-delay-100">Our Vision</p>
           <h1 className="mx-auto mt-5 max-w-3xl font-serif text-3xl font-semibold leading-tight sm:text-5xl lg:text-6xl animate-slide-up animation-delay-200">

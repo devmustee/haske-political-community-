@@ -25,7 +25,7 @@ export function LeftSidebar({ onCompose }: { onCompose?: () => void }) {
   return (
     <div className="flex h-full flex-col gap-1 py-4">
       <Link href="/" className="mb-2 flex items-center gap-2 px-3">
-        <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={32} height={32} className="size-8 rounded-full" />
+        <Image src="/brand/haske-logo.png" alt="Abdulrahman Bashir Haske" width={32} height={32} className="size-8 rounded-full bg-white object-contain" />
         <span className="hidden font-serif text-lg font-semibold xl:inline">Haske Community</span>
       </Link>
 

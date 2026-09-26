@@ -58,7 +58,7 @@ export default async function HomePage() {
                 alt="Allied Peoples Movement"
                 width={40}
                 height={40}
-                className="size-10 rounded-full bg-white/90 p-0.5 shadow-lg"
+                className="size-10 rounded-full bg-white/90 object-contain p-0.5 shadow-lg"
               />
               <Badge className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground backdrop-blur-sm">
                 APM Governorship Candidate &middot; Adamawa 2027
@@ -115,7 +115,7 @@ export default async function HomePage() {
             {/* Decorative floating badge */}
             <div className="absolute -bottom-3 -left-3 rounded-2xl border border-accent/30 bg-primary/90 px-4 py-2.5 shadow-elevated backdrop-blur-sm">
               <p className="text-xs font-medium text-accent">Adamawa State</p>
-              <p className="text-sm font-bold text-primary-foreground">Governor 2027</p>
+              <p className="text-sm font-bold text-primary-foreground">2027 Candidate</p>
             </div>
           </div>
         </div>
@@ -148,17 +148,13 @@ export default async function HomePage() {
                 the American University of Nigeria, Yola.
               </p>
               <div className="mt-5 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-              <div className="mt-5 grid grid-cols-3 gap-4 text-center">
+              <div className="mt-5 grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-primary">10+</p>
-                  <p className="text-xs text-muted-foreground">Years Experience</p>
+                  <p className="text-2xl font-bold text-primary">21</p>
+                  <p className="text-xs text-muted-foreground">LGAs statewide</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-accent">5K+</p>
-                  <p className="text-xs text-muted-foreground">Community</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-primary">7</p>
+                  <p className="text-2xl font-bold text-accent">7</p>
                   <p className="text-xs text-muted-foreground">Policy Pillars</p>
                 </div>
               </div>

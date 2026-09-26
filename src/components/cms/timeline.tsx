@@ -18,7 +18,7 @@ interface TimelineItem {
 export function Timeline({ items }: { items: TimelineItem[] }) {
   return (
     <ol className="relative flex flex-col gap-10 border-l-2 border-primary/20 pl-8 sm:pl-10">
-      {items.map((item, i) => (
+      {items.map((item) => (
         <li key={item.id} className="group relative">
           {/* Dot with ring effect */}
           <span className="absolute -left-[37px] top-1 flex size-4 items-center justify-center rounded-full border-[2.5px] border-primary bg-background shadow-sm transition-all duration-300 group-hover:scale-125 group-hover:shadow-glow-primary sm:-left-[41px]" />

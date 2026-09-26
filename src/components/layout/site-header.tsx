@@ -43,7 +43,7 @@ export function SiteHeader() {
             alt="Abdulrahman Bashir Haske"
             width={40}
             height={40}
-            className="size-10 shrink-0 rounded-full shadow-sm ring-2 ring-primary/10 transition-all duration-200 group-hover:ring-primary/25 group-hover:shadow-md"
+            className="size-10 shrink-0 rounded-full bg-white object-contain shadow-sm ring-2 ring-primary/10 transition-all duration-200 group-hover:ring-primary/25 group-hover:shadow-md"
             priority
           />
           <span className="hidden whitespace-nowrap font-serif text-lg font-semibold tracking-tight sm:inline">
