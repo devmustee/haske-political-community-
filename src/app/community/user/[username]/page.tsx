@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, MapPin } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, MessageSquare, MessageCircle, Image as ImageIcon, Heart } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import { auth } from "@/auth";
 import { getUserProfile } from "@/lib/queries/users";
 import { getUserPosts, getUserLikedPosts } from "@/lib/queries/posts";
@@ -121,29 +122,33 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
 
         <TabsContent value="posts" className="mt-0">
           {posts.length === 0 ? (
-            <EmptyTab message="No posts yet." />
+            <EmptyState icon={MessageSquare} title="No posts yet" />
           ) : (
             posts.map((p) => <PostCard key={p.id} post={p} />)
           )}
         </TabsContent>
         <TabsContent value="replies" className="mt-0">
           {replies.length === 0 ? (
-            <EmptyTab message="No replies yet." />
+            <EmptyState icon={MessageCircle} title="No replies yet" />
           ) : (
             replies.map((r) => <ReplyCard key={r.id} reply={r} />)
           )}
         </TabsContent>
         <TabsContent value="media" className="mt-0">
-          {media.length === 0 ? <EmptyTab message="No media yet." /> : media.map((p) => <PostCard key={p.id} post={p} />)}
+          {media.length === 0 ? (
+            <EmptyState icon={ImageIcon} title="No media yet" />
+          ) : (
+            media.map((p) => <PostCard key={p.id} post={p} />)
+          )}
         </TabsContent>
         <TabsContent value="likes" className="mt-0">
-          {likes.length === 0 ? <EmptyTab message="No likes yet." /> : likes.map((p) => <PostCard key={p.id} post={p} />)}
+          {likes.length === 0 ? (
+            <EmptyState icon={Heart} title="No likes yet" />
+          ) : (
+            likes.map((p) => <PostCard key={p.id} post={p} />)
+          )}
         </TabsContent>
       </Tabs>
     </div>
   );
-}
-
-function EmptyTab({ message }: { message: string }) {
-  return <p className="py-16 text-center text-sm text-muted-foreground">{message}</p>;
 }
