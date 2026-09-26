@@ -4,6 +4,8 @@ import { auth } from "@/auth";
 import { getNotifications } from "@/lib/queries/notifications";
 import { NotificationItem } from "@/components/community/notification-item";
 import { MarkAllReadButton } from "@/components/community/mark-all-read-button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Bell } from "lucide-react";
 
 export const metadata: Metadata = { title: "Notifications" };
 export const dynamic = "force-dynamic";
@@ -22,7 +24,7 @@ export default async function NotificationsPage() {
       </div>
 
       {notifications.length === 0 ? (
-        <p className="py-16 text-center text-sm text-muted-foreground">You&apos;re all caught up.</p>
+        <EmptyState icon={Bell} title="You're all caught up" description="New notifications will show up here." />
       ) : (
         notifications.map((n) => <NotificationItem key={n.id} notification={n} />)
       )}

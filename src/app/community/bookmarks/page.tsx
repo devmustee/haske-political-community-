@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getUserBookmarkedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Bookmark } from "lucide-react";
 
 export const metadata: Metadata = { title: "Bookmarks" };
 export const dynamic = "force-dynamic";
@@ -20,7 +22,7 @@ export default async function BookmarksPage() {
       </div>
 
       {posts.length === 0 ? (
-        <p className="py-16 text-center text-sm text-muted-foreground">Posts you bookmark will show up here.</p>
+        <EmptyState icon={Bookmark} title="No bookmarks yet" description="Posts you bookmark will show up here." />
       ) : (
         posts.map((p) => <PostCard key={p.id} post={p} />)
       )}

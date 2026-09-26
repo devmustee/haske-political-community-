@@ -5,7 +5,8 @@ import { getFeedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
 import { FeedTabs } from "@/components/community/feed-tabs";
 import { ComposerPrompt } from "@/components/community/composer-prompt";
-import { Info } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Info, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = { title: "Community" };
 export const dynamic = "force-dynamic";
@@ -41,19 +42,18 @@ export default async function CommunityFeedPage({
       )}
 
       {posts.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 px-6 py-20 text-center">
-          <p className="font-medium">Nothing here yet</p>
-          <p className="text-sm text-muted-foreground">
-            {tab === "following"
-              ? "Follow people to see their posts here."
-              : "Be the first to post in Haske Community."}
-          </p>
-          {tab === "following" && (
-            <Link href="/community/explore" className="text-sm font-medium text-primary hover:underline">
-              Discover people to follow
-            </Link>
-          )}
-        </div>
+        <EmptyState
+          icon={MessageSquare}
+          title="Nothing here yet"
+          description={tab === "following" ? "Follow people to see their posts here." : "Be the first to post in Haske Community."}
+          action={
+            tab === "following" && (
+              <Link href="/community/explore" className="text-sm font-medium text-primary hover:underline">
+                Discover people to follow
+              </Link>
+            )
+          }
+        />
       ) : (
         posts.map((post) => <PostCard key={post.id} post={post} />)
       )}

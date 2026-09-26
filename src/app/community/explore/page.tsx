@@ -9,8 +9,9 @@ import { VerifiedBadge } from "@/components/community/verified-badge";
 import { FollowButton } from "@/components/community/follow-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { initials, formatCount, formatDate } from "@/lib/utils";
-import { Hash } from "lucide-react";
+import { Hash, SearchX } from "lucide-react";
 import { getFeedPosts } from "@/lib/queries/posts";
 
 export const metadata: Metadata = { title: "Explore" };
@@ -56,7 +57,9 @@ export default async function ExplorePage({
                 </Card>
               </Link>
             ))}
-            {trending.length === 0 && <p className="text-sm text-muted-foreground">No trending topics yet.</p>}
+            {trending.length === 0 && (
+              <p className="col-span-full text-sm text-muted-foreground">No trending topics yet.</p>
+            )}
           </div>
         </div>
 
@@ -78,7 +81,9 @@ export default async function ExplorePage({
         <SearchBox initialQuery={query} />
       </div>
 
-      {totalResults === 0 && <p className="py-16 text-center text-sm text-muted-foreground">No results for &ldquo;{query}&rdquo;.</p>}
+      {totalResults === 0 && (
+        <EmptyState icon={SearchX} title="No results" description={`Nothing matched "${query}".`} />
+      )}
 
       {results.people.length > 0 && (
         <section className="border-b border-border">
