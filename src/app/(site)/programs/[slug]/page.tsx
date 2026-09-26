@@ -58,7 +58,18 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
       />
 
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-        <p className="text-lg leading-relaxed">{program.description}</p>
+        {program.images.length > 0 && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={program.images[0].url}
+            alt={program.images[0].caption ?? ""}
+            className="w-full rounded-2xl border border-border object-cover shadow-soft"
+          />
+        )}
+
+        <p className={program.images.length > 0 ? "mt-8 text-lg leading-relaxed" : "text-lg leading-relaxed"}>
+          {program.description}
+        </p>
 
         {program.eligibility && <DetailField label="Eligibility">{program.eligibility}</DetailField>}
 

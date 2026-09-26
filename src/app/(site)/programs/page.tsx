@@ -31,6 +31,7 @@ export default async function ProgramsPage() {
   const programs = await prisma.program.findMany({
     where: { contentStatus: { notIn: ["DRAFT"] } },
     orderBy: { createdAt: "asc" },
+    include: { images: { take: 1 } },
   });
 
   return (
@@ -55,6 +56,17 @@ export default async function ProgramsPage() {
                 <Link href={`/programs/${p.slug}`}>
                   <Card className="group h-full card-link overflow-hidden">
                     <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-accent via-primary to-accent opacity-0 transition-opacity group-hover:opacity-100" />
+                    {p.images[0] && (
+                      <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={p.images[0].url}
+                          alt={p.images[0].caption ?? ""}
+                          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
                     <CardContent className="flex h-full flex-col p-6">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="secondary">{CATEGORY_LABELS[p.category] ?? p.category}</Badge>

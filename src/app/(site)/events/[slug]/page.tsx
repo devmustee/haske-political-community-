@@ -64,7 +64,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
       />
 
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-        <p className="text-lg leading-relaxed">{event.description}</p>
+        {event.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={event.imageUrl} alt="" className="w-full rounded-2xl border border-border object-cover shadow-soft" />
+        )}
+
+        <p className={event.imageUrl ? "mt-8 text-lg leading-relaxed" : "text-lg leading-relaxed"}>{event.description}</p>
 
         {!isPast && event.registrationRequired && (
           <div className="mt-8 flex gap-3 border-t border-border pt-6">

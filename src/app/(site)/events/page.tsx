@@ -61,22 +61,30 @@ export default async function EventsPage() {
   );
 }
 
-function EventRow({ event }: { event: { id: string; slug: string; title: string; date: Date; venue: string; status: string } }) {
+function EventRow({ event }: { event: { id: string; slug: string; title: string; date: Date; venue: string; status: string; imageUrl?: string | null } }) {
   return (
     <Link href={`/events/${event.slug}`}>
       <Card className="group card-link overflow-hidden">
-        <CardContent className="flex items-center justify-between gap-4 p-5">
-          <div>
-            <div className="flex items-center gap-2">
-              <Badge variant={STATUS_VARIANT[event.status] ?? "outline"}>{event.status}</Badge>
+        <CardContent className="flex items-center gap-4 p-5">
+          {event.imageUrl && (
+            <div className="relative hidden size-20 shrink-0 overflow-hidden rounded-xl bg-muted sm:block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={event.imageUrl} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             </div>
-            <p className="mt-2 text-lg font-medium group-hover:text-primary transition-colors">{event.title}</p>
-            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
-              <span className="flex items-center gap-2"><Calendar className="size-4 text-primary/60" /> {formatDate(event.date)}</span>
-              <span className="flex items-center gap-2"><MapPin className="size-4 text-primary/60" /> {event.venue}</span>
+          )}
+          <div className="flex flex-1 items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Badge variant={STATUS_VARIANT[event.status] ?? "outline"}>{event.status}</Badge>
+              </div>
+              <p className="mt-2 text-lg font-medium group-hover:text-primary transition-colors">{event.title}</p>
+              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
+                <span className="flex items-center gap-2"><Calendar className="size-4 text-primary/60" /> {formatDate(event.date)}</span>
+                <span className="flex items-center gap-2"><MapPin className="size-4 text-primary/60" /> {event.venue}</span>
+              </div>
             </div>
+            <ArrowRight className="size-5 shrink-0 text-muted-foreground/40 transition-all group-hover:text-primary group-hover:translate-x-1" />
           </div>
-          <ArrowRight className="size-5 shrink-0 text-muted-foreground/40 transition-all group-hover:text-primary group-hover:translate-x-1" />
         </CardContent>
       </Card>
     </Link>
