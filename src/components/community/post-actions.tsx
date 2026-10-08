@@ -154,19 +154,31 @@ export function PostActions({
       <button
         onClick={handleLike}
         disabled={pending}
-        className={cn("group flex items-center gap-1.5 rounded-full p-2 -m-2 hover:text-rose-600", likeState.liked && "text-rose-600")}
+        className={cn(
+          "group flex items-center gap-1.5 rounded-full p-2 -m-2 transition-all duration-200 hover:text-rose-600 active:scale-125",
+          likeState.liked && "text-rose-600"
+        )}
       >
-        <span className="rounded-full p-1.5 group-hover:bg-rose-600/10">
-          <Heart className={cn("size-[18px]", likeState.liked && "fill-current")} />
+        <span className="rounded-full p-1.5 group-hover:bg-rose-600/10 transition-transform group-hover:scale-110">
+          <Heart className={cn("size-[18px] transition-transform", likeState.liked && "fill-current animate-zoom-in")} />
         </span>
-        {likeState.count > 0 && <span className="text-xs">{formatCount(likeState.count)}</span>}
+        {likeState.count > 0 && <span className="text-xs font-semibold font-tnum">{formatCount(likeState.count)}</span>}
       </button>
 
-      <button onClick={handleBookmark} className={cn("rounded-full p-2 -m-2 hover:text-primary", bookmarkState && "text-primary")}>
-        <Bookmark className={cn("size-[18px]", bookmarkState && "fill-current")} />
+      <button
+        onClick={handleBookmark}
+        className={cn(
+          "rounded-full p-2 -m-2 transition-all duration-200 hover:text-accent hover:bg-accent/10 active:scale-125",
+          bookmarkState && "text-accent"
+        )}
+      >
+        <Bookmark className={cn("size-[18px] transition-transform", bookmarkState && "fill-current animate-zoom-in")} />
       </button>
 
-      <button onClick={handleShare} className="rounded-full p-2 -m-2 hover:text-primary">
+      <button
+        onClick={handleShare}
+        className="rounded-full p-2 -m-2 transition-all duration-200 hover:text-primary hover:bg-primary/10 active:scale-125"
+      >
         <Share className="size-[18px]" />
       </button>
 

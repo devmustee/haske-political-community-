@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 function easeOutExpo(t: number): number {
   return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
@@ -16,10 +17,18 @@ type AnimatedCounterProps = {
 };
 
 /**
- * Counts up to `value` once it scrolls into view. Renders the final value
- * immediately under prefers-reduced-motion.
+ * Counts up to `value` once it scrolls into view with smooth spring deceleration.
+ * Renders the final value immediately under prefers-reduced-motion.
+ * Uses tabular figures (`font-tnum`) to eliminate layout jitter.
  */
-export function AnimatedCounter({ value, duration = 1400, prefix = "", suffix = "", decimals = 0, className }: AnimatedCounterProps) {
+export function AnimatedCounter({
+  value,
+  duration = 1400,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+  className,
+}: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
   const started = useRef(false);
@@ -47,14 +56,14 @@ export function AnimatedCounter({ value, duration = 1400, prefix = "", suffix = 
         };
         requestAnimationFrame(tick);
       },
-      { threshold: 0.4 },
+      { threshold: 0.3 },
     );
     observer.observe(node);
     return () => observer.disconnect();
   }, [value, duration]);
 
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className={cn("font-tnum inline-block tabular-nums", className)}>
       {prefix}
       {display.toFixed(decimals)}
       {suffix}

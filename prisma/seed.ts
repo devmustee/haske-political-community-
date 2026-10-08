@@ -201,10 +201,10 @@ async function main() {
     },
     {
       era: "EDUCATION",
-      title: "American University of Nigeria",
+      title: "Education and professional formation",
       dateLabel: "",
       description:
-        "Studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance, according to the AA&R Investment Group profile.",
+        "Graduated from the American University of Nigeria, building a foundation in business and leadership, then completed postgraduate certifications in Business Strategy and Leadership at Manchester Business School and Lagos Business School. Member of the Institute of Directors (IoD) Nigeria.",
       order: 2,
     },
     {
@@ -212,7 +212,7 @@ async function main() {
       title: "Technology, business and entrepreneurship",
       dateLabel: "",
       description:
-        "Built a professional career spanning technology, business and entrepreneurship, with public profile experience in IT, software architecture, web technologies, applications, information security and assurance.",
+        "Built a diversified investment portfolio spanning agriculture, construction, information technology and oil field services, with a pioneering role in advancing oil field services in Northern Nigeria.",
       order: 3,
     },
     {
@@ -220,7 +220,7 @@ async function main() {
       title: "H&W Rice Company",
       dateLabel: "",
       description:
-        "Associated with a rice-processing investment in Adamawa (H&W Rice Company), an integrated operation designed to connect smallholder farmers with value-added processing and market opportunities.",
+        "Conceptualised and established a 48-ton-per-day rice processing mill in Adamawa State, described as the first of its kind in Northeast Nigeria, strengthening food security, creating jobs and empowering smallholder farmers.",
       order: 4,
     },
     {
@@ -228,7 +228,7 @@ async function main() {
       title: "Community development and philanthropy",
       dateLabel: "",
       description:
-        "Public activities have included humanitarian and empowerment work spanning youth empowerment, entrepreneurship support and community development across Adamawa State.",
+        "As a founding member of the AB Haske Foundation, led interventions in education, skills development, youth empowerment and humanitarian support across Adamawa State, and promotes sports development through polo.",
       order: 5,
     },
     {
@@ -312,8 +312,8 @@ async function main() {
   await prisma.achievementImage.create({
     data: {
       achievementId: hwRice.id,
-      url: "/brand/illustrations/rice-field.svg",
-      caption: "Illustration of a rice paddy field",
+      url: "/images/abdulrahman/agriculture/hw-rice-mill-facility-demsa.jpg",
+      caption: "H&W Rice Company 48-ton/day agro-industrial processing complex in Demsa, Adamawa State",
       order: 0,
     },
   });
@@ -346,8 +346,8 @@ async function main() {
   await prisma.achievementImage.create({
     data: {
       achievementId: ramadanOutreach.id,
-      url: "/brand/illustrations/ramadan-outreach.svg",
-      caption: "Illustration of grain sacks and a Ramadan crescent moon",
+      url: "/images/abdulrahman/foundation/ab-haske-foundation-ramadan-relief.png",
+      caption: "AB Haske Foundation Ramadan humanitarian food grain relief distribution in Adamawa State",
       order: 0,
     },
   });
@@ -747,12 +747,28 @@ async function main() {
       value: {
         heading: "Biography",
         paragraphs: [
-          "Abdulrahman Bashir Haske is a Nigerian entrepreneur, philanthropist and politician from Adamawa State.",
-          "Public profiles describe him as having built his career primarily through entrepreneurship, business, community development and philanthropy before entering electoral politics.",
-          "He studied Information Systems at the American University of Nigeria (AUN) in Yola, with a concentration in Security and Assurance according to the AA&R Investment Group profile, and AA&R's own leadership page lists him as pursuing an MSc in Computer Science at Nigerian Turkish Nile University, Abuja.",
-          "His professional profile also identifies him as Group Executive Director at AA&R Investment Group and Executive Director at Haske & Williams Company, where he leads Northern Region operations from the Yola office.",
-          "His public profile includes experience in IT, software architecture, web technologies, applications, information security and assurance.",
-          "His public activities have also included entrepreneurship, agriculture, philanthropy, youth empowerment and community development.",
+          "Abdulrahman Bashir Haske is a distinguished Nigerian entrepreneur, philanthropist and emerging political leader committed to advancing inclusive development, economic transformation and sustainable progress.",
+          "Born and raised in Yola, Adamawa State, he has built a reputation as a forward-thinking leader with a deep understanding of both grassroots realities and national development priorities. His career spans multiple sectors, driving initiatives that improve livelihoods, expand economic opportunities and strengthen community resilience across Adamawa State and Northern Nigeria.",
+          "He is a graduate of the American University of Nigeria, with postgraduate certifications in Business Strategy and Leadership from Manchester Business School and Lagos Business School, and is a member of the Institute of Directors (IoD) Nigeria.",
+          "A dynamic entrepreneur, he has built a diversified investment portfolio spanning agriculture, construction, information technology and oil field services, and conceptualised and established a 48-ton-per-day rice processing mill in Adamawa State, the first of its kind in Northeast Nigeria.",
+        ],
+        sections: [
+          {
+            title: "Political Vision",
+            body: "A pragmatic, people-centred and solutions-driven approach grounded in inclusive governance, economic empowerment and social justice, with a focus on job creation, youth empowerment, infrastructure and policies that unlock the state's economic potential.",
+          },
+          {
+            title: "Ethical Leadership",
+            body: "Guided by the principle of \"doing good while doing business\", aligning profitability with social impact and building partnerships across sectors.",
+          },
+          {
+            title: "Philanthropy & Community",
+            body: "A founding member of the AB Haske Foundation, which has led interventions in education, skills development, youth empowerment and humanitarian support in underserved communities across Adamawa State. He also advocates for sports development, using polo to promote unity, discipline and youth engagement.",
+          },
+          {
+            title: "Family",
+            body: "Happily married with children, and committed to his family, his community and the advancement of Adamawa State and Nigeria.",
+          },
         ],
       },
     },
@@ -762,21 +778,47 @@ async function main() {
         heading: "Experience & Enterprise",
         entries: [
           {
-            organization: "AA&R Investment Group",
-            role: "Group Executive Director",
+            organization: "Diversified Investment Portfolio",
+            role: "Entrepreneur",
             description:
-              "AA&R Investment Group's own leadership page identifies Abdulrahman Bashir Haske as Group Executive Director, an IT professional with a BSc in Information Systems from AUN who is pursuing an MSc in Computer Science at Nigerian Turkish Nile University, Abuja.",
+              "Investments spanning agriculture, construction, information technology and oil field services, including a pioneering role in advancing oil field services in Northern Nigeria.",
           },
           {
-            organization: "Haske & Williams Company",
-            role: "Executive Director, Northern Region",
-            description: "He is identified as Executive Director and Northern Region lead, leading operations from the Yola office.",
+            organization: "Rice Processing Mill, Adamawa State",
+            role: "Founder",
+            description:
+              "Conceptualised and established a state-of-the-art 48-ton-per-day rice processing mill, the first of its kind in Northeast Nigeria, strengthening food security, creating jobs and empowering smallholder farmers.",
           },
           {
-            organization: "Technology",
-            role: "Software architecture & information security",
-            description: "His professional profile describes experience in software architecture, web technologies, applications, information security and security and assurance.",
+            organization: "AB Haske Foundation",
+            role: "Founding Member",
+            description:
+              "Interventions in education, skills development, youth empowerment and humanitarian support across Adamawa State, alongside advocacy for sports development through polo.",
           },
+          {
+            organization: "Institute of Directors (IoD) Nigeria",
+            role: "Member",
+            description: "Upholds standards of corporate governance, accountability and ethical leadership.",
+          },
+        ],
+      },
+    },
+    {
+      key: "contact",
+      value: {
+        email: "info@abhaske.ng",
+        phone: "+234 801 234 5678",
+        offices: [
+          { name: "Yola Office", address: "No. 1, Haske Road, Yola" },
+          { name: "Mubi Office", address: "No. 2, Haske Road, Mubi" },
+        ],
+        socials: [
+          { label: "Facebook", url: "https://www.facebook.com/share/14feGWpiZ1m/" },
+          { label: "X", url: "https://x.com/OfficialABHaske" },
+          { label: "Instagram", url: "https://www.instagram.com/officialabhaske" },
+          { label: "TikTok", url: "https://vm.tiktok.com/ZS9NPwK8fREhc-aXoST/" },
+          { label: "YouTube", url: "https://www.youtube.com/@abdulrahmanbashir" },
+          { label: "WhatsApp", url: "https://whatsapp.com/channel/0029VbCbTfm3bbV2KGXVBK33" },
         ],
       },
     },

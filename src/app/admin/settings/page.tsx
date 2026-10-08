@@ -7,7 +7,7 @@ import { SiteSettingEditor } from "@/components/admin/site-setting-editor";
 export const metadata: Metadata = { title: "Admin · Site Settings" };
 export const dynamic = "force-dynamic";
 
-const EDITABLE_KEYS = ["biography", "experience", "mission", "vision"];
+const EDITABLE_KEYS = ["biography", "experience", "mission", "vision", "contact"];
 
 export default async function AdminSettingsPage() {
   await requireAdminPagePermission("cms.settings");

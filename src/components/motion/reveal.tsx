@@ -3,22 +3,34 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+export type RevealVariant = "up" | "scale" | "blur" | "left" | "right";
+
 type RevealProps = {
   children: ReactNode;
   /** HTML tag to render as. Defaults to "div". */
   as?: keyof HTMLElementTagNameMap;
-  /** Stagger delay in ms, applied as a transition-delay. */
+  /** Custom delay in ms, applied as a transition-delay. */
   delay?: number;
-  variant?: "up" | "scale";
+  /** Optional index multiplier for automatic staggered cascades (delay = index * 70ms). */
+  staggerIndex?: number;
+  variant?: RevealVariant;
   className?: string;
+  threshold?: number;
 };
 
 /**
- * Fades/slides an element in once it scrolls into view, using the `.reveal`
- * CSS in globals.css. No-ops (renders already-visible) under
- * prefers-reduced-motion, or if IntersectionObserver isn't available.
+ * High-performance fluid scroll-reveal primitive with spring easing.
+ * Respects `prefers-reduced-motion` and no-ops gracefully without lag.
  */
-export function Reveal({ children, as = "div", delay = 0, variant = "up", className }: RevealProps) {
+export function Reveal({
+  children,
+  as = "div",
+  delay = 0,
+  staggerIndex,
+  variant = "up",
+  className,
+  threshold = 0.12,
+}: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -38,19 +50,31 @@ export function Reveal({ children, as = "div", delay = 0, variant = "up", classN
           observer.disconnect();
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
+      { threshold, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [threshold]);
 
   const Tag = as as "div";
-  const style: CSSProperties | undefined = delay ? { transitionDelay: `${delay}ms` } : undefined;
+  const calculatedDelay = staggerIndex !== undefined ? Math.min(staggerIndex * 70, 700) : delay;
+  const style: CSSProperties | undefined = calculatedDelay ? { transitionDelay: `${calculatedDelay}ms` } : undefined;
+
+  const variantClass =
+    variant === "scale"
+      ? "reveal-scale"
+      : variant === "blur"
+        ? "reveal-blur"
+        : variant === "left"
+          ? "reveal-left"
+          : variant === "right"
+            ? "reveal-right"
+            : undefined;
 
   return (
     <Tag
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={cn("reveal", variant === "scale" && "reveal-scale", visible && "visible", className)}
+      className={cn("reveal", variantClass, visible && "visible", className)}
       style={style}
     >
       {children}

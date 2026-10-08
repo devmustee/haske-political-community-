@@ -9,6 +9,16 @@ export async function getSiteSetting<T = unknown>(key: string): Promise<T | null
 export interface BiographySettings {
   heading: string;
   paragraphs: string[];
+  /** Longer-form sections imported from the previous campaign website. */
+  sections?: { title: string; body: string }[];
+  sectionsNote?: string;
+}
+
+export interface ContactSettings {
+  email: string;
+  phone: string;
+  offices: { name: string; address: string }[];
+  socials: { label: string; url: string }[];
 }
 
 export interface ExperienceSettings {
