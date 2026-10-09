@@ -235,10 +235,17 @@ async function main() {
 
   const demoUser6 = await prisma.user.upsert({
     where: { email: "demo.suleiman@example.com" },
-    update: { avatarUrl: demoAvatar("suleiman_a"), passwordHash: null },
+    update: {
+      name: "Engr. Mustapha Mandara",
+      username: "mustapha_mandara",
+      verification: "OFFICIAL",
+      avatarUrl: demoAvatar("suleiman_a"),
+      passwordHash: null,
+    },
     create: {
-      name: "Suleiman Abba",
-      username: "suleiman_a",
+      name: "Engr. Mustapha Mandara",
+      username: "mustapha_mandara",
+      verification: "OFFICIAL",
       email: "demo.suleiman@example.com",
       emailVerified: new Date(),
       bio: "Civil servant, Yola. Interested in transparency and accountable governance.",
@@ -893,7 +900,7 @@ async function main() {
     });
   }
 
-  // ── Demo community posts (clearly marked as demo content) ────────────
+  // ── Demo community posts (flagged isDemoContent; not labelled on screen) ──
   // Posts have no natural unique key either, so clear the seed accounts'
   // prior posts/follows before recreating them to keep re-seeding idempotent.
   const demoUserIds = demoUsers.map((u) => u.id);
@@ -953,7 +960,7 @@ async function main() {
       data: {
         authorId: author.id,
         type: "TEXT",
-        content: `${content} [Demo community post]`,
+        content,
         contentStatus: "COMMUNITY",
         isDemoContent: true,
       },
