@@ -56,6 +56,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0F4028",
+  // Lets iPhones report notch/home-indicator insets (env(safe-area-inset-*)),
+  // which globals.css and the fixed bottom nav pad around.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

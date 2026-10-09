@@ -164,7 +164,7 @@ export default async function VisionPage() {
         <div className="pointer-events-none absolute -left-32 top-1/2 h-[560px] w-[560px] -translate-y-1/2 rounded-full bg-accent/20 blur-[140px] animate-pulse-glow" />
         <div className="pointer-events-none absolute -right-32 -bottom-32 h-[500px] w-[500px] rounded-full bg-primary-foreground/10 blur-[100px]" />
 
-        <div className="relative mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 sm:py-32">
+        <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-12 text-center sm:px-6 sm:py-32">
           {/* Official Seals */}
           <div className="flex items-center justify-center gap-4 mb-6 animate-slide-up">
             <Image
@@ -199,7 +199,7 @@ export default async function VisionPage() {
             A sovereign, self-reliant, and united state where agricultural wealth, industrial innovation, and ethical governance guarantee every citizen the dignity of shared progress.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5 animate-slide-up animation-delay-400">
+          <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-3.5 animate-slide-up animation-delay-400">
             <Button asChild size="lg" variant="gold-shimmer" className="shadow-glow-gold">
               <Link href="/manifesto">
                 <BookOpen className="size-4" />

@@ -312,6 +312,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Keep content clear of the notch in landscape (viewport-fit=cover). */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -523,6 +526,19 @@
   }
   .reveal-right.visible {
     transform: translateX(0);
+  }
+  /* Phones: sideways slides push content past the screen edge while they
+     animate (where overflow-hidden ancestors clip it), so rise up instead.
+     Reduced motion is handled globally and in <Reveal>. */
+  @media (max-width: 639.98px) {
+    .reveal-left,
+    .reveal-right {
+      transform: translateY(24px);
+    }
+    .reveal-left.visible,
+    .reveal-right.visible {
+      transform: translateY(0);
+    }
   }
 
   .admin-row {

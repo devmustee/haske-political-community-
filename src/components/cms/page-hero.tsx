@@ -46,7 +46,7 @@ export function PageHero({
         </p>
       )}
 
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:py-28">
+      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 sm:py-24 lg:py-28">
         {/* Eyebrow & Live Beacon */}
         {(eyebrow || badge) && (
           <div className="flex flex-wrap items-center gap-3 animate-slide-up">
@@ -75,9 +75,9 @@ export function PageHero({
           </p>
         )}
 
-        {/* Action Slots */}
+        {/* Action Slots: equal full-width stack on phones, a row from sm */}
         {(actions || primaryAction || secondaryAction) && (
-          <div className="mt-8 flex flex-wrap items-center gap-3 animate-slide-up animation-delay-300">
+          <div className="mt-8 flex max-w-md flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center animate-slide-up animation-delay-300">
             {primaryAction && (
               <Button asChild size="lg" variant="gold-shimmer" className="shadow-glow-gold">
                 <Link href={primaryAction.href}>{primaryAction.label}</Link>

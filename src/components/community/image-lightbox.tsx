@@ -59,7 +59,7 @@ export function ImageLightbox({
             />
           )}
 
-          <div className="absolute right-3 top-3 flex items-center gap-2">
+          <div className="absolute right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))] flex items-center gap-2">
             {current && (
               <a
                 href={current.url}
@@ -79,13 +79,13 @@ export function ImageLightbox({
 
           {multiple && (
             <>
-              <button type="button" onClick={() => go(-1)} className={cn(controlClass, "absolute left-3 top-1/2 -translate-y-1/2")} aria-label="Previous image">
+              <button type="button" onClick={() => go(-1)} className={cn(controlClass, "absolute left-[max(0.75rem,env(safe-area-inset-left))] top-1/2 -translate-y-1/2")} aria-label="Previous image">
                 <ChevronLeft className="size-6" />
               </button>
-              <button type="button" onClick={() => go(1)} className={cn(controlClass, "absolute right-3 top-1/2 -translate-y-1/2")} aria-label="Next image">
+              <button type="button" onClick={() => go(1)} className={cn(controlClass, "absolute right-[max(0.75rem,env(safe-area-inset-right))] top-1/2 -translate-y-1/2")} aria-label="Next image">
                 <ChevronRight className="size-6" />
               </button>
-              <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
+              <p className="absolute bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
                 {(index ?? 0) + 1} / {images.length}
               </p>
             </>

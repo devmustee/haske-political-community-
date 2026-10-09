@@ -65,16 +65,29 @@ only below the `sm` breakpoint, so desktop is unchanged.
   measured before its photo loaded. No text under 12px remains except the
   hero brand strip. No clipping at 320 or 375px.
 
-## P3: layout consistency
+## P3: layout consistency (done)
 
-- Apply the hero pattern to the other page heroes: tighter top padding on
-  phones, and stacked full-width CTAs.
-- Scroll-reveal animations that slide in sideways (`reveal-right`) should
-  fade only on phones, and respect `prefers-reduced-motion`.
-- Installed iPhone app: add `viewportFit: "cover"` and pad the community bottom
-  nav and the header with `env(safe-area-inset-*)`, so nothing sits under the
-  home indicator.
-- Check the site-header mobile drawer at 320px and in landscape.
+- **Page heroes:** the shared `PageHero` (25 pages) and the Vision hero use
+  the homepage pattern on phones: less top padding, and equal full-width
+  stacked CTAs (a row again from `sm`). Verified at 320/375px with no
+  clipping.
+- **Scroll reveals:** `reveal-left`/`reveal-right` rise instead of sliding
+  sideways below `sm`, so content isn't pushed past the edge while
+  animating. Reduced motion was already handled globally and in `<Reveal>`.
+- **Installed iPhone app:** `viewportFit: "cover"`, with
+  `env(safe-area-inset-*)` used for:
+  - body side padding (landscape notch);
+  - the community bottom nav and the feed's bottom spacing (home
+    indicator);
+  - the photo lightbox controls.
+
+  On devices without insets the values match the old layout exactly.
+  Still to check on a real notched iPhone: the simulator here can't
+  produce insets.
+- **Site-header phone menu:** checked at 320×568 and 740×360 landscape
+  with every section expanded. It fits under the header, scrolls, the
+  last item (and Sign In / Join) is reachable, nothing is under 40px, and
+  there's no overflow. No change was needed.
 
 ## PWA follow-ups
 
