@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import "./globals.css";
 
 // Self-hosted (not next/font/google): Vercel's Turbopack build image doesn't
@@ -45,6 +46,16 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  // Installed (home-screen) behaviour on iOS; Android reads app/manifest.ts.
+  appleWebApp: {
+    capable: true,
+    title: "Haske",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0F4028",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -56,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
