@@ -5,8 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Menu, X, ChevronDown, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, Sparkles, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { signOutUser } from "@/lib/sign-out";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -442,12 +443,18 @@ export function SiteHeader() {
           {/* Action CTA Buttons */}
           <div className="mt-4 flex flex-col gap-2.5 border-t border-border/60 pt-4">
             {session?.user ? (
-              <Button asChild size="lg" className="w-full">
-                <Link href="/community" onClick={() => setOpen(false)}>
-                  <Sparkles className="size-4 text-accent" />
-                  Go to Community Hub
-                </Link>
-              </Button>
+              <>
+                <Button asChild size="lg" className="w-full">
+                  <Link href="/community" onClick={() => setOpen(false)}>
+                    <Sparkles className="size-4 text-accent" />
+                    Go to Community Hub
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="w-full" onClick={signOutUser}>
+                  <LogOut className="size-4" />
+                  Sign out
+                </Button>
+              </>
             ) : (
               <>
                 <Button asChild variant="outline" size="lg" className="w-full">

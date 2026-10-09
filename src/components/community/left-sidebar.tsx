@@ -3,14 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Home, Search, Sparkles, Calendar, Bell, Bookmark, User, LogOut, Shield, PenSquare, UserPlus, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { initials, cn } from "@/lib/utils";
 import { VerifiedBadge } from "@/components/community/verified-badge";
 import { UnreadBadge } from "@/components/community/unread-badge";
-import { disablePush } from "@/lib/push-client";
+import { signOutUser } from "@/lib/sign-out";
 
 const NAV = [
   { href: "/community", label: "Home", icon: Home },
@@ -104,7 +104,7 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
             <PenSquare className="size-5" />
           </Button>
 
-          <div className="mt-auto flex items-center gap-2 rounded-full p-2 hover:bg-muted">
+          <div className="mt-auto flex flex-col items-center gap-1 rounded-full p-2 xl:flex-row xl:gap-2 xl:hover:bg-muted">
             <Avatar className="size-9">
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? ""} />
               <AvatarFallback>{initials(user.name ?? user.username)}</AvatarFallback>
@@ -116,13 +116,10 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
               <p className="truncate text-xs text-muted-foreground">@{user.username}</p>
             </div>
             <button
-              onClick={async () => {
-                // Stop this device receiving the signed-out user's notifications.
-                await disablePush();
-                signOut({ callbackUrl: "/" });
-              }}
-              className="hidden rounded-full p-2 text-muted-foreground hover:bg-secondary xl:block"
+              onClick={signOutUser}
+              className="flex size-11 items-center justify-center rounded-full text-muted-foreground hover:bg-secondary xl:size-auto xl:p-2"
               title="Sign out"
+              aria-label="Sign out"
             >
               <LogOut className="size-4" />
             </button>
