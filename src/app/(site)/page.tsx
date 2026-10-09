@@ -86,21 +86,27 @@ export default async function HomePage() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-10 sm:px-6 sm:py-28 lg:grid-cols-[1.35fr_0.65fr] lg:py-32 lg:text-left">
           <div className="text-center lg:text-left">
             {/* APM & Candidate Official Insignia */}
-            <div className="flex items-center justify-center gap-3 max-[359px]:gap-2 lg:justify-start animate-slide-up">
-              <Image
-                src="/brand/apm-logo-official.png"
-                alt="Allied Peoples Movement"
-                width={44}
-                height={44}
-                className="size-11 rounded-full bg-white object-contain p-0.5 shadow-elevated ring-2 ring-accent/40 max-[359px]:size-9"
-              />
-              {/* Stacks into two lines on phones so the title never breaks mid-phrase. */}
-              <div className="inline-flex flex-col items-start gap-0.5 rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-left text-xs font-semibold backdrop-blur-md max-[359px]:px-3 max-[359px]:text-[11px] ring-1 ring-accent/30 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full">
-                <span className="flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-accent animate-pulse" />
-                  <span className="font-bold text-accent">APM</span>
-                </span>
-                <span className="whitespace-nowrap">Governorship Candidate &middot; Adamawa 2027</span>
+            <div className="flex justify-center lg:justify-start animate-slide-up">
+              <div className="inline-flex items-center gap-3 rounded-full border border-accent/35 bg-gradient-to-r from-primary-foreground/[0.14] via-primary-foreground/[0.07] to-primary-foreground/[0.03] py-1.5 pl-1.5 pr-5 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_30px_-12px_rgb(0_0_0/0.55)] backdrop-blur-md">
+                <Image
+                  src="/brand/apm-logo-official.png"
+                  alt="Allied Peoples Movement"
+                  width={44}
+                  height={44}
+                  className="size-11 shrink-0 rounded-full bg-white object-contain p-0.5 ring-2 ring-accent/60"
+                />
+                <div className="leading-tight">
+                  <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.16em] text-accent">
+                    <span className="relative flex size-1.5" aria-hidden>
+                      <span className="absolute inline-flex size-full animate-beacon-ping rounded-full bg-accent opacity-75" />
+                      <span className="relative inline-flex size-1.5 rounded-full bg-accent" />
+                    </span>
+                    APM &middot; Adamawa 2027
+                  </p>
+                  <p className="mt-0.5 whitespace-nowrap text-[15px] font-semibold tracking-tight text-primary-foreground">
+                    Governorship Candidate
+                  </p>
+                </div>
               </div>
             </div>
 
