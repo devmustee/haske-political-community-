@@ -57,6 +57,9 @@ const ROLE_PERMISSIONS: Record<AdminRoleName, Permission[]> = {
   EVENT_MANAGER: ["events.manage"],
   ANALYST: ["analytics.view"],
   MODERATOR: ["moderation.review", "community.moderate"],
+  ELECTION_ADMIN: ["analytics.view", "feedback.manage"],
+  ELECTION_SUPERVISOR: ["analytics.view"],
+  ELECTION_COLLECTOR: ["analytics.view"],
 };
 
 export function permissionsForRoles(roles: AdminRoleName[]): Set<Permission> {
@@ -82,4 +85,7 @@ export const ADMIN_ROLE_LABELS: Record<AdminRoleName, string> = {
   EVENT_MANAGER: "Event Manager",
   ANALYST: "Analyst",
   MODERATOR: "Moderator",
+  ELECTION_ADMIN: "Election Admin",
+  ELECTION_SUPERVISOR: "Election Supervisor",
+  ELECTION_COLLECTOR: "Election Collector",
 };
