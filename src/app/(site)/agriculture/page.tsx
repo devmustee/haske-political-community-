@@ -350,7 +350,7 @@ export default function AgriculturePage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                           <div className="absolute top-3 left-3">
-                            <span className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-bold text-accent shadow-sm border border-accent/20">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md px-2.5 py-0.5 text-xs sm:text-[11px] font-bold text-accent shadow-sm border border-accent/20">
                               <ShieldCheck className="size-3 text-accent" />
                               {photo.spec}
                             </span>
@@ -364,7 +364,7 @@ export default function AgriculturePage() {
                         </div>
                       ) : null}
                       <div className="p-5">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-accent">
+                        <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-accent">
                           {photo.subtitle}
                         </span>
                         <h3 className="mt-1 font-serif text-lg font-bold text-foreground">
@@ -376,7 +376,7 @@ export default function AgriculturePage() {
                       </div>
                     </div>
                     {imgData && (
-                      <div className="px-5 pb-5 pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="px-5 pb-5 pt-2 border-t border-border/60 flex items-center justify-between text-xs sm:text-[11px] text-muted-foreground">
                         <span>{imgData.credit}</span>
                         <Link href="/image-credits" className="text-accent hover:underline font-semibold">
                           Attribution &rarr;
@@ -412,7 +412,7 @@ export default function AgriculturePage() {
                 <div className="rounded-2xl border border-border/80 bg-card p-5 hover:border-primary/40 transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-serif text-lg font-bold text-foreground">{loc.lga}</span>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-accent/15 text-accent">
+                    <span className="text-xs sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-accent/15 text-accent">
                       Active
                     </span>
                   </div>

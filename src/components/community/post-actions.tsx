@@ -174,6 +174,7 @@ export function PostActions({
         <DropdownMenuTrigger asChild>
           <button
             disabled={pending}
+            aria-label={repostState.reposted ? "Undo repost or quote" : "Repost or quote"}
             className={cn(
               "group flex items-center gap-1.5 rounded-full p-2 -m-2 hover:text-emerald-600",
               repostState.reposted && "text-emerald-600"
@@ -198,6 +199,8 @@ export function PostActions({
       <button
         onClick={handleLike}
         disabled={pending}
+        aria-label={likeState.liked ? "Unlike" : "Like"}
+        aria-pressed={likeState.liked}
         className={cn(
           "group flex items-center gap-1.5 rounded-full p-2 -m-2 transition-all duration-200 hover:text-rose-600 active:scale-125",
           likeState.liked && "text-rose-600"
@@ -211,8 +214,10 @@ export function PostActions({
 
       <button
         onClick={handleBookmark}
+        aria-label={bookmarkState ? "Remove bookmark" : "Bookmark"}
+        aria-pressed={bookmarkState}
         className={cn(
-          "rounded-full p-2 -m-2 transition-all duration-200 hover:text-accent hover:bg-accent/10 active:scale-125",
+          "rounded-full p-2 -m-2 transition-all duration-200 hover:text-accent hover:bg-accent/10 active:scale-125 max-sm:p-[13px] max-sm:-m-[13px]",
           bookmarkState && "text-accent"
         )}
       >
@@ -223,7 +228,7 @@ export function PostActions({
         <DropdownMenuTrigger asChild>
           <button
             aria-label="Share"
-            className="rounded-full p-2 -m-2 transition-all duration-200 hover:text-primary hover:bg-primary/10 active:scale-125"
+            className="rounded-full p-2 -m-2 transition-all duration-200 hover:text-primary hover:bg-primary/10 active:scale-125 max-sm:p-[13px] max-sm:-m-[13px]"
           >
             <Share className="size-[18px]" />
           </button>
@@ -255,7 +260,7 @@ export function PostActions({
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button aria-label="More options" className="rounded-full p-2 -m-2 hover:text-primary">
+          <button aria-label="More options" className="rounded-full p-2 -m-2 hover:text-primary max-sm:p-[13px] max-sm:-m-[13px]">
             <MoreHorizontal className="size-[18px]" />
           </button>
         </DropdownMenuTrigger>

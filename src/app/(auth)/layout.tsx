@@ -25,7 +25,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <span className="font-serif text-lg font-semibold tracking-tight text-foreground block">
                 Haske Community
               </span>
-              <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary block">
+              <span className="text-xs sm:text-[11px] font-bold uppercase tracking-[0.14em] text-primary block">
                 Adamawa 2027
               </span>
             </div>
@@ -46,11 +46,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 pt-6 text-xs text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Haske Community. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors max-sm:inline-flex max-sm:items-center max-sm:min-h-11 max-sm:px-1.5">Privacy</Link>
             <span>&middot;</span>
-            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors max-sm:inline-flex max-sm:items-center max-sm:min-h-11 max-sm:px-1.5">Terms</Link>
             <span>&middot;</span>
-            <Link href="/community-guidelines" className="hover:text-foreground transition-colors">Guidelines</Link>
+            <Link href="/community-guidelines" className="hover:text-foreground transition-colors max-sm:inline-flex max-sm:items-center max-sm:min-h-11 max-sm:px-1.5">Guidelines</Link>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
             {/* Floating Accolade Badge */}
             <div className="absolute -bottom-4 -left-3 rounded-2xl border border-accent/40 bg-primary/95 px-4 py-2.5 shadow-elevated backdrop-blur-md">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Adamawa State</p>
+              <p className="text-xs sm:text-[11px] font-bold uppercase tracking-widest text-accent">Adamawa State</p>
               <p className="text-sm font-extrabold text-primary-foreground">2027 Mandate</p>
             </div>
           </div>
@@ -137,15 +137,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="relative grid grid-cols-3 gap-3 border-t border-primary-foreground/15 pt-6 text-center">
           <div className="flex flex-col items-center gap-1.5">
             <ShieldCheck className="size-5 text-accent" />
-            <span className="text-[11px] font-semibold text-primary-foreground/90">Verified Civic Voice</span>
+            <span className="text-xs sm:text-[11px] font-semibold text-primary-foreground/90">Verified Civic Voice</span>
           </div>
           <div className="flex flex-col items-center gap-1.5">
             <MessageSquare className="size-5 text-accent" />
-            <span className="text-[11px] font-semibold text-primary-foreground/90">Direct Dialogue</span>
+            <span className="text-xs sm:text-[11px] font-semibold text-primary-foreground/90">Direct Dialogue</span>
           </div>
           <div className="flex flex-col items-center gap-1.5">
             <Users className="size-5 text-accent" />
-            <span className="text-[11px] font-semibold text-primary-foreground/90">21 LGAs Connected</span>
+            <span className="text-xs sm:text-[11px] font-semibold text-primary-foreground/90">21 LGAs Connected</span>
           </div>
         </div>
       </div>

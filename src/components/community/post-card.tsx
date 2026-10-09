@@ -30,7 +30,7 @@ export function RoleBadge({ verification, className }: { verification?: string |
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase leading-none tracking-wider",
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs sm:text-[10px] font-bold uppercase leading-none tracking-wider",
         verification === "OFFICIAL" ? "bg-primary text-primary-foreground" : "bg-accent-subtle text-accent-foreground ring-1 ring-accent/40 dark:text-accent",
         className
       )}
@@ -101,7 +101,7 @@ export function PostCard({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[15px] leading-tight">
-            <StopPropagationLink href={`/community/user/${post.author.username}`} className="truncate font-semibold hover:underline">
+            <StopPropagationLink href={`/community/user/${post.author.username}`} className="truncate font-semibold hover:underline max-sm:-my-3 max-sm:py-3">
               {post.author.name}
             </StopPropagationLink>
             <VerifiedBadge status={post.author.verification} />
@@ -157,7 +157,7 @@ export function PostCard({
                 <div className="flex items-center gap-1.5 text-sm">
                   <Avatar className="size-5">
                     <AvatarImage src={post.quoteOf.author.avatarUrl ?? undefined} />
-                    <AvatarFallback className="text-[10px]">{initials(post.quoteOf.author.name)}</AvatarFallback>
+                    <AvatarFallback className="text-xs sm:text-[10px]">{initials(post.quoteOf.author.name)}</AvatarFallback>
                   </Avatar>
                   <span className="font-medium">{post.quoteOf.author.name}</span>
                   <VerifiedBadge status={post.quoteOf.author.verification} />

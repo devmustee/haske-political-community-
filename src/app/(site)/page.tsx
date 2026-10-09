@@ -161,7 +161,7 @@ export default async function HomePage() {
             </div>
             {/* Floating Accolade Badge */}
             <div className="absolute -bottom-4 -left-3 rounded-2xl border border-accent/40 bg-primary/95 px-4 py-2.5 shadow-elevated backdrop-blur-md">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Adamawa State</p>
+              <p className="text-xs sm:text-[11px] font-bold uppercase tracking-widest text-accent">Adamawa State</p>
               <p className="text-sm font-extrabold text-primary-foreground">2027 Mandate</p>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default async function HomePage() {
                 <p className="font-serif text-xl sm:text-3xl font-extrabold text-primary">
                   <AnimatedCounter value={21} />
                 </p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-xs sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Local Govts (LGAs)
                 </p>
               </div>
@@ -200,7 +200,7 @@ export default async function HomePage() {
                 <p className="font-serif text-xl sm:text-3xl font-extrabold text-accent">
                   <AnimatedCounter value={7} />
                 </p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-xs sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Strategic Pillars
                 </p>
               </div>
@@ -212,7 +212,7 @@ export default async function HomePage() {
                 <p className="font-serif text-xl sm:text-3xl font-extrabold text-primary">
                   <AnimatedCounter value={100} suffix="%" />
                 </p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-xs sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Documented Record
                 </p>
               </div>
@@ -224,7 +224,7 @@ export default async function HomePage() {
                 <p className="font-serif text-xl sm:text-3xl font-extrabold text-accent">
                   <AnimatedCounter value={2027} />
                 </p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-xs sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Adamawa Mandate
                 </p>
               </div>
@@ -234,7 +234,7 @@ export default async function HomePage() {
             <div className="lg:col-span-7 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-border/80 pt-6 lg:pt-0 lg:pl-8">
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-primary">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-0.5 text-xs sm:text-[11px] font-bold uppercase tracking-wider text-primary">
                     <Compass className="size-3.5 text-primary" /> 2027 Strategic Blueprint
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
@@ -256,7 +256,7 @@ export default async function HomePage() {
                     <Wheat className="size-4 text-accent shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-bold text-foreground">Agro-Processing</p>
-                      <p className="text-[11px] text-muted-foreground leading-tight">48-ton/day Demsa rice complex</p>
+                      <p className="text-xs sm:text-[11px] text-muted-foreground leading-tight">48-ton/day Demsa rice complex</p>
                     </div>
                   </div>
 
@@ -264,7 +264,7 @@ export default async function HomePage() {
                     <Cpu className="size-4 text-primary shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-bold text-foreground">Tech & Youth</p>
-                      <p className="text-[11px] text-muted-foreground leading-tight">AUN digital literacy incubators</p>
+                      <p className="text-xs sm:text-[11px] text-muted-foreground leading-tight">AUN digital literacy incubators</p>
                     </div>
                   </div>
 
@@ -272,7 +272,7 @@ export default async function HomePage() {
                     <Heart className="size-4 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-bold text-foreground">Relief & Grants</p>
-                      <p className="text-[11px] text-muted-foreground leading-tight">₦220M direct grants awarded</p>
+                      <p className="text-xs sm:text-[11px] text-muted-foreground leading-tight">₦220M direct grants awarded</p>
                     </div>
                   </div>
                 </div>
@@ -386,7 +386,7 @@ export default async function HomePage() {
                           <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary ring-1 ring-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                             <Icon className="size-5" />
                           </div>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent/15 text-accent">
+                          <span className="text-xs sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent/15 text-accent">
                             {pillar.tag}
                           </span>
                         </div>
@@ -397,7 +397,7 @@ export default async function HomePage() {
                           {pillar.desc}
                         </p>
                       </div>
-                      <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] font-bold text-primary">
+                      <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs sm:text-[11px] font-bold text-primary">
                         <span>Explore Pillar</span>
                         <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
                       </div>
@@ -485,19 +485,19 @@ export default async function HomePage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
                       <div className="absolute top-3 left-3">
-                        <Badge variant="outline" className="border-white/30 bg-black/50 text-white backdrop-blur-md text-[10px]">
+                        <Badge variant="outline" className="border-white/30 bg-black/50 text-white backdrop-blur-md text-xs sm:text-[10px]">
                           {item.category}
                         </Badge>
                       </div>
                       <div className="absolute bottom-2.5 left-3 right-3 text-white text-xs">
-                        <p className="font-mono text-[11px] opacity-80">{item.location} &bull; {item.date}</p>
+                        <p className="font-mono text-xs sm:text-[11px] opacity-80">{item.location} &bull; {item.date}</p>
                       </div>
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-between">
                       <h3 className="font-serif text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {item.title}
                       </h3>
-                      <p className="mt-2 text-[11px] text-muted-foreground border-t border-border/50 pt-2 flex items-center justify-between">
+                      <p className="mt-2 text-xs sm:text-[11px] text-muted-foreground border-t border-border/50 pt-2 flex items-center justify-between">
                         <span>Photo: {item.credit}</span>
                         <ArrowRight className="size-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                       </p>

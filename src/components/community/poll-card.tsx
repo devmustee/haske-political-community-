@@ -75,7 +75,7 @@ export function PollCard({
       <div className="flex items-start justify-between gap-2">
         <p className="font-semibold text-foreground text-[15px]">{question}</p>
         {isOfficial && (
-          <span className="shrink-0 rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] font-bold text-accent-foreground uppercase tracking-wider">
+          <span className="shrink-0 rounded-full bg-accent/15 px-2.5 py-0.5 text-xs sm:text-[11px] font-bold text-accent-foreground uppercase tracking-wider">
             Official
           </span>
         )}

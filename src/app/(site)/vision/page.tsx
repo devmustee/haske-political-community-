@@ -230,7 +230,7 @@ export default async function VisionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
                 <AnimatedCounter value={300} prefix="₦" suffix="B" />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Target Agro-Economy
               </p>
             </div>
@@ -238,7 +238,7 @@ export default async function VisionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
                 <AnimatedCounter value={1000000} suffix="+" />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Livelihoods Catalyzed
               </p>
             </div>
@@ -246,7 +246,7 @@ export default async function VisionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
                 <AnimatedCounter value={3} />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Agro-Industrial Hubs
               </p>
             </div>
@@ -254,7 +254,7 @@ export default async function VisionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
                 <AnimatedCounter value={21} />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 United LGAs
               </p>
             </div>
@@ -300,21 +300,21 @@ export default async function VisionPage() {
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-4">
                 <ShieldCheck className="size-5 text-emerald-600 mb-2" />
                 <h4 className="text-xs font-bold text-foreground">Economic Sovereignty</h4>
-                <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+                <p className="mt-1 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                   Ending complete dependency on federal FAAC disbursements by building self-sustaining agrarian industry.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-4">
                 <Handshake className="size-5 text-accent mb-2" />
                 <h4 className="text-xs font-bold text-foreground">Social Inclusivity</h4>
-                <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+                <p className="mt-1 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                   Empowering all 80+ ethnic groups with equitable appointments, capital distribution, and religious peace.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-4">
                 <Scale className="size-5 text-primary mb-2" />
                 <h4 className="text-xs font-bold text-foreground">Institutional Integrity</h4>
-                <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+                <p className="mt-1 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                   Strict boardroom fiduciary governance guaranteeing that state budgets build public wealth.
                 </p>
               </div>
@@ -351,7 +351,7 @@ export default async function VisionPage() {
                       <span className="font-mono text-xs font-extrabold uppercase tracking-wider text-accent">
                         {horizon.phase}
                       </span>
-                      <span className="rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-bold text-muted-foreground">
+                      <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs sm:text-[10px] font-bold text-muted-foreground">
                         {horizon.timeline}
                       </span>
                     </div>
@@ -365,12 +365,12 @@ export default async function VisionPage() {
                     </p>
 
                     <div className="border-t border-border/60 pt-4 space-y-2">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                      <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-foreground">
                         Key Deliverables:
                       </p>
                       <ul className="space-y-1.5">
                         {horizon.deliverables.map((item, dIdx) => (
-                          <li key={dIdx} className="flex items-start gap-2 text-[11px] text-muted-foreground leading-relaxed">
+                          <li key={dIdx} className="flex items-start gap-2 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                             <span className="size-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
                             <span>{item}</span>
                           </li>
@@ -380,7 +380,7 @@ export default async function VisionPage() {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-border/60">
-                    <span className="text-[11px] font-bold text-primary inline-flex items-center gap-1">
+                    <span className="text-xs sm:text-[11px] font-bold text-primary inline-flex items-center gap-1">
                       <CheckCircle2 className="size-3.5 text-emerald-600" /> Milestone Verified Strategy
                     </span>
                   </div>
@@ -418,7 +418,7 @@ export default async function VisionPage() {
                         <Icon className="size-5" />
                       </div>
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-accent">
+                        <span className="text-xs sm:text-[10px] font-bold uppercase tracking-widest text-accent">
                           {district.district}
                         </span>
                         <h3 className="font-serif text-lg font-bold text-foreground">
@@ -427,7 +427,7 @@ export default async function VisionPage() {
                       </div>
                     </div>
 
-                    <div className="mb-4 rounded-xl bg-secondary/50 p-2.5 text-[11px] font-medium text-muted-foreground border border-border/60">
+                    <div className="mb-4 rounded-xl bg-secondary/50 p-2.5 text-xs sm:text-[11px] font-medium text-muted-foreground border border-border/60">
                       <span className="font-bold text-foreground">LGAs: </span>
                       {district.lgas}
                     </div>
@@ -437,12 +437,12 @@ export default async function VisionPage() {
                     </p>
 
                     <div className="space-y-2 border-t border-border/60 pt-4">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                      <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-foreground">
                         Flagship Initiatives:
                       </p>
                       <ul className="space-y-1.5">
                         {district.highlights.map((h, hIdx) => (
-                          <li key={hIdx} className="flex items-start gap-2 text-[11px] text-muted-foreground leading-relaxed">
+                          <li key={hIdx} className="flex items-start gap-2 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                             <span className="size-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
                             <span>{h}</span>
                           </li>
@@ -486,7 +486,7 @@ export default async function VisionPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4 text-white">
                           <p className="text-xs font-bold">{rallyImg.caption}</p>
-                          <p className="mt-1 text-[11px] text-white/70">
+                          <p className="mt-1 text-xs sm:text-[11px] text-white/70">
                             {rallyImg.location ?? "Adamawa State"} &middot; {rallyImg.credit}
                           </p>
                         </div>

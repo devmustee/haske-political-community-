@@ -44,7 +44,7 @@ export default function ImageCreditsPage() {
                   <td className="py-3 pr-4">{img.credit}</td>
                   <td className="py-3 pr-4">
                     {img.licenseUrl ? (
-                      <a href={img.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                      <a href={img.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline max-sm:inline-flex max-sm:items-center max-sm:min-h-11">
                         {img.license}
                       </a>
                     ) : (
@@ -53,7 +53,7 @@ export default function ImageCreditsPage() {
                   </td>
                   <td className="py-3">
                     {img.sourceUrl ? (
-                      <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                      <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline max-sm:inline-flex max-sm:items-center max-sm:min-h-11">
                         {img.source}
                       </a>
                     ) : (

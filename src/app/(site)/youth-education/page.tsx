@@ -229,7 +229,7 @@ export default function YouthEducationPage() {
                         <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary ring-1 ring-primary/20">
                           <Icon className="size-6" />
                         </div>
-                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-accent/15 text-accent">
+                        <span className="text-xs sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-accent/15 text-accent">
                           {pillar.category}
                         </span>
                       </div>
@@ -242,7 +242,7 @@ export default function YouthEducationPage() {
                     </div>
 
                     <div className="mt-6 pt-5 border-t border-border/60">
-                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-foreground mb-2">
+                      <h4 className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-foreground mb-2">
                         Key Outcomes
                       </h4>
                       <ul className="space-y-1.5">
@@ -336,7 +336,7 @@ export default function YouthEducationPage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                           <div className="absolute top-3 left-3">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-[11px] font-bold text-accent shadow-sm border border-accent/20">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-xs sm:text-[11px] font-bold text-accent shadow-sm border border-accent/20">
                               <ShieldCheck className="size-3 text-accent" />
                               {photo.badge}
                             </span>
@@ -362,7 +362,7 @@ export default function YouthEducationPage() {
                       </div>
                     </div>
                     {imgData && (
-                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-xs sm:text-[11px] text-muted-foreground">
                         <span>{imgData.credit}</span>
                         <Link href="/image-credits" className="text-accent hover:underline font-semibold">
                           Verify source &rarr;

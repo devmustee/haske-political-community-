@@ -51,7 +51,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
   return (
     <div>
       <div className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <Link href="/community" className="rounded-full p-2 hover:bg-muted">
+        <Link href="/community" className="rounded-full p-2 hover:bg-muted max-sm:p-3">
           <ArrowLeft className="size-5" />
         </Link>
         <h1 className="font-serif text-lg font-semibold">Post</h1>

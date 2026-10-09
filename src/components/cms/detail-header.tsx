@@ -25,7 +25,7 @@ export function DetailHeader({
       <div className="relative mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
         <Link
           href={backHref}
-          className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary max-sm:min-h-11"
         >
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" /> {backLabel}
         </Link>

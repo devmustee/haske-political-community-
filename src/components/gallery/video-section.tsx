@@ -48,7 +48,7 @@ export function VideoSection({ videos, press }: VideoSectionProps) {
                     <Badge variant="outline" className="border-white/30 bg-black/40 text-white backdrop-blur-md">
                       {vid.duration || "Documentary"}
                     </Badge>
-                    <span className="font-mono text-[11px] opacity-90">{vid.date}</span>
+                    <span className="font-mono text-xs sm:text-[11px] opacity-90">{vid.date}</span>
                   </div>
                 </div>
 
@@ -59,7 +59,7 @@ export function VideoSection({ videos, press }: VideoSectionProps) {
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground line-clamp-2">
                     {vid.description}
                   </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
+                  <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-xs sm:text-[11px] text-muted-foreground">
                     <span>Source: {vid.source}</span>
                     <span className="font-semibold text-primary inline-flex items-center gap-1">
                       Verified Archival Record

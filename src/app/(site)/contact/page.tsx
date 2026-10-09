@@ -125,7 +125,7 @@ export default function ContactPage() {
                     <div className="pt-3 border-t border-border/60">
                       <a
                         href={`mailto:${desk.email}`}
-                        className="text-xs font-bold text-primary hover:text-primary-hover flex items-center gap-1.5 transition-colors"
+                        className="text-xs font-bold text-primary hover:text-primary-hover flex items-center gap-1.5 transition-colors max-sm:min-h-11"
                       >
                         <Mail className="size-3.5 text-accent" />
                         {desk.email}

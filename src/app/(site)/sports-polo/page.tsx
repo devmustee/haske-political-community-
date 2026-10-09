@@ -340,7 +340,7 @@ export default function SportsPoloPage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                           <div className="absolute top-3 left-3">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-[11px] font-bold text-accent shadow-sm border border-accent/20">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-xs sm:text-[11px] font-bold text-accent shadow-sm border border-accent/20">
                               <ShieldCheck className="size-3 text-accent" />
                               {photo.badge}
                             </span>
@@ -366,7 +366,7 @@ export default function SportsPoloPage() {
                       </div>
                     </div>
                     {imgData && (
-                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-xs sm:text-[11px] text-muted-foreground">
                         <span>{imgData.credit}</span>
                         <Link href="/image-credits" className="text-accent hover:underline font-semibold">
                           Verify source &rarr;
@@ -398,7 +398,7 @@ export default function SportsPoloPage() {
               <Reveal key={club.name} variant="up" staggerIndex={i}>
                 <div className="rounded-2xl border border-border/80 bg-card p-6 h-full flex flex-col justify-between hover:border-primary/40 transition-colors">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-accent block mb-2">
+                    <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-accent block mb-2">
                       {club.role}
                     </span>
                     <h3 className="font-serif text-base font-bold text-foreground mb-2">

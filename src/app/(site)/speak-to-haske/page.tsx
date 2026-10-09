@@ -102,7 +102,7 @@ export default async function SpeakToHaskePage() {
                       <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                         <Icon className="size-5" />
                       </div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-accent bg-accent/10 px-2 py-0.5 rounded-md">
+                      <span className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-accent bg-accent/10 px-2 py-0.5 rounded-md">
                         {channel.badge}
                       </span>
                     </div>

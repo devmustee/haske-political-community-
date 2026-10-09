@@ -60,7 +60,7 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
             aria-selected={active === key}
             onClick={() => setActive(key)}
             className={cn(
-              "rounded-full px-4 py-2 text-xs font-bold transition-all duration-200",
+              "rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 max-sm:min-h-11",
               active === key
                 ? "bg-primary text-primary-foreground shadow-soft"
                 : "border border-border/70 bg-card text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -94,7 +94,7 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
               </button>
               <figcaption className="mt-3 border-l-2 border-accent pl-3">
                 <p className="text-xs font-semibold text-foreground">{img.caption}</p>
-                <p className="mt-1 text-[11px] text-muted-foreground">
+                <p className="mt-1 text-xs sm:text-[11px] text-muted-foreground">
                   {[img.date, img.location].filter(Boolean).join(" · ")}
                   {(img.date || img.location) && " — "}
                   {img.credit}
@@ -125,7 +125,7 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
                 />
                 <div className="max-w-2xl text-center text-white px-2">
                   <p className="text-xs sm:text-sm font-semibold">{current.caption}</p>
-                  <p className="mt-1 text-[11px] sm:text-xs text-white/70">
+                  <p className="mt-1 text-xs sm:text-xs text-white/70">
                     {[current.date, current.location].filter(Boolean).join(" · ")}
                     {(current.date || current.location) && " — "}
                     {current.credit}

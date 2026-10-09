@@ -43,7 +43,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
   return (
     <div>
       <div className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <Link href="/community" className="rounded-full p-2 hover:bg-muted">
+        <Link href="/community" className="rounded-full p-2 hover:bg-muted max-sm:p-3">
           <ArrowLeft className="size-5" />
         </Link>
         <div>

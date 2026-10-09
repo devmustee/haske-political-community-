@@ -55,7 +55,7 @@ export default async function MediaCenterPage({
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         {/* Category Filters */}
         <div className="mb-10 flex flex-wrap gap-2">
-          <Link href="/media">
+          <Link href="/media" className="inline-flex max-sm:min-h-11 max-sm:items-center">
             <Badge
               variant={!category ? "solid" : "outline"}
               className="px-4 py-1.5 text-xs font-semibold transition-all hover:shadow-soft cursor-pointer"
@@ -64,7 +64,7 @@ export default async function MediaCenterPage({
             </Badge>
           </Link>
           {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-            <Link key={key} href={`/media?category=${key}`}>
+            <Link key={key} href={`/media?category=${key}`} className="inline-flex max-sm:min-h-11 max-sm:items-center">
               <Badge
                 variant={category === key ? "solid" : "outline"}
                 className="px-4 py-1.5 text-xs font-semibold transition-all hover:shadow-soft cursor-pointer"

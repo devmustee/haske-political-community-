@@ -97,7 +97,7 @@ export async function SiteFooter() {
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-3 py-1 text-[11px] font-semibold text-muted-foreground w-fit">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-3 py-1 text-xs sm:text-[11px] font-semibold text-muted-foreground w-fit">
               <ShieldCheck className="size-3.5 text-emerald-600" />
               <span>Verified Civic Platform</span>
             </div>
@@ -110,12 +110,12 @@ export async function SiteFooter() {
                 <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-foreground">
                   {col.title}
                 </h3>
-                <ul className="mt-4 flex flex-col gap-2.5">
+                <ul className="mt-2 flex flex-col sm:mt-4 sm:gap-2.5">
                   {col.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary hover:underline underline-offset-4"
+                        className="inline-flex min-h-11 items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary hover:underline underline-offset-4 sm:min-h-0 sm:text-xs"
                       >
                         {link.label}
                       </Link>
@@ -135,14 +135,14 @@ export async function SiteFooter() {
               <ul className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
                 {contact.email && (
                   <li>
-                    <a href={`mailto:${contact.email}`} className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <a href={`mailto:${contact.email}`} className="flex min-h-11 items-center gap-2 hover:text-primary transition-colors sm:min-h-0">
                       <Mail className="size-3.5 text-primary" /> {contact.email}
                     </a>
                   </li>
                 )}
                 {contact.phone && (
                   <li>
-                    <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="flex min-h-11 items-center gap-2 hover:text-primary transition-colors sm:min-h-0">
                       <Phone className="size-3.5 text-primary" /> {contact.phone}
                     </a>
                   </li>
@@ -158,7 +158,7 @@ export async function SiteFooter() {
                     <MapPin className="size-3.5 text-primary shrink-0 mt-0.5" />
                     <div>
                       <span className="font-semibold text-foreground/90">{o.name}</span>
-                      <p className="text-[11px] text-muted-foreground">{o.address}</p>
+                      <p className="text-xs sm:text-[11px] text-muted-foreground">{o.address}</p>
                     </div>
                   </li>
                 ))}
@@ -174,7 +174,7 @@ export async function SiteFooter() {
                       href={s.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-lg border border-border/80 bg-background/50 px-2.5 py-1 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+                      className="inline-flex min-h-11 items-center gap-1 rounded-lg border border-border/80 bg-background/50 px-3.5 py-1 text-xs font-semibold sm:min-h-0 sm:px-2.5 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
                     >
                       {s.label} <ArrowUpRight className="size-3" />
                     </a>
@@ -190,7 +190,7 @@ export async function SiteFooter() {
           <p>
             &copy; {new Date().getFullYear()} Haske Community Platform &middot; Abdulrahman Bashir Haske. All rights reserved.
           </p>
-          <p className="text-[11px] text-muted-foreground/80 text-center sm:text-right">
+          <p className="text-xs text-muted-foreground/80 text-center sm:text-right">
             Content is labeled by type: Documented Record, Proposed Agenda, or Community Dialogue.
           </p>
         </div>

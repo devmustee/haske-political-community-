@@ -351,10 +351,10 @@ export function SiteHeader() {
         <div className="relative z-40 max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-border/80 bg-background/98 backdrop-blur-2xl px-4 pb-safe pt-3 xl:hidden animate-slide-up shadow-float">
           {/* Quick Direct Link / Top strip */}
           <div className="mb-2 flex items-center justify-between px-2 pt-1">
-            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
+            <span className="text-xs sm:text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
               Platform Navigation
             </span>
-            <span className="text-[10px] font-mono text-muted-foreground">
+            <span className="text-xs sm:text-[10px] font-mono text-muted-foreground">
               Adamawa 2027
             </span>
           </div>
@@ -425,7 +425,7 @@ export function SiteHeader() {
                           >
                             <span>{item.label}</span>
                             {isActive && (
-                              <span className="text-[10px] font-mono tracking-wider opacity-80 uppercase">
+                              <span className="text-xs sm:text-[10px] font-mono tracking-wider opacity-80 uppercase">
                                 Current
                               </span>
                             )}

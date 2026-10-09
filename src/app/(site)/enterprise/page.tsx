@@ -120,7 +120,7 @@ export default async function EnterprisePage() {
             <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
               <AnimatedCounter value={15} suffix="+" />
             </p>
-            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Years in Enterprise
             </p>
           </div>
@@ -128,7 +128,7 @@ export default async function EnterprisePage() {
             <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
               <AnimatedCounter value={4} />
             </p>
-            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Core Industries
             </p>
           </div>
@@ -136,13 +136,13 @@ export default async function EnterprisePage() {
             <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
               <AnimatedCounter value={1000} suffix="s" />
             </p>
-            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Jobs Created
             </p>
           </div>
           <div className="text-center">
             <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">IoD</p>
-            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Governance Certified
             </p>
           </div>
@@ -261,7 +261,7 @@ export default async function EnterprisePage() {
                       {v.link ? (
                         <Link
                           href={v.link}
-                          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-accent transition-colors"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-accent transition-colors max-sm:min-h-11"
                         >
                           Deep Dive <ArrowRight className="size-3.5" />
                         </Link>
@@ -351,7 +351,7 @@ export default async function EnterprisePage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                           <div className="absolute top-3 left-3">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-[11px] font-bold text-accent shadow-sm border border-accent/20">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-3 py-1 text-xs sm:text-[11px] font-bold text-accent shadow-sm border border-accent/20">
                               <ShieldCheck className="size-3 text-accent" />
                               {photo.tag}
                             </span>
@@ -377,7 +377,7 @@ export default async function EnterprisePage() {
                       </div>
                     </div>
                     {imgData && (
-                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="px-6 pb-6 pt-2 border-t border-border/60 flex items-center justify-between text-xs sm:text-[11px] text-muted-foreground">
                         <span>{imgData.credit}</span>
                         <Link href="/image-credits" className="text-accent hover:underline font-semibold">
                           Verify source &rarr;

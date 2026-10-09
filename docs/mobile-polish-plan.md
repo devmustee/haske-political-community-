@@ -39,36 +39,31 @@ audit ran signed in. They still need a signed-out pass.
    the page scroll. Keep it as a safety net, but add the audit below to CI so
    regressions like the `/contact` one are caught.
 
-## P1: tap targets (aim for 44px; WCAG 2.5.8 minimum is 24px)
+## P1 + P2: tap targets and type size (done)
 
-| Where | What's small |
-|---|---|
-| Footer (every page) | Email, phone and social icon links (about 8 per page) |
-| `/media`, `/gallery` | Category filter chips |
-| `/community-issues`, `/speak-to-haske` | Category and form-type toggle buttons |
-| Community post cards | Action icons (about 36px, with negative margins); avatar links |
-| Community post cards | Like and bookmark buttons have **no accessible label** (read as just "button") |
-| Profile page | Posts / Replies / Media / Likes tabs |
-| Detail pages | Back/breadcrumb links ("Events", "Programs", "Media Center", "Achievements", "Our Agenda") |
-| Home and section pages | Text-only CTAs ("View Full Gallery", "Explore the 2027 Agenda", …) |
-| `/image-credits` | 43 of 47 links |
+Measured with the audit at 375px across all routes. These changes apply
+only below the `sm` breakpoint, so desktop is unchanged.
 
-Fix pattern: `min-h-11` with inline padding on links and chips. For icon
-buttons, a `size-11` hit area around the visual icon, with no negative margins
-that shrink it.
-
-## P2: type size
-
-Labels at 10–11px with wide uppercase tracking are the most common issue:
-
-- stat labels on `/`, `/mission` (56), `/vision` (56), `/enterprise`, and the
-  section pages;
-- photo captions on `/gallery` (51);
-- pillar tags on `/manifesto` (10px);
-- role badges in the community (10px).
-
-Set a 12px floor on phones and reduce tracking below `sm` (as done in the
-hero brand strip).
+- **Tap targets: 44px on phones.** Shared `Button` sizes and `TabsTrigger`
+  get a phone-only minimum height (`max-sm:min-h-*`), not a new fixed
+  height, so callers that pass their own `h-*` still work. The rest are
+  fixed at the source: footer links, email and social links, back links
+  (`detail-header`), text CTAs, the media and gallery filter chips, the
+  contact desk emails, the auth footer and "Forgot password?", the
+  image-credit links, the community back arrows, and the post bookmark,
+  share and more buttons (with negative margins so the layout doesn't
+  move).
+- **Labels:** the post like, bookmark and repost buttons now have
+  accessible labels; like and bookmark also expose `aria-pressed`.
+- **Type: 12px floor on phones.** About 100 `text-[10px]`/`text-[11px]`
+  labels became `text-xs sm:text-[…]`. Deliberate exceptions:
+  - the hero brand strip (tuned to fit one line on small phones);
+  - the header tagline (hidden on phones);
+  - the unread-count bubble (a number);
+  - the right sidebar (desktop only).
+- **Re-audit:** no targets under 40px remain except an image button
+  measured before its photo loaded. No text under 12px remains except the
+  hero brand strip. No clipping at 320 or 375px.
 
 ## P3: layout consistency
 

@@ -219,7 +219,7 @@ export default async function MissionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
                 <AnimatedCounter value={21} />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 LGAs Prioritized
               </p>
             </div>
@@ -227,7 +227,7 @@ export default async function MissionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
                 <AnimatedCounter value={7} />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Action Pillars
               </p>
             </div>
@@ -235,7 +235,7 @@ export default async function MissionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
                 <AnimatedCounter value={226} />
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Wards in Scope
               </p>
             </div>
@@ -243,7 +243,7 @@ export default async function MissionPage() {
               <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
                 100%
               </p>
-              <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <p className="mt-1 text-xs sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Audited Fiduciary
               </p>
             </div>
@@ -334,7 +334,7 @@ export default async function MissionPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4 text-white">
                         <p className="text-xs font-bold">{documentaryImg.caption}</p>
-                        <p className="mt-1 text-[11px] text-white/70">
+                        <p className="mt-1 text-xs sm:text-[11px] text-white/70">
                           {documentaryImg.location ?? "Adamawa State"} &middot; {documentaryImg.credit}
                         </p>
                       </div>
@@ -344,7 +344,7 @@ export default async function MissionPage() {
                         <span className="font-semibold text-primary inline-flex items-center gap-1.5">
                           <CheckCircle2 className="size-4 text-emerald-600" /> Verified Archival Record
                         </span>
-                        <Link href="/gallery" className="text-accent hover:underline font-semibold">
+                        <Link href="/gallery" className="text-accent hover:underline font-semibold max-sm:inline-flex max-sm:items-center max-sm:min-h-11">
                           View Gallery &rarr;
                         </Link>
                       </div>
@@ -371,7 +371,7 @@ export default async function MissionPage() {
                   />
                   <div className="text-left">
                     <p className="text-xs font-bold text-foreground">Adamawa State 2027</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                    <p className="text-xs sm:text-[10px] text-muted-foreground uppercase tracking-wider">
                       Allied Peoples Movement Mandate
                     </p>
                   </div>
@@ -413,7 +413,7 @@ export default async function MissionPage() {
                         <span className="font-mono text-xs font-extrabold text-accent">
                           {priority.number}
                         </span>
-                        <span className="rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                           {priority.category}
                         </span>
                       </div>
@@ -433,12 +433,12 @@ export default async function MissionPage() {
 
                       {/* Action Targets */}
                       <div className="space-y-2 border-t border-border/60 pt-4">
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                        <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-foreground">
                           Core Commitments:
                         </p>
                         <ul className="space-y-1.5">
                           {priority.targets.map((tgt, tIdx) => (
-                            <li key={tIdx} className="flex items-start gap-2 text-[11px] text-muted-foreground leading-relaxed">
+                            <li key={tIdx} className="flex items-start gap-2 text-xs sm:text-[11px] text-muted-foreground leading-relaxed">
                               <span className="size-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
                               <span>{tgt}</span>
                             </li>
@@ -449,7 +449,7 @@ export default async function MissionPage() {
 
                     {/* Metric Target Badge */}
                     <div className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-2.5 text-center">
-                      <span className="text-[11px] font-bold text-primary">
+                      <span className="text-xs sm:text-[11px] font-bold text-primary">
                         {priority.metrics}
                       </span>
                     </div>
@@ -484,7 +484,7 @@ export default async function MissionPage() {
                   <CheckCircle2 className="size-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Open Budget Dashboard</h5>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-[11px] text-muted-foreground mt-0.5">
                       Real-time citizen tracking of state revenue allocations and project disbursements.
                     </p>
                   </div>
@@ -493,7 +493,7 @@ export default async function MissionPage() {
                   <CheckCircle2 className="size-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Civil Service Audit & Prompt Payroll</h5>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-[11px] text-muted-foreground mt-0.5">
                       Elimination of ghost workers, harmonization of salaries, and digitized pension systems.
                     </p>
                   </div>
@@ -502,7 +502,7 @@ export default async function MissionPage() {
                   <CheckCircle2 className="size-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Fertilizer Buffer Stocks</h5>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-[11px] text-muted-foreground mt-0.5">
                       Immediate procurement and distribution of subsidized farm inputs ahead of planting season.
                     </p>
                   </div>
@@ -511,7 +511,7 @@ export default async function MissionPage() {
                   <CheckCircle2 className="size-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Bi-Annual Citizen Town Halls</h5>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-[11px] text-muted-foreground mt-0.5">
                       Direct executive question-and-answer accountability sessions broadcast live across all 21 LGAs.
                     </p>
                   </div>

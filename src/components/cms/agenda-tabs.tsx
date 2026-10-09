@@ -45,7 +45,7 @@ export function AgendaTabs({ pillars }: { pillars: AgendaPillar[] }) {
             >
               <span className="flex flex-col items-start gap-0.5">
                 <span className="text-lg sm:text-xl font-black leading-none">{letterOf(p.category)}</span>
-                <span className="text-[10px] sm:text-[11px] font-medium leading-none">{labelOf(p.category)}</span>
+                <span className="text-xs sm:text-[11px] font-medium leading-none">{labelOf(p.category)}</span>
               </span>
             </TabsTrigger>
           ))}
@@ -67,7 +67,7 @@ export function AgendaTabs({ pillars }: { pillars: AgendaPillar[] }) {
             )}
             <Link
               href={`/policies/${p.slug}`}
-              className="group mt-7 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors"
+              className="group mt-7 inline-flex items-center gap-2 text-sm font-medium text-accent max-sm:min-h-11 hover:text-accent/80 transition-colors"
             >
               Read the full policy pillar <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>

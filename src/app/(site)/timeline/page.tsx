@@ -239,12 +239,12 @@ export default function TimelinePage() {
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70" />
                               <div className="absolute top-2.5 left-2.5">
-                                <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-accent shadow-sm border border-accent/20">
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 backdrop-blur-md px-2.5 py-0.5 text-xs sm:text-[10px] font-bold text-accent shadow-sm border border-accent/20">
                                   <Camera className="size-3 text-accent" />
                                   Documentary Archive
                                 </span>
                               </div>
-                              <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white text-[11px]">
+                              <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white text-xs sm:text-[11px]">
                                 {imgData.location && (
                                   <span className="flex items-center gap-1 text-white/90 font-medium">
                                     <MapPin className="size-3 text-accent" />
@@ -260,7 +260,7 @@ export default function TimelinePage() {
                               </div>
                             </div>
                             {imgData.caption && (
-                              <div className="p-3 bg-secondary/40 text-[11px] text-muted-foreground leading-relaxed border-t border-border/60">
+                              <div className="p-3 bg-secondary/40 text-xs sm:text-[11px] text-muted-foreground leading-relaxed border-t border-border/60">
                                 {imgData.caption}
                               </div>
                             )}

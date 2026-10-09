@@ -78,11 +78,11 @@ export default async function BiographyPage() {
                 <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border/80 pt-5 text-center">
                   <div className="rounded-xl bg-secondary/50 p-3">
                     <span className="block font-serif text-lg font-bold text-primary">Adamawa</span>
-                    <span className="text-[11px] font-medium text-muted-foreground">Home Heritage</span>
+                    <span className="text-xs sm:text-[11px] font-medium text-muted-foreground">Home Heritage</span>
                   </div>
                   <div className="rounded-xl bg-secondary/50 p-3">
                     <span className="block font-serif text-lg font-bold text-accent">Private & Civic</span>
-                    <span className="text-[11px] font-medium text-muted-foreground">Executive Experience</span>
+                    <span className="text-xs sm:text-[11px] font-medium text-muted-foreground">Executive Experience</span>
                   </div>
                 </div>
               </SpotlightCard>
@@ -122,7 +122,7 @@ export default async function BiographyPage() {
                   </div>
                   <figcaption className="mt-2.5 text-xs">
                     <p className="font-semibold text-foreground">Formal Heritage Presentation</p>
-                    <p className="text-[11px] text-muted-foreground">Photo: ElsieIReed &bull; CC BY 4.0</p>
+                    <p className="text-xs sm:text-[11px] text-muted-foreground">Photo: ElsieIReed &bull; CC BY 4.0</p>
                   </figcaption>
                 </figure>
 
@@ -138,7 +138,7 @@ export default async function BiographyPage() {
                   </div>
                   <figcaption className="mt-2.5 text-xs">
                     <p className="font-semibold text-foreground">Ribadu Square Address (2026)</p>
-                    <p className="text-[11px] text-muted-foreground">Photo: Premium Times</p>
+                    <p className="text-xs sm:text-[11px] text-muted-foreground">Photo: Premium Times</p>
                   </figcaption>
                 </figure>
               </div>
