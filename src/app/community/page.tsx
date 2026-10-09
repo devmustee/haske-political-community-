@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { getFeedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
 import { FeedTabs } from "@/components/community/feed-tabs";
-import { ComposerPrompt } from "@/components/community/composer-prompt";
+import { InlinePostComposer } from "@/components/community/inline-post-composer";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Info, MessageSquare } from "lucide-react";
 
@@ -32,7 +32,7 @@ export default async function CommunityFeedPage({
         <FeedTabs active={tab} />
       </div>
 
-      <ComposerPrompt />
+      <InlinePostComposer />
 
       {tab === "following" && !session?.user && (
         <div className="flex items-center gap-2 border-b border-border bg-secondary/40 px-4 py-3 text-sm text-muted-foreground">
