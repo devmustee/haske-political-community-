@@ -4,12 +4,12 @@ import { PageHero } from "@/components/cms/page-hero";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/motion/reveal";
+import { ContactForm } from "@/components/cms/contact-form";
 import {
   Mail,
   MapPin,
   Phone,
   Building2,
-  Send,
   MessageSquare,
   HelpCircle,
   FileCheck2,
@@ -182,94 +182,7 @@ export default function ContactPage() {
                   Executive Correspondence Portal
                 </h3>
 
-                <form className="space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Amina Mohammed"
-                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="you@domain.com"
-                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                        Telephone Number
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+234 ..."
-                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                        Inquiry Category *
-                      </label>
-                      <select
-                        required
-                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      >
-                        <option value="enterprise">Commercial & Agro-Industry</option>
-                        <option value="foundation">AB Haske Foundation Intervention</option>
-                        <option value="media">Media & Press Relations</option>
-                        <option value="civic">Grassroots 2027 Campaign & Civic</option>
-                        <option value="general">General Executive Inquiry</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                      Subject *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Brief headline of your message"
-                      className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                      Message Details *
-                    </label>
-                    <textarea
-                      rows={5}
-                      required
-                      placeholder="Please provide complete context regarding your inquiry..."
-                      className="w-full rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                    />
-                  </div>
-
-                  <div className="pt-2">
-                    <Button type="button" variant="gold-shimmer" size="lg" className="w-full">
-                      <Send className="size-4" />
-                      Submit Executive Correspondence
-                    </Button>
-                    <p className="mt-2 text-center text-[11px] text-muted-foreground">
-                      All correspondence is registered securely with the secretariat. You will receive an acknowledgment reference.
-                    </p>
-                  </div>
-                </form>
+                <ContactForm />
               </SpotlightCard>
             </div>
           </div>
