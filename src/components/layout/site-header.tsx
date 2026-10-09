@@ -149,7 +149,7 @@ export function SiteHeader() {
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         {/* Brand Logo */}
-        <Link href="/" className="group flex shrink-0 items-center gap-3">
+        <Link href="/" className="group flex min-w-0 shrink items-center gap-3 max-[359px]:gap-2">
           <Image
             src="/brand/haske-logo.png"
             alt="Abdulrahman Bashir Haske"
@@ -158,14 +158,15 @@ export function SiteHeader() {
             className="size-10 shrink-0 rounded-full bg-white object-contain shadow-soft ring-2 ring-primary/10 transition-all duration-300 group-hover:ring-primary/30 group-hover:shadow-elevated"
             priority
           />
-          {/* From xl the full desktop nav shares this row, which is capped at
-              max-w-7xl (1280px) at every larger width too, so the name drops
-              a size and the tagline hides. */}
-          <div className="hidden sm:block">
-            <span className="block font-serif text-base font-bold tracking-tight text-foreground leading-tight xl:text-sm">
+          {/* The tagline shows only from sm to xl: phones lack the width, and
+              from xl the full desktop nav shares this row (capped at
+              max-w-7xl, 1280px, at every larger width too), so the name also
+              drops a size there. */}
+          <div className="min-w-0">
+            <span className="block truncate font-serif text-sm font-bold tracking-tight text-foreground leading-tight max-[359px]:text-[13px] sm:text-base xl:text-sm">
               Abdulrahman Bashir Haske
             </span>
-            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-accent leading-none xl:hidden">
+            <span className="hidden text-[10px] font-bold uppercase tracking-[0.16em] text-accent leading-none sm:block xl:hidden">
               Enterprise • Impact • Leadership
             </span>
           </div>

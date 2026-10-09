@@ -138,8 +138,8 @@ export default function ContactPage() {
           </div>
 
           {/* Offices & Direct Message Form */}
-          <div className="grid gap-12 lg:grid-cols-12 items-start">
-            <div className="lg:col-span-5 space-y-6">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 items-start">
+            <div className="min-w-0 lg:col-span-5 space-y-6">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent block">
                 Official Secretariats
               </span>
@@ -162,7 +162,7 @@ export default function ContactPage() {
                     </p>
                     <p className="flex items-center gap-2">
                       <Mail className="size-4 text-accent shrink-0" />
-                      <span>{office.email}</span>
+                      <span className="min-w-0 break-all">{office.email}</span>
                     </p>
                     <p className="flex items-center gap-2">
                       <Clock className="size-4 text-accent shrink-0" />
@@ -173,7 +173,7 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <div className="lg:col-span-7">
+            <div className="min-w-0 lg:col-span-7">
               <SpotlightCard className="p-5 sm:p-10 border-primary/20">
                 <span className="text-xs font-bold uppercase tracking-wider text-accent block mb-1">
                   Send a Direct Message

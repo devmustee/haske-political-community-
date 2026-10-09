@@ -83,21 +83,24 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 h-[680px] w-[680px] rounded-full bg-accent/20 blur-[140px] animate-pulse-glow" />
         <div className="pointer-events-none absolute -left-32 top-1/4 h-[500px] w-[500px] rounded-full bg-primary-foreground/8 blur-[120px]" />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.35fr_0.65fr] lg:py-32 lg:text-left">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-10 sm:px-6 sm:py-28 lg:grid-cols-[1.35fr_0.65fr] lg:py-32 lg:text-left">
           <div className="text-center lg:text-left">
             {/* APM & Candidate Official Insignia */}
-            <div className="flex items-center justify-center gap-3 lg:justify-start animate-slide-up">
+            <div className="flex items-center justify-center gap-3 max-[359px]:gap-2 lg:justify-start animate-slide-up">
               <Image
                 src="/brand/apm-logo-official.png"
                 alt="Allied Peoples Movement"
                 width={44}
                 height={44}
-                className="size-11 rounded-full bg-white object-contain p-0.5 shadow-elevated ring-2 ring-accent/40"
+                className="size-11 rounded-full bg-white object-contain p-0.5 shadow-elevated ring-2 ring-accent/40 max-[359px]:size-9"
               />
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-md ring-1 ring-accent/30">
-                <span className="size-2 rounded-full bg-accent animate-pulse" />
-                <span className="font-bold text-accent">APM</span>
-                <span>Governorship Candidate &middot; Adamawa 2027</span>
+              {/* Stacks into two lines on phones so the title never breaks mid-phrase. */}
+              <div className="inline-flex flex-col items-start gap-0.5 rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-left text-xs font-semibold backdrop-blur-md max-[359px]:px-3 max-[359px]:text-[11px] ring-1 ring-accent/30 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full">
+                <span className="flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-accent animate-pulse" />
+                  <span className="font-bold text-accent">APM</span>
+                </span>
+                <span className="whitespace-nowrap">Governorship Candidate &middot; Adamawa 2027</span>
               </div>
             </div>
 
@@ -109,7 +112,7 @@ export default async function HomePage() {
 
             {/* Core Brand Message Badge & Lead Statement */}
             <div className="mx-auto mt-4 max-w-xl lg:mx-0 animate-slide-up animation-delay-150">
-              <span className="inline-block rounded-full bg-accent/20 px-3.5 py-1 text-xs font-extrabold uppercase tracking-[0.2em] text-accent ring-1 ring-accent/40">
+              <span className="inline-block whitespace-nowrap rounded-full bg-accent/20 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-accent ring-1 ring-accent/40 sm:px-3.5 sm:text-xs sm:tracking-[0.2em] max-[359px]:text-[10.5px] max-[359px]:tracking-[0.08em]">
                 Enterprise &middot; Impact &middot; People &middot; Service
               </span>
               <p className="mt-3 text-lead font-semibold text-primary-foreground leading-snug">
@@ -121,20 +124,20 @@ export default async function HomePage() {
             </div>
 
             {/* Primary Action Buttons */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5 lg:justify-start animate-slide-up animation-delay-300">
-              <Button asChild size="lg" variant="gold-shimmer" className="shadow-glow-gold">
+            <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-3.5 lg:justify-start animate-slide-up animation-delay-300">
+              <Button asChild size="lg" variant="gold-shimmer" className="w-full shadow-glow-gold sm:w-auto">
                 <Link href="/enterprise">
                   <Building2 className="size-4" />
                   Explore Enterprise
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground backdrop-blur-md hover:bg-primary-foreground/20 hover:border-primary-foreground/60">
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground backdrop-blur-md hover:bg-primary-foreground/20 hover:border-primary-foreground/60">
                 <Link href="/foundation">
                   <Heart className="size-4" />
                   AB Haske Foundation
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/15">
+              <Button asChild size="lg" variant="ghost" className="w-full text-primary-foreground hover:bg-primary-foreground/15 sm:w-auto">
                 <Link href="/manifesto">
                   <BookOpen className="size-4" />
                   2027 Manifesto
