@@ -88,12 +88,29 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
+function sectionForPath(pathname: string): string | null {
+  const matched = NAV_SECTIONS.find((s) =>
+    s.items.some((item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
+  );
+  return matched?.id ?? null;
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>(() => sectionForPath(pathname));
+
+  // On navigation: expand the section containing the new page and close the
+  // drawer. Done during render (not in an effect) to avoid a cascading render.
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    const matched = sectionForPath(pathname);
+    if (matched) setExpandedSection(matched);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,17 +119,6 @@ export function SiteHeader() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Auto-expand section containing the current path
-  useEffect(() => {
-    const matched = NAV_SECTIONS.find((s) =>
-      s.items.some((item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
-    );
-    if (matched) {
-      setExpandedSection(matched.id);
-    }
-    setOpen(false);
-  }, [pathname]);
 
   // Lock background scroll when mobile drawer is open
   useEffect(() => {

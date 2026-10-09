@@ -26,7 +26,7 @@ export function CommunityShell({
         <LeftSidebar onCompose={openComposer} unreadCount={unreadCount} />
       </aside>
 
-      <main className="min-h-screen w-full max-w-[600px] flex-1 border-r border-border pb-16 lg:pb-0">{children}</main>
+      <main className="min-h-screen w-full max-w-[600px] flex-1 border-r border-border pb-16 sm:pb-0">{children}</main>
 
       <aside className="sticky top-0 hidden h-screen w-[350px] shrink-0 overflow-y-auto px-4 py-4 lg:block">
         {rightSidebar}

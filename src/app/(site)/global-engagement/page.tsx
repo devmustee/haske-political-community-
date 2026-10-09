@@ -181,7 +181,7 @@ export default function GlobalEngagementPage() {
               Strategic International Engagement Verticals
             </h2>
             <p className="mt-4 text-base text-muted-foreground">
-              Connecting northern Nigeria's resources to international capital, trade pathways, and diaspora talent.
+              Connecting northern Nigeria&apos;s resources to international capital, trade pathways, and diaspora talent.
             </p>
           </div>
 

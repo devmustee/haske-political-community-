@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Home, Search, Sparkles, Calendar, Bell, Bookmark, User, LogOut, Shield, PenSquare } from "lucide-react";
+import { Home, Search, Sparkles, Calendar, Bell, Bookmark, User, LogOut, Shield, PenSquare, UserPlus, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { initials, cn } from "@/lib/utils";
@@ -125,11 +125,22 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
         </>
       ) : (
         <div className="mt-auto flex flex-col gap-2 px-1">
-          <Button asChild size="lg">
+          <Button asChild size="lg" className="hidden xl:flex">
             <Link href="/register">Join Haske Community</Link>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="hidden xl:flex">
             <Link href="/login">Sign in</Link>
+          </Button>
+          {/* Collapsed (icon-only) sidebar below xl */}
+          <Button asChild size="icon" className="size-12 self-center rounded-full xl:hidden">
+            <Link href="/register" aria-label="Join Haske Community" title="Join Haske Community">
+              <UserPlus className="size-5" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="icon" className="size-12 self-center rounded-full xl:hidden">
+            <Link href="/login" aria-label="Sign in" title="Sign in">
+              <LogIn className="size-5" />
+            </Link>
           </Button>
         </div>
       )}

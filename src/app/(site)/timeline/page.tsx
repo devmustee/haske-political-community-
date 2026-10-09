@@ -21,6 +21,7 @@ import {
   Award,
   Camera,
   MapPin,
+  type LucideIcon,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ interface TimelineMilestone {
   year: string;
   title: string;
   category: string;
-  icon: any;
+  icon: LucideIcon;
   summary: string;
   keyFacts: string[];
   imageId?: string;
