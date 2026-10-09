@@ -158,24 +158,27 @@ export function SiteHeader() {
             className="size-10 shrink-0 rounded-full bg-white object-contain shadow-soft ring-2 ring-primary/10 transition-all duration-300 group-hover:ring-primary/30 group-hover:shadow-elevated"
             priority
           />
-          <div className="hidden sm:block xl:hidden 2xl:block">
-            <span className="block font-serif text-base font-bold tracking-tight text-foreground leading-tight">
+          {/* From xl the full desktop nav shares this row, which is capped at
+              max-w-7xl (1280px) at every larger width too, so the name drops
+              a size and the tagline hides. */}
+          <div className="hidden sm:block">
+            <span className="block font-serif text-base font-bold tracking-tight text-foreground leading-tight xl:text-sm">
               Abdulrahman Bashir Haske
             </span>
-            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-accent leading-none">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-accent leading-none xl:hidden">
               Enterprise • Impact • Leadership
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
           {/* About Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs 2xl:gap-1.5 2xl:px-3 font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
                   isGroupActive(ABOUT_ITEMS) && "bg-primary/10 text-primary font-bold"
                 )}
               >
@@ -196,7 +199,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs 2xl:gap-1.5 2xl:px-3 font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
                   isGroupActive(ENTERPRISE_ITEMS) && "bg-primary/10 text-primary font-bold"
                 )}
               >
@@ -217,7 +220,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs 2xl:gap-1.5 2xl:px-3 font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
                   isGroupActive(IMPACT_ITEMS) && "bg-primary/10 text-primary font-bold"
                 )}
               >
@@ -238,7 +241,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs 2xl:gap-1.5 2xl:px-3 font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
                   isGroupActive(LEADERSHIP_ITEMS) && "bg-primary/10 text-primary font-bold"
                 )}
               >
@@ -259,7 +262,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <button
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs 2xl:gap-1.5 2xl:px-3 font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
                   isGroupActive(MEDIA_ITEMS) && "bg-primary/10 text-primary font-bold"
                 )}
               >
@@ -279,7 +282,7 @@ export function SiteHeader() {
           <Link
             href="/speak-to-haske"
             className={cn(
-              "whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold 2xl:px-3 text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+              "whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
               pathname.startsWith("/speak-to-haske") && "bg-primary/10 text-primary font-bold"
             )}
           >
@@ -290,7 +293,7 @@ export function SiteHeader() {
           <Link
             href="/contact"
             className={cn(
-              "whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold 2xl:px-3 text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
+              "whitespace-nowrap rounded-full px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground",
               pathname.startsWith("/contact") && "bg-primary/10 text-primary font-bold"
             )}
           >
@@ -299,7 +302,7 @@ export function SiteHeader() {
         </nav>
 
         {/* Header Right Actions */}
-        <div className="hidden shrink-0 items-center gap-2 xl:flex 2xl:gap-3">
+        <div className="hidden shrink-0 items-center gap-2 xl:flex">
           {session?.user ? (
             <Button asChild size="sm" variant="default" className="shadow-soft">
               <Link href="/community">
