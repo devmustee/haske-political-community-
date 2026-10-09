@@ -25,9 +25,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const limited = rateLimit(`login:${identifier.toLowerCase()}:${ip}`, 8, 5 * 60_000);
         if (!limited.ok) return null;
 
+        const cleanIdentifier = identifier.trim().toLowerCase();
         const user = await prisma.user.findFirst({
           where: {
-            OR: [{ email: identifier.toLowerCase() }, { username: identifier.toLowerCase() }],
+            OR: [
+              { email: { equals: cleanIdentifier, mode: "insensitive" } },
+              { username: { equals: cleanIdentifier, mode: "insensitive" } },
+            ],
           },
         });
 
