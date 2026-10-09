@@ -286,6 +286,17 @@ model User {
   sessions            Session[]
   pushSubscriptions   PushSubscription[]
 
+  // Election situation room
+  collectorAssignments       CollectorAssignment[] @relation("CollectorAssignmentCollector")
+  collectorAssignmentsMade   CollectorAssignment[] @relation("CollectorAssignmentAssignedBy")
+  resultSubmissions          ResultSubmission[]    @relation("ResultSubmissionCollector")
+  resultSubmissionsReviewed  ResultSubmission[]    @relation("ResultSubmissionReviewer")
+  resultSubmissionsPublished ResultSubmission[]    @relation("ResultSubmissionPublisher")
+  resultDocumentsUploaded    ResultDocument[]
+  verificationReviews        VerificationReview[]
+  importBatches              ImportBatch[]
+  publicationEvents          PublicationEvent[]
+
   @@index([username])
   @@index([email])
 }
@@ -1015,4 +1026,337 @@ model SocialLink {
   platform String
   url      String
   order    Int    @default(0)
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Election situation room
+// Created by migration 20260926081334_add_election_situation_room; these
+// models were missing from this schema (added from the live database), which
+// made `prisma migrate dev` try to drop the tables.
+// ═══════════════════════════════════════════════════════════════════════
+
+model State {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String?  @unique
+  createdAt DateTime @default(now())
+
+  lgas Lga[]
+}
+
+model Lga {
+  id        String   @id @default(cuid())
+  stateId   String
+  name      String
+  code      String?  @unique
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  state State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  wards Ward[]
+
+  @@unique([stateId, name])
+  @@index([stateId])
+}
+
+model Ward {
+  id        String   @id @default(cuid())
+  lgaId     String
+  name      String
+  code      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lga          Lga           @relation(fields: [lgaId], references: [id], onDelete: Cascade)
+  pollingUnits PollingUnit[]
+
+  @@unique([lgaId, name])
+  @@index([lgaId])
+}
+
+model PollingUnit {
+  id             String            @id @default(cuid())
+  wardId         String
+  code           String            @unique
+  name           String
+  puNumber       String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         PollingUnitStatus @default(PENDING_VERIFICATION)
+  sourceDocument String?
+  importBatchId  String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  ward                 Ward                  @relation(fields: [wardId], references: [id], onDelete: Cascade)
+  importBatch          ImportBatch?          @relation(fields: [importBatchId], references: [id])
+  collectorAssignments CollectorAssignment[]
+  resultSubmissions    ResultSubmission[]
+
+  @@index([status])
+  @@index([wardId])
+}
+
+model PoliticalParty {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  acronym   String   @unique
+  logoUrl   String?
+  color     String?
+  createdAt DateTime @default(now())
+
+  candidates Candidate[]
+}
+
+model Election {
+  id                      String             @id @default(cuid())
+  name                    String
+  electionType            String
+  electionDate            DateTime
+  status                  ElectionStatus     @default(DRAFT)
+  description             String?
+  requireAccreditedVoters Boolean            @default(true)
+  requireTotalVotesCast   Boolean            @default(true)
+  totalVotesCastRule      TotalVotesCastRule @default(MUST_EQUAL_VALID_PLUS_REJECTED)
+  publicationPolicy       String?
+  allowWinnerProjection   Boolean            @default(false)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  candidates           Candidate[]
+  collectorAssignments CollectorAssignment[]
+  publicationEvents    PublicationEvent[]
+  resultSubmissions    ResultSubmission[]
+
+  @@index([status])
+}
+
+model Candidate {
+  id          String   @id @default(cuid())
+  electionId  String
+  partyId     String
+  fullName    String
+  runningMate String?
+  ballotOrder Int      @default(0)
+  photoUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  election Election        @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  party    PoliticalParty  @relation(fields: [partyId], references: [id])
+  votes    CandidateVote[]
+
+  @@unique([electionId, partyId])
+  @@index([electionId])
+}
+
+model CollectorAssignment {
+  id            String   @id @default(cuid())
+  electionId    String
+  pollingUnitId String
+  userId        String
+  assignedById  String
+  createdAt     DateTime @default(now())
+
+  election    Election    @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  pollingUnit PollingUnit @relation(fields: [pollingUnitId], references: [id], onDelete: Cascade)
+  user        User        @relation("CollectorAssignmentCollector", fields: [userId], references: [id], onDelete: Cascade)
+  assignedBy  User        @relation("CollectorAssignmentAssignedBy", fields: [assignedById], references: [id], onDelete: Cascade)
+
+  @@unique([electionId, pollingUnitId, userId])
+  @@index([userId])
+}
+
+model ResultSubmission {
+  id               String       @id @default(cuid())
+  electionId       String
+  pollingUnitId    String
+  collectorId      String
+  status           ResultStatus @default(DRAFT)
+  accreditedVoters Int?
+  totalVotesCast   Int?
+  rejectedVotes    Int          @default(0)
+  validVotes       Int          @default(0)
+  notes            String?
+  rejectionReason  String?
+  version          Int          @default(1)
+  supersedesId     String?      @unique
+  isCurrentVersion Boolean      @default(true)
+  submittedAt      DateTime?
+  reviewedById     String?
+  reviewedAt       DateTime?
+  publishedById    String?
+  publishedAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  election            Election             @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  pollingUnit         PollingUnit          @relation(fields: [pollingUnitId], references: [id], onDelete: Cascade)
+  collector           User                 @relation("ResultSubmissionCollector", fields: [collectorId], references: [id], onDelete: Cascade)
+  reviewedBy          User?                @relation("ResultSubmissionReviewer", fields: [reviewedById], references: [id])
+  publishedBy         User?                @relation("ResultSubmissionPublisher", fields: [publishedById], references: [id])
+  supersedes          ResultSubmission?    @relation("ResultSubmissionVersions", fields: [supersedesId], references: [id])
+  supersededBy        ResultSubmission?    @relation("ResultSubmissionVersions")
+  candidateVotes      CandidateVote[]
+  documents           ResultDocument[]
+  verificationReviews VerificationReview[]
+
+  @@index([collectorId])
+  @@index([electionId, pollingUnitId, isCurrentVersion])
+  @@index([status])
+}
+
+model CandidateVote {
+  id                 String @id @default(cuid())
+  resultSubmissionId String
+  candidateId        String
+  votes              Int
+
+  resultSubmission ResultSubmission @relation(fields: [resultSubmissionId], references: [id], onDelete: Cascade)
+  candidate        Candidate        @relation(fields: [candidateId], references: [id])
+
+  @@unique([resultSubmissionId, candidateId])
+}
+
+model ResultDocument {
+  id                 String   @id @default(cuid())
+  resultSubmissionId String
+  storageKey         String
+  originalFilename   String
+  contentType        String
+  fileSizeBytes      Int
+  checksumSha256     String
+  uploadedById       String
+  createdAt          DateTime @default(now())
+
+  resultSubmission ResultSubmission @relation(fields: [resultSubmissionId], references: [id], onDelete: Cascade)
+  uploadedBy       User             @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  @@index([resultSubmissionId])
+}
+
+model VerificationReview {
+  id                 String             @id @default(cuid())
+  resultSubmissionId String
+  reviewerId         String
+  action             VerificationAction
+  reason             String?
+  createdAt          DateTime           @default(now())
+
+  resultSubmission ResultSubmission @relation(fields: [resultSubmissionId], references: [id], onDelete: Cascade)
+  reviewer         User             @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@index([resultSubmissionId])
+}
+
+model ImportBatch {
+  id             String            @id @default(cuid())
+  entityType     ImportEntityType
+  sourceFilename String
+  uploadedById   String
+  status         ImportBatchStatus @default(PENDING)
+  columnMapping  Json
+  totalRows      Int               @default(0)
+  validRows      Int               @default(0)
+  invalidRows    Int               @default(0)
+  duplicateRows  Int               @default(0)
+  summary        Json?
+  committedAt    DateTime?
+  rolledBackAt   DateTime?
+  createdAt      DateTime          @default(now())
+
+  uploadedBy   User          @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  errors       ImportError[]
+  pollingUnits PollingUnit[]
+
+  @@index([status])
+}
+
+model ImportError {
+  id            String          @id @default(cuid())
+  importBatchId String
+  rowNumber     Int
+  rawData       Json
+  errorType     ImportErrorType
+  errorMessage  String
+
+  importBatch ImportBatch @relation(fields: [importBatchId], references: [id], onDelete: Cascade)
+
+  @@index([importBatchId])
+}
+
+model PublicationEvent {
+  id                  String   @id @default(cuid())
+  electionId          String
+  scope               String
+  scopeId             String?
+  resultSubmissionIds Json
+  publishedById       String
+  createdAt           DateTime @default(now())
+
+  election    Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  publishedBy User     @relation(fields: [publishedById], references: [id], onDelete: Cascade)
+
+  @@index([electionId])
+}
+
+enum ElectionStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+enum TotalVotesCastRule {
+  NOT_VALIDATED
+  MUST_EQUAL_VALID_PLUS_REJECTED
+  MUST_BE_GTE_VALID_PLUS_REJECTED
+}
+
+enum PollingUnitStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  MERGED
+  INVALID
+}
+
+enum ImportEntityType {
+  WARD
+  POLLING_UNIT
+}
+
+enum ImportBatchStatus {
+  PENDING
+  PREVIEWED
+  VALIDATION_FAILED
+  COMMITTED
+  ROLLED_BACK
+}
+
+enum ImportErrorType {
+  MISSING_FIELD
+  INVALID_CODE
+  DUPLICATE
+  UNMATCHED_LGA
+  UNMATCHED_WARD
+  INVALID_HIERARCHY
+  OTHER
+}
+
+enum ResultStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  VERIFIED
+  REJECTED
+  PUBLISHED
+  CORRECTION_REQUESTED
+}
+
+enum VerificationAction {
+  APPROVE
+  REJECT
+  REQUEST_CORRECTION
 }
