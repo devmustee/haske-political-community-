@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { WifiOff } from "lucide-react";
 import { RetryButton } from "./retry-button";
+import { OfflineReadingList } from "./offline-reading-list";
 
 export const metadata: Metadata = {
   title: "Offline",
@@ -24,9 +25,11 @@ export default function OfflinePage() {
       <WifiOff className="mt-8 size-8 text-accent" />
       <h1 className="mt-3 font-serif text-2xl font-bold">You&apos;re offline</h1>
       <p className="mt-2 max-w-xs text-sm text-primary-foreground/80">
-        Check your connection, then try again. Haske Community needs the internet to load new pages.
+        Check your connection, then try again. Pages you&apos;ve read before, like the manifesto, may still open
+        offline.
       </p>
       <RetryButton />
+      <OfflineReadingList />
     </main>
   );
 }

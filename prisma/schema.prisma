@@ -235,25 +235,25 @@ enum NavLocation {
 // ─────────────────────────────────────────────────────────────────────────
 
 model User {
-  id             String            @id @default(cuid())
-  username       String            @unique
-  email          String            @unique
-  emailVerified  DateTime?
-  passwordHash   String?
+  id                String            @id @default(cuid())
+  username          String            @unique
+  email             String            @unique
+  emailVerified     DateTime?
+  passwordHash      String?
   passwordChangedAt DateTime?
-  name           String
-  bio            String?           @db.Text
-  location       String?
-  avatarUrl      String?
-  coverImageUrl  String?
-  verification   VerificationBadge @default(NONE)
-  isOrganization Boolean           @default(false)
-  status         UserStatus        @default(ACTIVE)
-  suspendedUntil DateTime?
-  bannedAt       DateTime?
-  lastLoginAt    DateTime?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  name              String
+  bio               String?           @db.Text
+  location          String?
+  avatarUrl         String?
+  coverImageUrl     String?
+  verification      VerificationBadge @default(NONE)
+  isOrganization    Boolean           @default(false)
+  status            UserStatus        @default(ACTIVE)
+  suspendedUntil    DateTime?
+  bannedAt          DateTime?
+  lastLoginAt       DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   posts               Post[]                   @relation("PostAuthor")
   comments            Comment[]
@@ -284,6 +284,7 @@ model User {
   passwordResetTokens PasswordResetToken[]
   emailVerifyTokens   EmailVerificationToken[]
   sessions            Session[]
+  pushSubscriptions   PushSubscription[]
 
   @@index([username])
   @@index([email])
@@ -551,6 +552,21 @@ model Notification {
   actor User? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([userId, read, createdAt])
+}
+
+/// A browser's Web Push subscription (one per device/browser per user).
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model NotificationPreference {

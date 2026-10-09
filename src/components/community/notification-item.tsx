@@ -3,6 +3,7 @@ import { Heart, MessageCircle, Repeat2, UserPlus, BarChart3, Calendar, Sparkles,
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { VerifiedBadge } from "@/components/community/verified-badge";
 import { formatRelativeTime, initials, cn } from "@/lib/utils";
+import { NOTIFICATION_VERB as VERB } from "@/lib/notification-text";
 
 const ICONS: Record<string, { icon: React.ElementType; className: string }> = {
   LIKE: { icon: Heart, className: "text-rose-600" },
@@ -18,15 +19,6 @@ const ICONS: Record<string, { icon: React.ElementType; className: string }> = {
   FEEDBACK_STATUS: { icon: MessageSquareWarning, className: "text-primary" },
 };
 
-const VERB: Record<string, string> = {
-  LIKE: "liked your post",
-  COMMENT: "commented on your post",
-  REPLY: "replied to your comment",
-  REPOST: "reposted your post",
-  QUOTE_REPOST: "quoted your post",
-  FOLLOW: "followed you",
-  POLL_RESULT: "voted in your poll",
-};
 
 interface NotificationData {
   id: string;

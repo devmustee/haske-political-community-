@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { initials, cn } from "@/lib/utils";
 import { VerifiedBadge } from "@/components/community/verified-badge";
 import { UnreadBadge } from "@/components/community/unread-badge";
+import { disablePush } from "@/lib/push-client";
 
 const NAV = [
   { href: "/community", label: "Home", icon: Home },
@@ -115,7 +116,11 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
               <p className="truncate text-xs text-muted-foreground">@{user.username}</p>
             </div>
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={async () => {
+                // Stop this device receiving the signed-out user's notifications.
+                await disablePush();
+                signOut({ callbackUrl: "/" });
+              }}
               className="hidden rounded-full p-2 text-muted-foreground hover:bg-secondary xl:block"
               title="Sign out"
             >

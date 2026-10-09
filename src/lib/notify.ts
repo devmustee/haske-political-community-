@@ -1,6 +1,9 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { NotificationType } from "@prisma/client";
+import { after } from "next/server";
+import { sendPushToUser } from "@/lib/push";
+import { notificationHref, notificationPushText } from "@/lib/notification-text";
 
 const PREF_FIELD: Partial<Record<NotificationType, string>> = {
   LIKE: "likes",
@@ -37,7 +40,7 @@ export async function notify(input: NotifyInput) {
     }
   }
 
-  await prisma.notification.create({
+  const notification = await prisma.notification.create({
     data: {
       userId: input.userId,
       actorId: input.actorId,
@@ -46,5 +49,16 @@ export async function notify(input: NotifyInput) {
       commentId: input.commentId,
       message: input.message,
     },
+    include: { actor: { select: { name: true, username: true } } },
   });
+
+  // Push to the user's devices after the response is sent, so it never slows
+  // down the action that triggered it.
+  after(() =>
+    sendPushToUser(input.userId, {
+      ...notificationPushText({ type: input.type, actorName: notification.actor?.name, message: input.message }),
+      url: notificationHref({ postId: input.postId, actorUsername: notification.actor?.username }),
+      tag: `${input.type}:${input.postId ?? notification.actor?.username ?? notification.id}`,
+    })
+  );
 }

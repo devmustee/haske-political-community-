@@ -89,20 +89,39 @@ only below the `sm` breakpoint, so desktop is unchanged.
   last item (and Sign In / Join) is reachable, nothing is under 40px, and
   there's no overflow. No change was needed.
 
-## PWA follow-ups
+## PWA follow-ups (done)
 
-- **Push notifications:** VAPID keys, a `PushSubscription` table, sending
-  from `src/lib/notify.ts`, and a `push` handler in `public/sw.js` (see the
-  Next.js PWA guide). Needs HTTPS and a permission UX that asks only after a
-  user action.
-- **Install hint for iOS:** Safari has no install prompt, so show a one-time
-  "Add to Home Screen" tip in the community for iOS visitors.
-- **Offline reading:** optionally cache static public pages (manifesto,
-  biography) for offline viewing. Keep signed-in pages uncached, as the
-  service worker does now.
-- **Richer install sheet:** add `screenshots` to `src/app/manifest.ts`.
-- **Updating:** bump `VERSION` in `public/sw.js` whenever its caching rules
-  change.
+- **Push notifications:** every in-app notification is also pushed to the
+  user's subscribed devices.
+  - Storage: a `PushSubscription` table.
+  - Sending: `src/lib/push.ts`, called from `notify()` via `after()`, so
+    it never slows the action that triggered it.
+  - Display: the `push` and `notificationclick` handlers in `public/sw.js`
+    (taps only open same-origin paths).
+  - Control: an on/off switch on the notifications page. Permission is
+    only asked for on tap. On iOS the switch explains that the app must be
+    installed first.
+  - Cleanup: expired subscriptions (404/410) are deleted. Signing out
+    unsubscribes the device.
+  - Needs `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and
+    `VAPID_SUBJECT` (see `.env.example`). Generate separate production keys.
+- **iOS install hint:** a dismissible "Add to Home Screen" tip on the
+  community feed, shown only in iPhone/iPad Safari when not installed.
+- **Offline reading:** eight static public pages (biography, timeline,
+  manifesto, mission, vision, leadership, public record, programs) are
+  cached network-first after a visit. The offline page lists the ones
+  saved. Signed-in pages are still never cached.
+- **Install sheet:** narrow and wide `screenshots` in the manifest
+  (`public/screenshots/`).
+- **Updating:** `public/sw.js` is now `v2`, which clears the v1 caches.
+
+Not verifiable in this environment, so check on real devices:
+- push arriving on Android Chrome and on an installed iPhone app;
+- the install tip showing in iPhone Safari.
+
+The send path was verified against a local fake push service: the payload
+is encrypted and signed, decrypts correctly, and gone subscriptions are
+deleted.
 
 ## Guardrail
 

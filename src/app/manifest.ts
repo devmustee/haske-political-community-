@@ -22,6 +22,11 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
+    // Shown in the richer install dialog on Android/desktop Chrome.
+    screenshots: [
+      { src: "/screenshots/home-narrow.jpg", sizes: "750x1624", type: "image/jpeg", form_factor: "narrow", label: "Home on a phone" },
+      { src: "/screenshots/home-wide.jpg", sizes: "1280x800", type: "image/jpeg", form_factor: "wide", label: "Home on desktop" },
+    ],
     shortcuts: [
       { name: "Community", url: "/community", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
       { name: "Manifesto", url: "/manifesto", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },

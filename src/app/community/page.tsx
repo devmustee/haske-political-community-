@@ -5,6 +5,7 @@ import { getFeedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
 import { FeedTabs } from "@/components/community/feed-tabs";
 import { InlinePostComposer } from "@/components/community/inline-post-composer";
+import { InstallHint } from "@/components/community/install-hint";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Info, MessageSquare } from "lucide-react";
 
@@ -33,6 +34,7 @@ export default async function CommunityFeedPage({
       </div>
 
       <InlinePostComposer />
+      <InstallHint />
 
       {tab === "following" && !session?.user && (
         <div className="flex items-center gap-2 border-b border-border bg-secondary/40 px-4 py-3 text-sm text-muted-foreground">

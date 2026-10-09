@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { getNotifications } from "@/lib/queries/notifications";
 import { NotificationItem } from "@/components/community/notification-item";
 import { MarkAllReadButton } from "@/components/community/mark-all-read-button";
+import { PushToggle } from "@/components/community/push-toggle";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Bell } from "lucide-react";
 
@@ -22,6 +23,8 @@ export default async function NotificationsPage() {
         <h1 className="font-serif text-xl font-semibold">Notifications</h1>
         {notifications.some((n) => !n.read) && <MarkAllReadButton />}
       </div>
+
+      <PushToggle />
 
       {notifications.length === 0 ? (
         <EmptyState icon={Bell} title="You're all caught up" description="New notifications will show up here." />
