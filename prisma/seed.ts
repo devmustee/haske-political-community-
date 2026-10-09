@@ -10,7 +10,7 @@
  * per the platform's content-provenance rule (see ContentStatus).
  */
 import { PrismaClient, AdminRoleName } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import { isLocalDatabase, passwordFields } from "./credentials";
 
 const prisma = new PrismaClient();
 
@@ -25,53 +25,119 @@ function demoAvatar(seed: string): string {
 async function main() {
   console.log("Seeding Haske Community...");
 
+  // ── Accounts ─────────────────────────────────────────────────────────
+  // Passwords come from SEED_*_PASSWORD env vars (see .env.example and
+  // prisma/credentials.ts); none are stored in this file.
+
   // ── Admin user ──────────────────────────────────────────────────────
-  const adminPasswordHash = await bcrypt.hash("Admin123!", 12);
+  const adminEmail = "admin@haskecommunity.ng";
+  const adminPassword = await passwordFields(prisma, adminEmail, "SEED_ADMIN_PASSWORD");
   await prisma.user.upsert({
-    where: { email: "admin@haskecommunity.ng" },
-    update: {},
+    where: { email: adminEmail },
+    update: adminPassword,
     create: {
-      name: "Platform Admin",
+      name: "Platform Administrator",
       username: "admin",
-      email: "admin@haskecommunity.ng",
-      passwordHash: adminPasswordHash,
+      email: adminEmail,
+      ...adminPassword,
       emailVerified: new Date(),
       status: "ACTIVE",
+      verification: "ORGANIZATION",
       notificationPref: { create: {} },
       adminRoles: { create: { role: AdminRoleName.SUPER_ADMIN } },
     },
   });
-  console.log(`Admin user ready: admin@haskecommunity.ng / Admin123! (username: admin)`);
+  console.log(`Admin user ready: ${adminEmail} (username: admin)`);
 
   // ── Official Haske account ─────────────────────────────────────────
-  const hasePasswordHash = await bcrypt.hash("Haske123!", 12);
+  const haskeEmail = "office@haskecommunity.ng";
+  const haskePassword = await passwordFields(prisma, haskeEmail, "SEED_HASKE_PASSWORD");
   const haske = await prisma.user.upsert({
-    where: { email: "office@haskecommunity.ng" },
-    update: { avatarUrl: "/brand/portrait.png" },
+    where: { email: haskeEmail },
+    update: {
+      ...haskePassword,
+      avatarUrl: "/brand/portrait-haske-traditional.png",
+    },
     create: {
       name: "Abdulrahman Bashir Haske",
       username: "AbdulrahmanHaske",
-      email: "office@haskecommunity.ng",
-      passwordHash: hasePasswordHash,
+      email: haskeEmail,
+      ...haskePassword,
       emailVerified: new Date(),
       verification: "OFFICIAL",
-      bio: "Businessman, entrepreneur, philanthropist and politician from Adamawa State. APM Governorship Candidate for Adamawa State, 2027.",
+      bio: "Businessman, entrepreneur, philanthropist, and APM Governorship Candidate for Adamawa State 2027.",
       location: "Yola, Adamawa State",
-      avatarUrl: "/brand/portrait.png",
+      avatarUrl: "/brand/portrait-haske-traditional.png",
       status: "ACTIVE",
       notificationPref: { create: {} },
-      adminRoles: { create: { role: AdminRoleName.CONTENT_ADMIN } },
+      adminRoles: {
+        create: [
+          { role: AdminRoleName.SUPER_ADMIN },
+          { role: AdminRoleName.CONTENT_ADMIN },
+        ],
+      },
     },
   });
+  await prisma.adminRole.upsert({
+    where: { userId_role: { userId: haske.id, role: AdminRoleName.SUPER_ADMIN } },
+    update: {},
+    create: { userId: haske.id, role: AdminRoleName.SUPER_ADMIN },
+  });
 
+  // ── Localhost testing accounts (never created on a remote database) ──
+  if (isLocalDatabase()) {
+    const testAdminEmail = "testadmin@haske.local";
+    const testAdminPassword = await passwordFields(prisma, testAdminEmail, "SEED_TEST_ADMIN_PASSWORD");
+    const testAdmin = await prisma.user.upsert({
+      where: { email: testAdminEmail },
+      update: testAdminPassword,
+      create: {
+        name: "Localhost Test Admin",
+        username: "testadmin",
+        email: testAdminEmail,
+        ...testAdminPassword,
+        emailVerified: new Date(),
+        verification: "OFFICIAL",
+        status: "ACTIVE",
+        notificationPref: { create: {} },
+        adminRoles: { create: { role: AdminRoleName.SUPER_ADMIN } },
+      },
+    });
+    await prisma.adminRole.upsert({
+      where: { userId_role: { userId: testAdmin.id, role: AdminRoleName.SUPER_ADMIN } },
+      update: {},
+      create: { userId: testAdmin.id, role: AdminRoleName.SUPER_ADMIN },
+    });
+
+    const testUserEmail = "testuser@haske.local";
+    const testUserPassword = await passwordFields(prisma, testUserEmail, "SEED_TEST_USER_PASSWORD");
+    await prisma.user.upsert({
+      where: { email: testUserEmail },
+      update: testUserPassword,
+      create: {
+        name: "Localhost Community Tester",
+        username: "testuser",
+        email: testUserEmail,
+        ...testUserPassword,
+        emailVerified: new Date(),
+        status: "ACTIVE",
+        notificationPref: { create: {} },
+      },
+    });
+  } else {
+    console.log("Skipping localhost test accounts (DATABASE_URL is not a local database).");
+  }
+
+  const teamEmail = "team@haskecommunity.ng";
+  const teamPassword = await passwordFields(prisma, teamEmail, "SEED_TEAM_PASSWORD");
   const campaignTeam = await prisma.user.upsert({
-    where: { email: "team@haskecommunity.ng" },
-    update: { avatarUrl: "/brand/haske-logo.png" },
+    where: { email: teamEmail },
+    update: { ...teamPassword, avatarUrl: "/brand/haske-logo.png" },
     create: {
       name: "Haske Campaign Team",
       username: "HaskeCampaignTeam",
-      email: "team@haskecommunity.ng",
-      passwordHash: await bcrypt.hash("Team1234!", 12),
+      email: teamEmail,
+      ...teamPassword,
       emailVerified: new Date(),
       verification: "ORGANIZATION",
       isOrganization: true,
@@ -85,15 +151,15 @@ async function main() {
   // A handful of ordinary demo community members (fictional, generated
   // avatars — never real photos), so demo posts read as genuine community
   // content rather than campaign-authored content, and the feed doesn't
-  // look empty in a fresh install.
+  // look empty in a fresh install. They have no password: nobody signs in
+  // as them.
   const demoUser1 = await prisma.user.upsert({
     where: { email: "demo.fatima@example.com" },
-    update: { avatarUrl: demoAvatar("fatima_b") },
+    update: { avatarUrl: demoAvatar("fatima_b"), passwordHash: null },
     create: {
       name: "Fatima Bello",
       username: "fatima_b",
       email: "demo.fatima@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Small business owner, Yola. Interested in youth and women's empowerment programs.",
       location: "Yola, Adamawa",
@@ -105,12 +171,11 @@ async function main() {
 
   const demoUser2 = await prisma.user.upsert({
     where: { email: "demo.ibrahim@example.com" },
-    update: { avatarUrl: demoAvatar("ibrahim_s") },
+    update: { avatarUrl: demoAvatar("ibrahim_s"), passwordHash: null },
     create: {
       name: "Ibrahim Sanda",
       username: "ibrahim_s",
       email: "demo.ibrahim@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Agriculture student, Mubi. Following the agribusiness agenda closely.",
       location: "Mubi, Adamawa",
@@ -122,12 +187,11 @@ async function main() {
 
   const demoUser3 = await prisma.user.upsert({
     where: { email: "demo.aisha@example.com" },
-    update: { avatarUrl: demoAvatar("aisha_teaches") },
+    update: { avatarUrl: demoAvatar("aisha_teaches"), passwordHash: null },
     create: {
       name: "Aisha Umar",
       username: "aisha_teaches",
       email: "demo.aisha@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Primary school teacher, Mubi. Watching the education and healthcare access plans closely.",
       location: "Mubi, Adamawa",
@@ -139,12 +203,11 @@ async function main() {
 
   const demoUser4 = await prisma.user.upsert({
     where: { email: "demo.yakubu@example.com" },
-    update: { avatarUrl: demoAvatar("yakubu_m") },
+    update: { avatarUrl: demoAvatar("yakubu_m"), passwordHash: null },
     create: {
       name: "Yakubu Musa",
       username: "yakubu_m",
       email: "demo.yakubu@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Young entrepreneur running a small agro-processing outfit in Numan.",
       location: "Numan, Adamawa",
@@ -156,12 +219,11 @@ async function main() {
 
   const demoUser5 = await prisma.user.upsert({
     where: { email: "demo.grace@example.com" },
-    update: { avatarUrl: demoAvatar("grace_e") },
+    update: { avatarUrl: demoAvatar("grace_e"), passwordHash: null },
     create: {
       name: "Grace Emmanuel",
       username: "grace_e",
       email: "demo.grace@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Community health worker, Ganye. Focused on the health insurance scheme expansion.",
       location: "Ganye, Adamawa",
@@ -173,12 +235,11 @@ async function main() {
 
   const demoUser6 = await prisma.user.upsert({
     where: { email: "demo.suleiman@example.com" },
-    update: { avatarUrl: demoAvatar("suleiman_a") },
+    update: { avatarUrl: demoAvatar("suleiman_a"), passwordHash: null },
     create: {
       name: "Suleiman Abba",
       username: "suleiman_a",
       email: "demo.suleiman@example.com",
-      passwordHash: await bcrypt.hash("Demo1234!", 12),
       emailVerified: new Date(),
       bio: "Civil servant, Yola. Interested in transparency and accountable governance.",
       location: "Yola, Adamawa",
