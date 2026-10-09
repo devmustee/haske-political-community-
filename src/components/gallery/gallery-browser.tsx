@@ -109,7 +109,7 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
         <DialogPrimitive.Portal>
           <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/90" />
           <DialogPrimitive.Content
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 p-4 outline-none sm:p-8"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 p-4 pb-safe pt-safe outline-none sm:gap-4 sm:p-8"
             aria-describedby={undefined}
           >
             {current && (
@@ -121,11 +121,11 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
                   width={current.width}
                   height={current.height}
                   sizes="100vw"
-                  className="max-h-[75vh] w-auto max-w-full object-contain"
+                  className="max-h-[50dvh] sm:max-h-[72dvh] w-auto max-w-full object-contain select-none"
                 />
-                <div className="max-w-2xl text-center text-white">
-                  <p className="text-sm font-semibold">{current.caption}</p>
-                  <p className="mt-1 text-xs text-white/70">
+                <div className="max-w-2xl text-center text-white px-2">
+                  <p className="text-xs sm:text-sm font-semibold">{current.caption}</p>
+                  <p className="mt-1 text-[11px] sm:text-xs text-white/70">
                     {[current.date, current.location].filter(Boolean).join(" · ")}
                     {(current.date || current.location) && " — "}
                     {current.credit}
@@ -149,14 +149,14 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
                     <button
                       onClick={() => step(-1)}
                       aria-label="Previous photograph"
-                      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 sm:left-6"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 flex size-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-all sm:left-6"
                     >
                       <ChevronLeft className="size-6" />
                     </button>
                     <button
                       onClick={() => step(1)}
                       aria-label="Next photograph"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 sm:right-6"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 flex size-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-all sm:right-6"
                     >
                       <ChevronRight className="size-6" />
                     </button>
@@ -164,7 +164,7 @@ export function GalleryBrowser({ images }: { images: LibraryImage[] }) {
                 )}
                 <DialogPrimitive.Close
                   aria-label="Close"
-                  className="absolute right-3 top-3 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                  className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-all"
                 >
                   <X className="size-5" />
                 </DialogPrimitive.Close>

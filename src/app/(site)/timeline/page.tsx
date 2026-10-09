@@ -187,18 +187,18 @@ export default function TimelinePage() {
       {/* Timeline Section */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="relative border-l-2 border-primary/20 pl-6 sm:pl-10 space-y-16">
+          <div className="relative border-l-2 border-primary/20 ml-2.5 sm:ml-4 pl-5 sm:pl-10 space-y-12 sm:space-y-16">
             {TIMELINE_MILESTONES.map((milestone, i) => {
               const Icon = milestone.icon;
               return (
                 <div key={milestone.title} className="relative group">
                   {/* Glowing Node Dot */}
-                  <div className="absolute -left-[35px] sm:-left-[51px] top-1.5 size-7 rounded-full bg-background border-2 border-primary flex items-center justify-center text-primary group-hover:border-accent group-hover:scale-110 transition-all shadow-soft">
+                  <div className="absolute -left-[31px] sm:-left-[51px] top-1.5 size-7 rounded-full bg-background border-2 border-primary flex items-center justify-center text-primary group-hover:border-accent group-hover:scale-110 transition-all shadow-soft">
                     <div className="size-2.5 rounded-full bg-accent" />
                   </div>
 
                   <Reveal variant="left" staggerIndex={i}>
-                    <SpotlightCard className="p-6 sm:p-8">
+                    <SpotlightCard className="p-4 sm:p-8">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <span className="text-xs font-bold uppercase tracking-wider text-accent">
                           {milestone.era}
@@ -212,7 +212,7 @@ export default function TimelinePage() {
                         <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 ring-1 ring-primary/20">
                           <Icon className="size-5" />
                         </div>
-                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">
+                        <h3 className="font-serif text-lg sm:text-2xl font-bold text-foreground">
                           {milestone.title}
                         </h3>
                       </div>

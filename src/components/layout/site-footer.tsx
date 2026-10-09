@@ -104,7 +104,7 @@ export async function SiteFooter() {
           </div>
 
           {/* Link Columns */}
-          <div className="grid grow grid-cols-2 gap-8 sm:grow-0 sm:grid-cols-4">
+          <div className="grid grow grid-cols-1 min-[440px]:grid-cols-2 gap-8 sm:grow-0 sm:grid-cols-4">
             {COLUMNS.map((col) => (
               <div key={col.title}>
                 <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-foreground">

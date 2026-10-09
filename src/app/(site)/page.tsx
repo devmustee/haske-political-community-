@@ -173,55 +173,55 @@ export default async function HomePage() {
         <SpotlightCard
           spotlightColor="gold"
           className="border-border/80 shadow-elevated surface-glass-card rounded-3xl"
-          contentClassName="p-6 sm:p-8 lg:p-9"
+          contentClassName="p-4 sm:p-8 lg:p-9"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             {/* Left 4-Metric Dossier Grid (Columns 1-5) */}
-            <div className="lg:col-span-5 grid grid-cols-2 gap-3.5 sm:gap-4">
-              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4 text-center transition-all duration-300 hover:border-primary/40 hover:bg-secondary/60">
-                <div className="mx-auto flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary mb-2">
-                  <MapPin className="size-4" />
+            <div className="lg:col-span-5 grid grid-cols-2 gap-2.5 sm:gap-4">
+              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-3 sm:p-4 text-center transition-all duration-300 hover:border-primary/40 hover:bg-secondary/60">
+                <div className="mx-auto flex size-7 sm:size-8 items-center justify-center rounded-xl bg-primary/10 text-primary mb-1.5 sm:mb-2">
+                  <MapPin className="size-3.5 sm:size-4" />
                 </div>
-                <p className="font-serif text-2xl sm:text-3xl font-extrabold text-primary">
+                <p className="font-serif text-xl sm:text-3xl font-extrabold text-primary">
                   <AnimatedCounter value={21} />
                 </p>
-                <p className="mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Local Govts (LGAs)
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4 text-center transition-all duration-300 hover:border-accent/40 hover:bg-secondary/60">
-                <div className="mx-auto flex size-8 items-center justify-center rounded-xl bg-accent/15 text-accent mb-2">
-                  <Sparkles className="size-4" />
+              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-3 sm:p-4 text-center transition-all duration-300 hover:border-accent/40 hover:bg-secondary/60">
+                <div className="mx-auto flex size-7 sm:size-8 items-center justify-center rounded-xl bg-accent/15 text-accent mb-1.5 sm:mb-2">
+                  <Sparkles className="size-3.5 sm:size-4" />
                 </div>
-                <p className="font-serif text-2xl sm:text-3xl font-extrabold text-accent">
+                <p className="font-serif text-xl sm:text-3xl font-extrabold text-accent">
                   <AnimatedCounter value={7} />
                 </p>
-                <p className="mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Strategic Pillars
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4 text-center transition-all duration-300 hover:border-primary/40 hover:bg-secondary/60">
-                <div className="mx-auto flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary mb-2">
-                  <ShieldCheck className="size-4 text-emerald-600" />
+              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-3 sm:p-4 text-center transition-all duration-300 hover:border-primary/40 hover:bg-secondary/60">
+                <div className="mx-auto flex size-7 sm:size-8 items-center justify-center rounded-xl bg-primary/10 text-primary mb-1.5 sm:mb-2">
+                  <ShieldCheck className="size-3.5 sm:size-4 text-emerald-600" />
                 </div>
-                <p className="font-serif text-2xl sm:text-3xl font-extrabold text-primary">
+                <p className="font-serif text-xl sm:text-3xl font-extrabold text-primary">
                   <AnimatedCounter value={100} suffix="%" />
                 </p>
-                <p className="mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Documented Record
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-4 text-center transition-all duration-300 hover:border-accent/40 hover:bg-secondary/60">
-                <div className="mx-auto flex size-8 items-center justify-center rounded-xl bg-accent/15 text-accent mb-2">
-                  <Landmark className="size-4" />
+              <div className="rounded-2xl border border-border/70 bg-secondary/40 p-3 sm:p-4 text-center transition-all duration-300 hover:border-accent/40 hover:bg-secondary/60">
+                <div className="mx-auto flex size-7 sm:size-8 items-center justify-center rounded-xl bg-accent/15 text-accent mb-1.5 sm:mb-2">
+                  <Landmark className="size-3.5 sm:size-4" />
                 </div>
-                <p className="font-serif text-2xl sm:text-3xl font-extrabold text-accent">
+                <p className="font-serif text-xl sm:text-3xl font-extrabold text-accent">
                   <AnimatedCounter value={2027} />
                 </p>
-                <p className="mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   Adamawa Mandate
                 </p>
               </div>

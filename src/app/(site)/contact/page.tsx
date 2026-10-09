@@ -174,7 +174,7 @@ export default function ContactPage() {
             </div>
 
             <div className="lg:col-span-7">
-              <SpotlightCard className="p-8 sm:p-10 border-primary/20">
+              <SpotlightCard className="p-5 sm:p-10 border-primary/20">
                 <span className="text-xs font-bold uppercase tracking-wider text-accent block mb-1">
                   Send a Direct Message
                 </span>
@@ -192,7 +192,7 @@ export default function ContactPage() {
                         type="text"
                         required
                         placeholder="e.g. Amina Mohammed"
-                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                     <div>
@@ -203,7 +203,7 @@ export default function ContactPage() {
                         type="email"
                         required
                         placeholder="you@domain.com"
-                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export default function ContactPage() {
                       <input
                         type="tel"
                         placeholder="+234 ..."
-                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                     <div>
@@ -225,7 +225,7 @@ export default function ContactPage() {
                       </label>
                       <select
                         required
-                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       >
                         <option value="enterprise">Commercial & Agro-Industry</option>
                         <option value="foundation">AB Haske Foundation Intervention</option>
@@ -244,7 +244,7 @@ export default function ContactPage() {
                       type="text"
                       required
                       placeholder="Brief headline of your message"
-                      className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="w-full min-h-[44px] rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
 
@@ -256,7 +256,7 @@ export default function ContactPage() {
                       rows={5}
                       required
                       placeholder="Please provide complete context regarding your inquiry..."
-                      className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                      className="w-full rounded-xl border border-border/80 bg-background/80 px-3.5 py-2.5 text-sm sm:text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                     />
                   </div>
 

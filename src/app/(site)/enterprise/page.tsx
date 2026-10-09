@@ -114,35 +114,35 @@ export default async function EnterprisePage() {
       <section className="relative z-10 -mt-8 mx-auto max-w-5xl px-4 sm:px-6">
         <SpotlightCard
           spotlightColor="gold"
-          className="grid grid-cols-2 gap-4 sm:grid-cols-4 p-6 sm:p-8 border-border/80 shadow-elevated surface-glass-card"
+          className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 p-4 sm:p-8 border-border/80 shadow-elevated surface-glass-card"
         >
           <div className="text-center border-r border-border/60 last:border-r-0">
-            <p className="font-serif text-3xl sm:text-4xl font-extrabold text-primary">
+            <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
               <AnimatedCounter value={15} suffix="+" />
             </p>
-            <p className="mt-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Years in Enterprise
             </p>
           </div>
           <div className="text-center sm:border-r border-border/60">
-            <p className="font-serif text-3xl sm:text-4xl font-extrabold text-accent">
+            <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">
               <AnimatedCounter value={4} />
             </p>
-            <p className="mt-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Core Industries
             </p>
           </div>
           <div className="text-center border-r border-border/60 last:border-r-0">
-            <p className="font-serif text-3xl sm:text-4xl font-extrabold text-primary">
+            <p className="font-serif text-2xl sm:text-4xl font-extrabold text-primary">
               <AnimatedCounter value={1000} suffix="s" />
             </p>
-            <p className="mt-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Jobs Created
             </p>
           </div>
           <div className="text-center">
-            <p className="font-serif text-3xl sm:text-4xl font-extrabold text-accent">IoD</p>
-            <p className="mt-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <p className="font-serif text-2xl sm:text-4xl font-extrabold text-accent">IoD</p>
+            <p className="mt-1 text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Governance Certified
             </p>
           </div>

@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.1fr_0.9fr] bg-background">
       {/* ─── Left Panel: Interactive Auth Sanctuary ─── */}
-      <div className="relative flex flex-col justify-between p-6 sm:p-10 lg:p-14">
+      <div className="relative flex flex-col justify-between p-4 sm:p-10 lg:p-14">
         {/* Subtle Ambient Background Light */}
         <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-primary/5 blur-[90px]" />
 
@@ -21,7 +21,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               className="size-11 rounded-full bg-white object-contain shadow-soft ring-2 ring-primary/10 transition-all duration-300 group-hover:ring-primary/30 group-hover:shadow-elevated"
               priority
             />
-            <div>3
+            <div>
               <span className="font-serif text-lg font-semibold tracking-tight text-foreground block">
                 Haske Community
               </span>
@@ -38,7 +38,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Form Container */}
-        <div className="relative mx-auto w-full max-w-md py-10 sm:py-14">
+        <div className="relative mx-auto w-full max-w-md py-6 sm:py-14">
           {children}
         </div>
 

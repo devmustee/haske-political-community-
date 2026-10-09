@@ -50,11 +50,50 @@ const MEDIA_ITEMS = [
   { href: "/events", label: "Events & Town Halls" },
 ];
 
+interface NavSection {
+  id: string;
+  title: string;
+  items: { href: string; label: string; featured?: boolean }[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    id: "about",
+    title: "About & Profile",
+    items: ABOUT_ITEMS,
+  },
+  {
+    id: "enterprise",
+    title: "Enterprise & Trade",
+    items: ENTERPRISE_ITEMS,
+  },
+  {
+    id: "impact",
+    title: "Impact & Foundation",
+    items: IMPACT_ITEMS,
+  },
+  {
+    id: "leadership",
+    title: "Leadership & Covenant",
+    items: LEADERSHIP_ITEMS,
+  },
+  {
+    id: "media",
+    title: "Media & Dialogue",
+    items: [
+      ...MEDIA_ITEMS,
+      { href: "/speak-to-haske", label: "Speak to Haske", featured: true },
+      { href: "/contact", label: "Contact & Secretariats" },
+    ],
+  },
+];
+
 export function SiteHeader() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,6 +102,29 @@ export function SiteHeader() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Auto-expand section containing the current path
+  useEffect(() => {
+    const matched = NAV_SECTIONS.find((s) =>
+      s.items.some((item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
+    );
+    if (matched) {
+      setExpandedSection(matched.id);
+    }
+    setOpen(false);
+  }, [pathname]);
+
+  // Lock background scroll when mobile drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   const isGroupActive = (items: { href: string }[]) =>
     items.some((item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)));
@@ -256,123 +318,137 @@ export function SiteHeader() {
 
         {/* Mobile Hamburger Button */}
         <button
-          className="shrink-0 rounded-xl p-2 transition-colors hover:bg-secondary xl:hidden"
+          className="flex size-11 shrink-0 items-center justify-center rounded-xl transition-colors hover:bg-secondary xl:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle navigation menu"
+          aria-expanded={open}
         >
           {open ? <X className="size-6 text-foreground" /> : <Menu className="size-6 text-foreground" />}
         </button>
       </div>
 
+      {/* Mobile Backdrop Overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 top-16 z-30 bg-black/50 backdrop-blur-xs xl:hidden animate-fade-in"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile Navigation Drawer */}
       {open && (
-        <div className="max-h-[85vh] overflow-y-auto border-t border-border/80 bg-background/95 backdrop-blur-2xl px-5 pb-8 pt-4 xl:hidden animate-slide-up shadow-float">
-          <nav className="flex flex-col gap-1">
-            <p className="px-3 pt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-              About & Profile
-            </p>
-            {ABOUT_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-              >
-                {item.label}
-              </Link>
-            ))}
+        <div className="relative z-40 max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-border/80 bg-background/98 backdrop-blur-2xl px-4 pb-safe pt-3 xl:hidden animate-slide-up shadow-float">
+          {/* Quick Direct Link / Top strip */}
+          <div className="mb-2 flex items-center justify-between px-2 pt-1">
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
+              Platform Navigation
+            </span>
+            <span className="text-[10px] font-mono text-muted-foreground">
+              Adamawa 2027
+            </span>
+          </div>
 
-            <div className="my-2 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          {/* Accordion Categories */}
+          <nav className="flex flex-col gap-1.5" aria-label="Mobile Navigation">
+            {NAV_SECTIONS.map((section) => {
+              const isExpanded = expandedSection === section.id;
+              const hasActiveChild = section.items.some(
+                (item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+              );
 
-            <p className="px-3 pt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-              Enterprise & Agriculture
-            </p>
-            {ENTERPRISE_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-              >
-                {item.label}
-              </Link>
-            ))}
+              return (
+                <div
+                  key={section.id}
+                  className={cn(
+                    "overflow-hidden rounded-2xl border transition-all duration-200",
+                    isExpanded
+                      ? "border-primary/30 bg-primary/[0.03] shadow-xs"
+                      : "border-border/60 bg-secondary/30 hover:border-border"
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setExpandedSection(isExpanded ? null : section.id)}
+                    aria-expanded={isExpanded}
+                    className="flex w-full min-h-[44px] items-center justify-between px-3.5 py-2.5 text-left transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      {hasActiveChild && (
+                        <span className="size-1.5 rounded-full bg-accent animate-pulse" />
+                      )}
+                      <span
+                        className={cn(
+                          "text-xs font-bold tracking-tight",
+                          hasActiveChild ? "text-primary" : "text-foreground"
+                        )}
+                      >
+                        {section.title}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={cn(
+                        "size-4 text-muted-foreground transition-transform duration-200",
+                        isExpanded && "rotate-180 text-primary"
+                      )}
+                    />
+                  </button>
 
-            <div className="my-2 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-            <p className="px-3 pt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-              Impact, Foundation & Sports
-            </p>
-            {IMPACT_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            <div className="my-2 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-            <p className="px-3 pt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-              Leadership & Manifesto
-            </p>
-            {LEADERSHIP_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            <div className="my-2 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-            <p className="px-3 pt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-              Media, Gallery & Secretariats
-            </p>
-            {MEDIA_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              href="/speak-to-haske"
-              onClick={() => setOpen(false)}
-              className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary text-primary font-bold"
-            >
-              Speak to Haske
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              className="rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary"
-            >
-              Contact & Inquiries
-            </Link>
+                  {isExpanded && (
+                    <div className="border-t border-border/50 px-2 py-1.5 space-y-0.5 animate-fade-in">
+                      {section.items.map((item) => {
+                        const isActive =
+                          pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={cn(
+                              "flex min-h-[40px] items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all active:scale-[0.99]",
+                              isActive
+                                ? "bg-primary text-primary-foreground font-semibold shadow-soft"
+                                : item.featured
+                                ? "text-accent font-semibold hover:bg-accent/10"
+                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                            )}
+                          >
+                            <span>{item.label}</span>
+                            {isActive && (
+                              <span className="text-[10px] font-mono tracking-wider opacity-80 uppercase">
+                                Current
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
-          <div className="mt-5 flex flex-col gap-2.5 pt-4 border-t border-border/60">
+          {/* Action CTA Buttons */}
+          <div className="mt-4 flex flex-col gap-2.5 border-t border-border/60 pt-4">
             {session?.user ? (
               <Button asChild size="lg" className="w-full">
-                <Link href="/community">Go to Community</Link>
+                <Link href="/community" onClick={() => setOpen(false)}>
+                  <Sparkles className="size-4 text-accent" />
+                  Go to Community Hub
+                </Link>
               </Button>
             ) : (
               <>
                 <Button asChild variant="outline" size="lg" className="w-full">
-                  <Link href="/login">Sign In</Link>
+                  <Link href="/login" onClick={() => setOpen(false)}>
+                    Sign In
+                  </Link>
                 </Button>
                 <Button asChild variant="gold-shimmer" size="lg" className="w-full shadow-glow-gold">
-                  <Link href="/register">Join Haske Community</Link>
+                  <Link href="/register" onClick={() => setOpen(false)}>
+                    Join Haske Community
+                  </Link>
                 </Button>
               </>
             )}
