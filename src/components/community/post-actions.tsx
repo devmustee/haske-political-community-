@@ -1,22 +1,35 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Heart, MessageCircle, Repeat2, Share, Bookmark, MoreHorizontal, Quote, Trash2, Flag } from "lucide-react";
+import { Heart, MessageCircle, Repeat2, Share, Bookmark, MoreHorizontal, Quote, Trash2, Flag, Link2, MessageSquareShare, Send } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+import { buttonVariants } from "@/components/ui/button";
 import { toggleLike, toggleRepost, deletePost } from "@/lib/actions/posts";
 import { toggleBookmark } from "@/lib/actions/posts";
 import { reportContent } from "@/lib/actions/reports";
 import { useGuestGate } from "@/components/community/guest-gate";
 import { PostComposer } from "@/components/community/post-composer";
 import { ReportDialog } from "@/components/community/report-dialog";
+import { CommentComposer } from "@/components/community/comment-composer";
 import { cn, formatCount } from "@/lib/utils";
 
 export function PostActions({
@@ -31,6 +44,7 @@ export function PostActions({
   liked,
   reposted,
   bookmarked,
+  quickReply = true,
 }: {
   postId: string;
   authorId: string;
@@ -43,6 +57,8 @@ export function PostActions({
   liked: boolean;
   reposted: boolean;
   bookmarked: boolean;
+  /** Reply opens an inline composer under the post instead of navigating to it. */
+  quickReply?: boolean;
 }) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -54,6 +70,13 @@ export function PostActions({
   const [bookmarkState, setBookmarkState] = useState(bookmarked);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [replyOpen, setReplyOpen] = useState(false);
+  const canNativeShare = useSyncExternalStore(
+    noopSubscribe,
+    () => typeof navigator.share === "function",
+    () => false
+  );
 
   const isOwner = session?.user?.id === authorId;
 
@@ -96,15 +119,33 @@ export function PostActions({
     });
   });
 
-  const handleShare = () => {
-    const url = `${window.location.origin}/community/post/${postId}`;
-    navigator.clipboard.writeText(url);
-    toast.success("Link copied to clipboard");
+  const postUrl = () => `${window.location.origin}/community/post/${postId}`;
+  const shareText = () => (contentPreview ? `${contentPreview.slice(0, 180)}${contentPreview.length > 180 ? "…" : ""}` : `Post by ${authorName} on Haske Community`);
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(postUrl());
+      toast.success("Link copied to clipboard");
+    } catch {
+      toast.error("Couldn't copy the link.");
+    }
+  };
+
+  const openShareWindow = (url: string) => window.open(url, "_blank", "noopener,noreferrer");
+
+  const handleNativeShare = () => {
+    navigator.share({ title: `${authorName} on Haske Community`, text: shareText(), url: postUrl() }).catch(() => {});
+  };
+
+  const handleReply = () => {
+    if (quickReply) setReplyOpen((v) => !v);
+    else router.push(`/community/post/${postId}`);
   };
 
   const handleReport = guard(() => setReportOpen(true));
 
   async function handleDelete() {
+    setDeleteOpen(false);
     const result = await deletePost(postId);
     if (!result.ok) {
       toast.error(result.error);
@@ -115,10 +156,13 @@ export function PostActions({
   }
 
   return (
-    <div className="mt-2 flex items-center justify-between text-muted-foreground" onClick={(e) => e.stopPropagation()}>
+    <div onClick={(e) => e.stopPropagation()}>
+    <div className="mt-3 flex items-center justify-between text-muted-foreground">
       <button
-        onClick={() => router.push(`/community/post/${postId}`)}
-        className="group flex items-center gap-1.5 rounded-full p-2 -m-2 hover:text-primary"
+        onClick={handleReply}
+        aria-expanded={quickReply ? replyOpen : undefined}
+        aria-label="Reply"
+        className={cn("group flex items-center gap-1.5 rounded-full p-2 -m-2 hover:text-primary", replyOpen && "text-primary")}
       >
         <span className="rounded-full p-1.5 group-hover:bg-primary/10">
           <MessageCircle className="size-[18px]" />
@@ -175,22 +219,49 @@ export function PostActions({
         <Bookmark className={cn("size-[18px] transition-transform", bookmarkState && "fill-current animate-zoom-in")} />
       </button>
 
-      <button
-        onClick={handleShare}
-        className="rounded-full p-2 -m-2 transition-all duration-200 hover:text-primary hover:bg-primary/10 active:scale-125"
-      >
-        <Share className="size-[18px]" />
-      </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            aria-label="Share"
+            className="rounded-full p-2 -m-2 transition-all duration-200 hover:text-primary hover:bg-primary/10 active:scale-125"
+          >
+            <Share className="size-[18px]" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleCopyLink}>
+            <Link2 className="size-4" /> Copy link
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => openShareWindow(`https://wa.me/?text=${encodeURIComponent(`${shareText()} ${postUrl()}`)}`)}>
+            <MessageSquareShare className="size-4" /> Share to WhatsApp
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              openShareWindow(`https://x.com/intent/post?text=${encodeURIComponent(shareText())}&url=${encodeURIComponent(postUrl())}`)
+            }
+          >
+            <Send className="size-4" /> Share to X
+          </DropdownMenuItem>
+          {canNativeShare && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleNativeShare}>
+                <Share className="size-4" /> More options…
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-full p-2 -m-2 hover:text-primary">
+          <button aria-label="More options" className="rounded-full p-2 -m-2 hover:text-primary">
             <MoreHorizontal className="size-[18px]" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {isOwner ? (
-            <DropdownMenuItem variant="destructive" onClick={handleDelete}>
+            <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
               <Trash2 className="size-4" /> Delete post
             </DropdownMenuItem>
           ) : (
@@ -201,7 +272,37 @@ export function PostActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
+    </div>
+
+      {replyOpen && (
+        <div className="mt-3 border-t border-border pt-3">
+          <CommentComposer
+            postId={postId}
+            autoFocus
+            placeholder={`Reply to @${authorUsername}`}
+            onDone={() => {
+              setReplyOpen(false);
+              toast.success("Reply posted");
+            }}
+          />
+        </div>
+      )}
+
       {GateDialog}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this post?</AlertDialogTitle>
+            <AlertDialogDescription>It will be removed from your profile and from community feeds. This can&apos;t be undone.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className={buttonVariants({ variant: "destructive" })} onClick={handleDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <PostComposer
         open={quoteOpen}
         onOpenChange={setQuoteOpen}
@@ -222,3 +323,5 @@ export function PostActions({
     </div>
   );
 }
+
+const noopSubscribe = () => () => {};

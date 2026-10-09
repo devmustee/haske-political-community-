@@ -791,7 +791,7 @@ export default async function HomePage() {
                 <p className="text-sm text-muted-foreground">No posts yet — be the first to participate.</p>
               </div>
             ) : (
-              feedPosts.map((post) => <PostCard key={post.id} post={post} />)
+              feedPosts.map((post) => <PostCard key={post.id} post={post} variant="row" />)
             )}
           </Reveal>
 

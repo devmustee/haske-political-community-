@@ -57,7 +57,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
         <h1 className="font-serif text-lg font-semibold">Post</h1>
       </div>
 
-      <PostCard post={post} />
+      <PostCard post={post} detail />
 
       <div className="border-b border-border px-4 py-3">
         <CommentComposer postId={post.id} />
