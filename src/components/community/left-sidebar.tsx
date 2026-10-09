@@ -38,7 +38,7 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
             href={item.href}
             className={cn(
               "flex items-center gap-3.5 rounded-full px-3 py-2.5 text-lg font-medium transition-colors hover:bg-muted xl:text-base",
-              active && "font-semibold"
+              active && "bg-primary/10 font-semibold text-primary hover:bg-primary/15"
             )}
           >
             <item.icon className="size-6 xl:size-5" strokeWidth={active ? 2.5 : 2} />
@@ -53,7 +53,7 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
             href="/community/notifications"
             className={cn(
               "flex items-center gap-3.5 rounded-full px-3 py-2.5 text-lg font-medium transition-colors hover:bg-muted xl:text-base",
-              pathname === "/community/notifications" && "font-semibold"
+              pathname === "/community/notifications" && "bg-primary/10 font-semibold text-primary hover:bg-primary/15"
             )}
           >
             <span className="relative">
@@ -66,7 +66,7 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
             href="/community/bookmarks"
             className={cn(
               "flex items-center gap-3.5 rounded-full px-3 py-2.5 text-lg font-medium transition-colors hover:bg-muted xl:text-base",
-              pathname === "/community/bookmarks" && "font-semibold"
+              pathname === "/community/bookmarks" && "bg-primary/10 font-semibold text-primary hover:bg-primary/15"
             )}
           >
             <Bookmark className="size-6 xl:size-5" />
@@ -76,7 +76,7 @@ export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => 
             href={`/community/user/${user.username}`}
             className={cn(
               "flex items-center gap-3.5 rounded-full px-3 py-2.5 text-lg font-medium transition-colors hover:bg-muted xl:text-base",
-              pathname === `/community/user/${user.username}` && "font-semibold"
+              pathname === `/community/user/${user.username}` && "bg-primary/10 font-semibold text-primary hover:bg-primary/15"
             )}
           >
             <User className="size-6 xl:size-5" />

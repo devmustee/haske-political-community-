@@ -25,7 +25,12 @@ export function MobileNav({ onCompose, unreadCount = 0 }: { onCompose: () => voi
         <Link
           key={item.href}
           href={item.href}
-          className={cn("flex flex-col items-center gap-0.5 p-2 text-muted-foreground", pathname === item.href && "text-foreground")}
+          aria-current={pathname === item.href ? "page" : undefined}
+          className={cn(
+            "relative flex flex-col items-center gap-0.5 p-2 text-muted-foreground transition-colors",
+            pathname === item.href &&
+              "text-primary after:absolute after:bottom-0 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-primary"
+          )}
         >
           <item.icon className="size-6" />
         </Link>
@@ -43,7 +48,12 @@ export function MobileNav({ onCompose, unreadCount = 0 }: { onCompose: () => voi
           key={item.href}
           href={item.href}
           aria-label={item.label}
-          className={cn("flex flex-col items-center gap-0.5 p-2 text-muted-foreground", pathname === item.href && "text-foreground")}
+          aria-current={pathname === item.href ? "page" : undefined}
+          className={cn(
+            "relative flex flex-col items-center gap-0.5 p-2 text-muted-foreground transition-colors",
+            pathname === item.href &&
+              "text-primary after:absolute after:bottom-0 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-primary"
+          )}
         >
           <span className="relative">
             <item.icon className="size-6" />

@@ -836,7 +836,7 @@ async function main() {
   // Posts have no natural unique key either, so clear the seed accounts'
   // prior posts/follows before recreating them to keep re-seeding idempotent.
   const demoUserIds = demoUsers.map((u) => u.id);
-  await prisma.post.deleteMany({ where: { authorId: { in: [haske.id, ...demoUserIds] } } });
+  await prisma.post.deleteMany({ where: { authorId: { in: [haske.id, campaignTeam.id, ...demoUserIds] } } });
   await prisma.follow.deleteMany({ where: { followerId: { in: demoUserIds } } });
   await prisma.hashtag.updateMany({ where: { tag: "adamawa2027" }, data: { postsCount: 0 } });
 
@@ -920,11 +920,166 @@ async function main() {
     await prisma.follow.create({ data: { followerId: user.id, followingId: haske.id } });
   }
 
+  // ── Campaign team posts ──────────────────────────────────────────────
+  // Restate only facts already documented above (achievements, media
+  // center), in the team account's third-person voice, with the same
+  // provenance status and source link. No new claims or quotes.
+  // Photos are attached only where the image genuinely shows the event:
+  // several files under public/images/abdulrahman are generic stock or
+  // third-party graphics despite their names, so they are not used here.
+  const hoursAgo = (h: number) => new Date(Date.now() - h * 60 * 60 * 1000);
+  const IMG = "/images/abdulrahman";
+
+  const teamPostSeeds: {
+    content: string;
+    contentStatus: "OFFICIAL" | "DOCUMENTED" | "THIRD_PARTY" | "PROPOSED";
+    linkUrl?: string;
+    createdAt: Date;
+    media?: { url: string; altText: string; width: number; height: number }[];
+  }[] = [
+    {
+      content:
+        "H&W Rice Company is a rice-processing investment associated with Abdulrahman Haske, built to connect smallholder farmers in Adamawa with value-added processing and market opportunities. #Agriculture #Adamawa2027",
+      contentStatus: "DOCUMENTED",
+      createdAt: hoursAgo(3),
+    },
+    {
+      content:
+        "Looking back: on 25 April 2026, traditional rulers, religious leaders, youth and women's groups and supporters from all 21 LGAs gathered at Mahmud Ribadu Square, Jimeta-Yola, for Abdulrahman Haske's declaration of intent to contest the 2027 governorship. #Adamawa2027 #YolaNorth https://www.premiumtimesng.com/promoted/874756-yola-agog-as-abdulrahman-haske-finally-declares-for-adamawa-governorship-race.html",
+      contentStatus: "THIRD_PARTY",
+      linkUrl: "https://www.premiumtimesng.com/promoted/874756-yola-agog-as-abdulrahman-haske-finally-declares-for-adamawa-governorship-race.html",
+      createdAt: hoursAgo(20),
+      media: [
+        { url: `${IMG}/politics/haske-declaration-podium-yola.jpeg`, altText: "Abdulrahman Haske greeting supporters from a vehicle, surrounded by campaign posters and flags", width: 1280, height: 960 },
+        { url: `${IMG}/politics/haske-declaration-ribadu-square-crowd.jpeg`, altText: "Guests in white kaftans and HASKE caps seated in the grandstand", width: 1280, height: 960 },
+        { url: `${IMG}/politics/haske-declaration-stage-dignitaries.jpeg`, altText: "Abdulrahman Haske seated with guests in the front row of the grandstand", width: 1280, height: 960 },
+      ],
+    },
+    {
+      content:
+        "During Ramadan 2026, the Haske Foundation's welfare drive was reported to have distributed roughly 80,000 bags of rice and grains and about ₦220 million in cash assistance across all 21 LGAs. #Adamawa2027 https://leadership.ng/ramadan-haske-foundation-launches-welfare-drive-distributes-80000-bags-of-rice-in-adamawa/",
+      contentStatus: "THIRD_PARTY",
+      linkUrl: "https://leadership.ng/ramadan-haske-foundation-launches-welfare-drive-distributes-80000-bags-of-rice-in-adamawa/",
+      createdAt: hoursAgo(44),
+    },
+    {
+      content:
+        "Youth inclusion is one of the campaign's stated priorities. Programme details are still being finalised — tell us below what support would make the biggest difference for young people in your LGA. #Youth #Adamawa2027",
+      contentStatus: "PROPOSED",
+      createdAt: hoursAgo(70),
+    },
+  ];
+
+  const teamPosts = [];
+  for (const seed of teamPostSeeds) {
+    teamPosts.push(
+      await prisma.post.create({
+        data: {
+          authorId: campaignTeam.id,
+          type: seed.media?.length ? "IMAGE" : seed.linkUrl ? "LINK" : "TEXT",
+          content: seed.content,
+          linkUrl: seed.linkUrl,
+          contentStatus: seed.contentStatus,
+          createdAt: seed.createdAt,
+          media: seed.media ? { create: seed.media.map((m, order) => ({ ...m, type: "IMAGE" as const, order })) } : undefined,
+        },
+      })
+    );
+  }
+
+  // ── Official community consultation poll ─────────────────────────────
+  // Asks a question; makes no claim. Open for two weeks from seeding.
+  const consultationOptions = [
+    "Farming inputs & market access",
+    "Schools & teachers",
+    "Healthcare access",
+    "Jobs & skills for youth",
+    "Security",
+    "Roads & infrastructure",
+  ];
+  const consultationPost = await prisma.post.create({
+    data: {
+      authorId: campaignTeam.id,
+      type: "POLL",
+      content:
+        "Community consultation: we want to hear directly from every LGA. Vote below, then reply with what's happening where you live. #Adamawa2027",
+      contentStatus: "OFFICIAL",
+      createdAt: hoursAgo(6),
+      poll: {
+        create: {
+          question: "Which issue matters most to your community right now?",
+          isOfficial: true,
+          resultsVisibility: "AFTER_VOTE",
+          endAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          options: { create: consultationOptions.map((text, order) => ({ text, order })) },
+        },
+      },
+    },
+    include: { poll: { include: { options: { orderBy: { order: "asc" } } } } },
+  });
+  // Demo accounts vote along their bios' interests.
+  const pollOptions = consultationPost.poll!.options;
+  const demoVotes: [typeof demoUser1, number][] = [
+    [demoUser1, 3],
+    [demoUser2, 0],
+    [demoUser3, 1],
+    [demoUser4, 0],
+    [demoUser5, 2],
+    [demoUser6, 5],
+  ];
+  for (const [user, optionIndex] of demoVotes) {
+    const option = pollOptions[optionIndex];
+    await prisma.pollVote.create({ data: { pollId: consultationPost.poll!.id, optionId: option.id, userId: user.id } });
+    await prisma.pollOption.update({ where: { id: option.id }, data: { votesCount: { increment: 1 } } });
+  }
+
+  // ── Demo replies, likes and follows on the team posts ────────────────
+  const [ricePost, declarationPost, , youthPost] = teamPosts;
+  const demoCommentSeeds: [typeof demoUser1, (typeof teamPosts)[number], string][] = [
+    [demoUser2, ricePost, "More processing capacity close to the farms is exactly what Mubi growers need."],
+    [demoUser4, ricePost, "Would be great to know if smaller processors can partner with mills like this."],
+    [demoUser6, declarationPost, "Was there that day — the square was packed."],
+    [demoUser1, youthPost, "Start-up grants and mentorship for young women traders in Yola, please."],
+    [demoUser3, consultationPost, "Mubi South: classrooms and teacher numbers, by a long way."],
+    [demoUser5, consultationPost, "Ganye: the nearest general hospital is still too far for most families."],
+  ];
+  for (const [user, post, content] of demoCommentSeeds) {
+    await prisma.comment.create({ data: { postId: post.id, authorId: user.id, content: `${content} [Demo reply]` } });
+    await prisma.post.update({ where: { id: post.id }, data: { commentsCount: { increment: 1 } } });
+  }
+
+  for (const [i, post] of [...teamPosts, consultationPost].entries()) {
+    for (const user of demoUsers.slice(0, 6 - (i % 4))) {
+      await prisma.postLike.create({ data: { userId: user.id, postId: post.id } });
+      await prisma.post.update({ where: { id: post.id }, data: { likesCount: { increment: 1 } } });
+    }
+  }
+
+  for (const user of demoUsers) {
+    await prisma.follow.create({ data: { followerId: user.id, followingId: campaignTeam.id } });
+  }
+
+  // ── Hashtags ─────────────────────────────────────────────────────────
+  // Link every seeded post to its hashtags, then recount all hashtags from
+  // live posts so re-seeding never drifts the counters.
+  for (const post of [...teamPosts, consultationPost]) {
+    const tags = [...new Set((post.content?.match(/#([a-zA-Z][a-zA-Z0-9_]{1,49})/g) ?? []).map((t) => t.slice(1).toLowerCase()))];
+    for (const tag of tags) {
+      const hashtag = await prisma.hashtag.upsert({ where: { tag }, update: {}, create: { tag } });
+      await prisma.postHashtag.create({ data: { postId: post.id, hashtagId: hashtag.id } });
+    }
+  }
+  for (const hashtag of await prisma.hashtag.findMany({ select: { id: true } })) {
+    const postsCount = await prisma.postHashtag.count({ where: { hashtagId: hashtag.id, post: { deletedAt: null } } });
+    await prisma.hashtag.update({ where: { id: hashtag.id }, data: { postsCount } });
+  }
+
   console.log("Seed complete.");
   console.log(`- Achievements: ${hwRice.title}`);
   console.log(`- Programs: ${programSeeds.length} placeholders`);
   console.log(`- Manifesto: ${manifesto.title} (historical)`);
   console.log(`- Policy pillars: ${pillarSeeds.length}`);
+  console.log(`- Community: ${teamPosts.length} team posts, 1 consultation poll, ${demoCommentSeeds.length} demo replies`);
   console.log(`- Accounts: admin, ${haske.username}, ${campaignTeam.username}, ${demoUsers.map((u) => u.username).join(", ")}`);
 }
 
