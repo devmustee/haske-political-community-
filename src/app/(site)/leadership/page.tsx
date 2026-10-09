@@ -109,11 +109,11 @@ export default function LeadershipPage() {
                 </h3>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button asChild variant="gold-shimmer" size="sm">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+              <Button asChild variant="gold-shimmer" size="sm" className="w-full sm:w-auto">
                 <Link href="/manifesto">Download Full Covenant</Link>
               </Button>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
                 <Link href="/speak-to-haske">Share Your Priority</Link>
               </Button>
             </div>

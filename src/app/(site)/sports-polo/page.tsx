@@ -141,8 +141,8 @@ export default function SportsPoloPage() {
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {POLO_METRICS.map((metric, i) => (
               <Reveal key={metric.label} variant="scale" staggerIndex={i}>
-                <div className="flex flex-col items-center text-center p-3">
-                  <span className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-primary">
+                <div className="flex flex-col items-center text-center p-2 sm:p-3">
+                  <span className="font-serif text-2xl min-[400px]:text-3xl sm:text-4xl font-bold tracking-tight text-primary">
                     {metric.value}
                   </span>
                   <span className="mt-1 text-sm font-bold text-foreground">

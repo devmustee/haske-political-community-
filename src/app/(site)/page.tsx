@@ -516,8 +516,8 @@ export default async function HomePage() {
           Haske
         </p>
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-            <Reveal>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <Reveal className="min-w-0">
               <span className="section-eyebrow">Leadership Profile</span>
               <h2 className="mt-3 text-fluid-h2 font-bold tracking-tight text-foreground">
                 Who is Abdulrahman Bashir Haske?
@@ -528,14 +528,14 @@ export default async function HomePage() {
               <p className="mt-4 max-w-xl text-body text-muted-foreground">
                 {bio?.paragraphs[1]}
               </p>
-              <div className="mt-8 flex items-center gap-4">
-                <Button asChild variant="default">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <Button asChild variant="default" className="w-full sm:w-auto">
                   <Link href="/biography">
                     Read Full Biography
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="w-full sm:w-auto">
                   <Link href="/achievements">
                     Documented Achievements
                   </Link>
@@ -543,8 +543,8 @@ export default async function HomePage() {
               </div>
             </Reveal>
 
-            <Reveal variant="scale" delay={120}>
-              <SpotlightCard spotlightColor="primary" className="p-8 shadow-elevated">
+            <Reveal variant="scale" delay={120} className="min-w-0">
+              <SpotlightCard spotlightColor="primary" className="p-5 shadow-elevated sm:p-8">
                 <div className="flex items-center justify-between mb-4">
                   <ContentStatusBadge status="DOCUMENTED" />
                   <span className="text-xs font-mono font-semibold text-primary">AUN Alumnus</span>
@@ -593,7 +593,7 @@ export default async function HomePage() {
             </Reveal>
             <Timeline items={timeline} />
             <div className="mt-10 text-center">
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="h-auto min-h-10 max-w-full whitespace-normal py-2.5 text-center">
                 <Link href="/biography">
                   See the Complete Historical Timeline <ArrowRight className="size-4" />
                 </Link>
@@ -765,7 +765,7 @@ export default async function HomePage() {
             </Reveal>
 
             <div className="mt-10">
-              <Button asChild variant="gold-shimmer" size="lg" className="shadow-glow-gold">
+              <Button asChild variant="gold-shimmer" size="lg" className="shadow-glow-gold h-auto min-h-12 max-w-full whitespace-normal py-3 text-center">
                 <Link href="/manifesto">
                   Read Full Manifesto Document <ArrowRight className="size-4" />
                 </Link>
@@ -799,7 +799,7 @@ export default async function HomePage() {
           </Reveal>
 
           <div className="mt-8 text-center">
-            <Button asChild size="lg" variant="default" className="shadow-elevated px-8">
+            <Button asChild size="lg" variant="default" className="shadow-elevated h-auto min-h-12 max-w-full whitespace-normal px-6 py-3 text-center sm:px-8">
               <Link href="/community">
                 <Users className="size-4" />
                 Join the Community Conversation

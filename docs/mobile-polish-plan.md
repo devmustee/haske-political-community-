@@ -15,20 +15,26 @@ audit ran signed in. They still need a signed-out pass.
   clipped. It now has a single-column grid and wrapping emails.
 - **Installable PWA:** manifest, icons, theme colour, iOS home-screen meta, a
   service worker, and an `/offline` page. See "PWA follow-ups" below.
+- **Contact form:** now sends through Speak to Haske, with a tracking ID.
+- **Clipped content fixed at 320 and 375px:**
+  - `/`: the "Who is Abdulrahman Bashir Haske" section (cut off at every
+    phone width) and long CTA labels;
+  - `/leadership`: the APM ticket buttons;
+  - `/sports-polo`: the stats;
+  - `/media`: the article cards.
+
+  A re-audit that flags text or controls cut off by a clipping container
+  now passes on every route at both widths.
 
 ## P0: broken or misleading on phones (do first)
 
-1. **The contact form doesn't send.** On `/contact`, "Send" is
-   `type="button"` with no handler, so messages go nowhere. Decide where they
-   should go: the existing Speak to Haske feedback flow, or email via
-   `src/lib/services/email.ts`.
-2. **Placeholder contact details are live in the footer on every page:**
+1. **Placeholder contact details are live in the footer on every page:**
    - `+234 801 234 5678` (a placeholder-pattern number);
    - `info@abhaske.ng`, while `/contact` uses `@haske.community` addresses;
    - "No. 1 / No. 2, Haske Road" office addresses (seeded site settings).
 
    Replace these with real details or remove them.
-3. **Clipping is hidden, not prevented.** `html` and `body` have
+2. **Clipping is hidden, not prevented.** `html` and `body` have
    `overflow-x: hidden`, so a too-wide element gets cut off instead of making
    the page scroll. Keep it as a safety net, but add the audit below to CI so
    regressions like the `/contact` one are caught.
@@ -93,10 +99,15 @@ hero brand strip).
 ## Guardrail
 
 Turn the audit used for this plan into a Playwright test that runs at 320,
-375 and 768px over the route list. It should fail on:
+375 and 768px over the route list. Disable transitions and force `.reveal`
+elements to their finished state first, so content isn't caught
+mid-animation. It should fail on:
 
-- any element extending past the viewport that isn't inside a clipping
-  container;
+- any text or control extending beyond its nearest `overflow: hidden`/`clip`
+  ancestor (this is how hidden clipping shows up, since the page itself
+  never scrolls sideways). The usual cause is a `grid` with no
+  `grid-cols-1` on phones, plus a child that can't shrink (buttons in a
+  row that doesn't wrap, long words, badge rows);
 - new tap targets under 24px;
 - text under 11px.
 

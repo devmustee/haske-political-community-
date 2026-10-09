@@ -132,7 +132,7 @@ export default async function MediaCenterPage({
             )}
 
             {rest.length > 0 && (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {rest.map((item, i) => (
                   <Reveal key={item.id} variant="scale" delay={Math.min(i, 5) * 80}>
                     <Link href={`/media/${item.slug}`}>
@@ -156,8 +156,8 @@ export default async function MediaCenterPage({
                             )}
                           </div>
                         )}
-                        <div className="flex flex-1 flex-col p-6 sm:p-7">
-                          <div className="flex items-center gap-2">
+                        <div className="flex flex-1 flex-col p-5 sm:p-7">
+                          <div className="flex flex-wrap items-center gap-2">
                             <Badge variant="secondary">{CATEGORY_LABELS[item.category] ?? item.category}</Badge>
                             <ContentStatusBadge status={item.contentStatus} />
                           </div>
