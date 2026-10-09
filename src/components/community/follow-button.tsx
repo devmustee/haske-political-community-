@@ -7,7 +7,15 @@ import { Button } from "@/components/ui/button";
 import { toggleFollow } from "@/lib/actions/follows";
 import { useGuestGate } from "@/components/community/guest-gate";
 
-export function FollowButton({ userId, initialFollowing }: { userId: string; initialFollowing: boolean }) {
+export function FollowButton({
+  userId,
+  initialFollowing,
+  size = "default",
+}: {
+  userId: string;
+  initialFollowing: boolean;
+  size?: "default" | "sm";
+}) {
   const router = useRouter();
   const { guard, GateDialog } = useGuestGate();
   const [following, setFollowing] = useState(initialFollowing);
@@ -28,7 +36,13 @@ export function FollowButton({ userId, initialFollowing }: { userId: string; ini
 
   return (
     <>
-      <Button variant={following ? "outline" : "default"} disabled={pending} onClick={handleClick} className="min-w-28">
+      <Button
+        variant={following ? "outline" : "default"}
+        size={size}
+        disabled={pending}
+        onClick={handleClick}
+        className={size === "sm" ? "min-w-20" : "min-w-28"}
+      >
         {following ? "Following" : "Follow"}
       </Button>
       {GateDialog}

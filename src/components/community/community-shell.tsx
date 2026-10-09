@@ -6,7 +6,15 @@ import { MobileNav } from "@/components/community/mobile-nav";
 import { PostComposer } from "@/components/community/post-composer";
 import { useGuestGate } from "@/components/community/guest-gate";
 
-export function CommunityShell({ children, rightSidebar }: { children: React.ReactNode; rightSidebar: React.ReactNode }) {
+export function CommunityShell({
+  children,
+  rightSidebar,
+  unreadCount,
+}: {
+  children: React.ReactNode;
+  rightSidebar: React.ReactNode;
+  unreadCount: number;
+}) {
   const [composerOpen, setComposerOpen] = useState(false);
   const { guard, GateDialog } = useGuestGate();
 
@@ -15,7 +23,7 @@ export function CommunityShell({ children, rightSidebar }: { children: React.Rea
   return (
     <div className="mx-auto flex w-full max-w-[1280px]">
       <aside className="sticky top-0 h-screen w-[72px] shrink-0 border-r border-border px-1 xl:w-[280px] xl:px-3 hidden sm:block">
-        <LeftSidebar onCompose={openComposer} />
+        <LeftSidebar onCompose={openComposer} unreadCount={unreadCount} />
       </aside>
 
       <main className="min-h-screen w-full max-w-[600px] flex-1 border-r border-border pb-16 lg:pb-0">{children}</main>
@@ -24,7 +32,7 @@ export function CommunityShell({ children, rightSidebar }: { children: React.Rea
         {rightSidebar}
       </aside>
 
-      <MobileNav onCompose={openComposer} />
+      <MobileNav onCompose={openComposer} unreadCount={unreadCount} />
       {GateDialog}
       <PostComposer open={composerOpen} onOpenChange={setComposerOpen} />
     </div>

@@ -11,6 +11,7 @@ export async function globalSearch(query: string, viewerId?: string) {
   const [people, posts, programs, achievements, events, media] = await Promise.all([
     prisma.user.findMany({
       where: { OR: [{ name: { contains: q, mode: "insensitive" } }, { username: { contains: q, mode: "insensitive" } }] },
+      include: { followers: { where: { followerId: viewerId ?? "" }, select: { id: true } } },
       take: 10,
     }),
     prisma.post.findMany({
@@ -46,7 +47,14 @@ export async function globalSearch(query: string, viewerId?: string) {
     }),
   ]);
 
-  return { people, posts, programs, achievements, events, media };
+  return {
+    people: people.map(({ followers, ...u }) => ({ ...u, isFollowing: followers.length > 0 })),
+    posts,
+    programs,
+    achievements,
+    events,
+    media,
+  };
 }
 
 export async function getTrendingHashtags(take = 10) {

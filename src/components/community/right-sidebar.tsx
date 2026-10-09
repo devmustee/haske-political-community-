@@ -1,12 +1,16 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { VerifiedBadge } from "@/components/community/verified-badge";
+import { FollowButton } from "@/components/community/follow-button";
 import { formatCount, formatDate, initials } from "@/lib/utils";
 import { Calendar, Hash } from "lucide-react";
 
 export async function RightSidebar() {
+  const session = await auth();
+  const viewerId = session?.user?.id;
   const [trending, events, officials] = await Promise.all([
     prisma.hashtag.findMany({ orderBy: { postsCount: "desc" }, take: 5 }),
     prisma.event.findMany({
@@ -18,6 +22,7 @@ export async function RightSidebar() {
       where: { verification: { in: ["OFFICIAL", "ORGANIZATION"] } },
       orderBy: { createdAt: "asc" },
       take: 4,
+      include: { followers: { where: { followerId: viewerId ?? "" }, select: { id: true } } },
     }),
   ]);
 
@@ -30,18 +35,23 @@ export async function RightSidebar() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3 pt-0">
             {officials.map((u) => (
-              <Link key={u.id} href={`/community/user/${u.username}`} className="flex items-center gap-2.5">
-                <Avatar className="size-9">
-                  <AvatarImage src={u.avatarUrl ?? undefined} />
-                  <AvatarFallback>{initials(u.name)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="flex items-center gap-1 truncate text-sm font-medium">
-                    {u.name} <VerifiedBadge status={u.verification} />
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">@{u.username}</p>
-                </div>
-              </Link>
+              <div key={u.id} className="flex items-center gap-2.5">
+                <Link href={`/community/user/${u.username}`} className="flex min-w-0 flex-1 items-center gap-2.5">
+                  <Avatar className="size-9">
+                    <AvatarImage src={u.avatarUrl ?? undefined} />
+                    <AvatarFallback>{initials(u.name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="flex items-center gap-1 truncate text-sm font-medium">
+                      {u.name} <VerifiedBadge status={u.verification} />
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">@{u.username}</p>
+                  </div>
+                </Link>
+                {u.id !== viewerId && (
+                  <FollowButton userId={u.id} initialFollowing={u.followers.length > 0} size="sm" />
+                )}
+              </div>
             ))}
           </CardContent>
         </Card>

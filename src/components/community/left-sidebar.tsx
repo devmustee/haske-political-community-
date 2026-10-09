@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { initials, cn } from "@/lib/utils";
 import { VerifiedBadge } from "@/components/community/verified-badge";
+import { UnreadBadge } from "@/components/community/unread-badge";
 
 const NAV = [
   { href: "/community", label: "Home", icon: Home },
@@ -17,7 +18,7 @@ const NAV = [
   { href: "/events", label: "Events", icon: Calendar },
 ];
 
-export function LeftSidebar({ onCompose }: { onCompose?: () => void }) {
+export function LeftSidebar({ onCompose, unreadCount = 0 }: { onCompose?: () => void; unreadCount?: number }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const user = session?.user;
@@ -55,7 +56,10 @@ export function LeftSidebar({ onCompose }: { onCompose?: () => void }) {
               pathname === "/community/notifications" && "font-semibold"
             )}
           >
-            <Bell className="size-6 xl:size-5" />
+            <span className="relative">
+              <Bell className="size-6 xl:size-5" strokeWidth={pathname === "/community/notifications" ? 2.5 : 2} />
+              <UnreadBadge count={unreadCount} />
+            </span>
             <span className="hidden xl:inline">Notifications</span>
           </Link>
           <Link

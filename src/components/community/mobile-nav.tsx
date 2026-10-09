@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Home, Search, Bell, User, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UnreadBadge } from "@/components/community/unread-badge";
 
-export function MobileNav({ onCompose }: { onCompose: () => void }) {
+export function MobileNav({ onCompose, unreadCount = 0 }: { onCompose: () => void; unreadCount?: number }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const user = session?.user;
@@ -41,9 +42,13 @@ export function MobileNav({ onCompose }: { onCompose: () => void }) {
         <Link
           key={item.href}
           href={item.href}
+          aria-label={item.label}
           className={cn("flex flex-col items-center gap-0.5 p-2 text-muted-foreground", pathname === item.href && "text-foreground")}
         >
-          <item.icon className="size-6" />
+          <span className="relative">
+            <item.icon className="size-6" />
+            {item.href === "/community/notifications" && <UnreadBadge count={unreadCount} />}
+          </span>
         </Link>
       ))}
     </nav>

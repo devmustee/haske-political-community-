@@ -102,7 +102,7 @@ export default async function ExplorePage({
                 </Link>
                 <p className="truncate text-sm text-muted-foreground">@{u.username}</p>
               </div>
-              <FollowButton userId={u.id} initialFollowing={false} />
+              {u.id !== session?.user?.id && <FollowButton userId={u.id} initialFollowing={u.isFollowing} />}
             </div>
           ))}
         </section>
