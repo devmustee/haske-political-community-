@@ -8,6 +8,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateFeedbackStatus } from "@/lib/actions/feedback";
+import { runAction } from "@/lib/run-action";
 
 const STATUSES = Object.values(FeedbackStatus);
 
@@ -18,7 +19,7 @@ export function FeedbackStatusControl({ feedbackId, status }: { feedbackId: stri
 
   function apply(newStatus: FeedbackStatus) {
     startTransition(async () => {
-      const result = await updateFeedbackStatus(feedbackId, newStatus, note || undefined);
+      const result = await runAction(() => updateFeedbackStatus(feedbackId, newStatus, note || undefined));
       if (!result.ok) {
         toast.error(result.error);
         return;

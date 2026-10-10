@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/payout-retention",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "regions": [
+    "dub1"
+  ]
+}

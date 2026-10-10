@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
 import type { ActionResult } from "@/lib/actions/auth";
 
 export async function toggleFollow(targetUserId: string): Promise<ActionResult<{ following: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   if (user.id === targetUserId) return { ok: false, error: "You can't follow yourself." };
 
   const existing = await prisma.follow.findUnique({

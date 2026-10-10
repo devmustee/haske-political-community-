@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUser, requireUserResult } from "@/lib/session";
 import { updateProfileSchema, type UpdateProfileInput } from "@/lib/validations/profile";
 import type { ActionResult } from "@/lib/actions/auth";
 
 export async function updateProfile(input: UpdateProfileInput): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const parsed = updateProfileSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid profile data." };
   const { name, bio, location, avatarUrl, coverImageUrl } = parsed.data;

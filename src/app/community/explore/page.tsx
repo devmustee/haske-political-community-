@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { globalSearch, getTrendingHashtags } from "@/lib/queries/search";
 import { SearchBox } from "@/components/community/search-box";
 import { PostCard } from "@/components/community/post-card";
@@ -23,7 +23,7 @@ export default async function ExplorePage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q } = await searchParams;
-  const session = await auth();
+  const session = await getSession();
   const query = (q ?? "").replace(/^#/, "");
 
   if (!query) {

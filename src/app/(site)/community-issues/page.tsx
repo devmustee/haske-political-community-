@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { PageHero } from "@/components/cms/page-hero";
 import { CommunityIssueForm } from "@/components/cms/community-issue-form";
@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Community Issues", description: "Pub
 export const dynamic = "force-dynamic";
 
 export default async function CommunityIssuesPage() {
-  const session = await auth();
+  const session = await getSession();
   const issues = await prisma.communityIssue.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,

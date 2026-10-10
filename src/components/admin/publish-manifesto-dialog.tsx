@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { publishManifesto } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 export function PublishManifestoDialog({ pillars }: { pillars: { id: string; name: string }[] }) {
   const router = useRouter();
@@ -27,7 +28,7 @@ export function PublishManifestoDialog({ pillars }: { pillars: { id: string; nam
 
   async function handlePublish() {
     setSubmitting(true);
-    const result = await publishManifesto({ title, version, introduction, pillarIds: selected });
+    const result = await runAction(() => publishManifesto({ title, version, introduction, pillarIds: selected }));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

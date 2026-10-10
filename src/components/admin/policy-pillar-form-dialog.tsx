@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { savePolicyPillar, type PolicyPillarFormInput } from "@/lib/actions/admin-cms";
 import type { PolicyPillar } from "@prisma/client";
+import { runAction } from "@/lib/run-action";
 
 const STATUSES = Object.values(ContentStatus);
 
@@ -35,7 +36,7 @@ export function PolicyPillarFormDialog({ pillar }: { pillar: PolicyPillar }) {
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await savePolicyPillar(form);
+    const result = await runAction(() => savePolicyPillar(form));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

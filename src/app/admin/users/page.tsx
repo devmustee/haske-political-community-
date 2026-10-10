@@ -1,11 +1,10 @@
+import { getSession, requireAdminPagePermission } from "@/lib/session";
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { UserRowActions } from "@/components/admin/user-row-actions";
 import { hasPermission } from "@/lib/permissions";
-import { requireAdminPagePermission } from "@/lib/session";
 import { initials, formatDate } from "@/lib/utils";
 import { AdminRoleName } from "@prisma/client";
 
@@ -20,7 +19,7 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
 
 export default async function AdminUsersPage() {
   await requireAdminPagePermission("community.manage_users");
-  const session = await auth();
+  const session = await getSession();
   const canManageRoles = hasPermission((session?.user.adminRoles ?? []) as AdminRoleName[], "admin.manage_roles");
 
   const users = await prisma.user.findMany({

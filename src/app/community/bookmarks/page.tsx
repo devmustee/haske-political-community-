@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { getUserBookmarkedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Bookmarks" };
 export const dynamic = "force-dynamic";
 
 export default async function BookmarksPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user) redirect("/login?callbackUrl=/community/bookmarks");
 
   const posts = await getUserBookmarkedPosts(session.user.id);

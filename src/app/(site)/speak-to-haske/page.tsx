@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { PageHero } from "@/components/cms/page-hero";
 import { FeedbackForm } from "@/components/cms/feedback-form";
 import { FeedbackTracker } from "@/components/cms/feedback-tracker";
@@ -54,7 +54,7 @@ const CONSULTATION_CHANNELS = [
 ];
 
 export default async function SpeakToHaskePage() {
-  const session = await auth();
+  const session = await getSession();
 
   return (
     <div>

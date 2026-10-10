@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
 import { containsBlockedWord, extractHashtags } from "@/lib/moderation";
 import { rateLimit } from "@/lib/rate-limit";
@@ -31,7 +31,9 @@ async function attachHashtags(postId: string, content: string) {
 }
 
 export async function createPost(input: CreatePostInput): Promise<ActionResult<{ postId: string }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const limited = rateLimit(`post:${user.id}`, 20, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "You're posting too fast. Slow down a little." };
@@ -90,7 +92,9 @@ export async function createPost(input: CreatePostInput): Promise<ActionResult<{
 }
 
 export async function deletePost(postId: string): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const post = await prisma.post.findUnique({
     where: { id: postId },
     select: { authorId: true, hashtags: { select: { hashtagId: true } } },
@@ -109,7 +113,9 @@ export async function deletePost(postId: string): Promise<ActionResult> {
 }
 
 export async function toggleLike(postId: string): Promise<ActionResult<{ liked: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const existing = await prisma.postLike.findUnique({ where: { userId_postId: { userId: user.id, postId } } });
   if (existing) {
@@ -133,7 +139,9 @@ export async function toggleLike(postId: string): Promise<ActionResult<{ liked: 
 }
 
 export async function toggleRepost(postId: string): Promise<ActionResult<{ reposted: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const existing = await prisma.repost.findUnique({ where: { userId_postId: { userId: user.id, postId } } });
   if (existing) {
@@ -158,7 +166,9 @@ export async function toggleRepost(postId: string): Promise<ActionResult<{ repos
 }
 
 export async function toggleBookmark(postId: string): Promise<ActionResult<{ bookmarked: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const existing = await prisma.bookmark.findUnique({ where: { userId_postId: { userId: user.id, postId } } });
   if (existing) {
@@ -177,7 +187,9 @@ export async function toggleBookmark(postId: string): Promise<ActionResult<{ boo
 }
 
 export async function createComment(input: CreateCommentInput): Promise<ActionResult<{ commentId: string }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const limited = rateLimit(`comment:${user.id}`, 30, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "You're commenting too fast. Slow down a little." };
@@ -217,7 +229,9 @@ export async function createComment(input: CreateCommentInput): Promise<ActionRe
 }
 
 export async function toggleCommentLike(commentId: string): Promise<ActionResult<{ liked: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const existing = await prisma.commentLike.findUnique({ where: { userId_commentId: { userId: user.id, commentId } } });
   if (existing) {
@@ -236,7 +250,9 @@ export async function toggleCommentLike(commentId: string): Promise<ActionResult
 }
 
 export async function deleteComment(commentId: string): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const comment = await prisma.comment.findUnique({ where: { id: commentId }, select: { authorId: true, postId: true } });
   if (!comment) return { ok: false, error: "Comment not found." };
   if (comment.authorId !== user.id) return { ok: false, error: "You can only delete your own comments." };

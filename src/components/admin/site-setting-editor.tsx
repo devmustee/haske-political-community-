@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { updateSiteSetting } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 export function SiteSettingEditor({ settingKey, value }: { settingKey: string; value: unknown }) {
   const router = useRouter();
@@ -24,7 +25,7 @@ export function SiteSettingEditor({ settingKey, value }: { settingKey: string; v
     }
     setError(null);
     setSubmitting(true);
-    const result = await updateSiteSetting(settingKey, parsed);
+    const result = await runAction(() => updateSiteSetting(settingKey, parsed));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

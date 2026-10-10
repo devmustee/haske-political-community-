@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { toggleFollow } from "@/lib/actions/follows";
 import { useGuestGate } from "@/components/community/guest-gate";
+import { runAction } from "@/lib/run-action";
 
 export function FollowButton({
   userId,
@@ -24,7 +25,7 @@ export function FollowButton({
   const handleClick = guard(() => {
     setFollowing((v) => !v);
     startTransition(async () => {
-      const result = await toggleFollow(userId);
+      const result = await runAction(() => toggleFollow(userId));
       if (!result.ok) {
         toast.error(result.error);
         setFollowing(initialFollowing);

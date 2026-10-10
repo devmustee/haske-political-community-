@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFeedbackStatus, getMyFeedback } from "@/lib/actions/feedback";
 import { formatRelativeTime } from "@/lib/utils";
+import { ACTION_FAILED_MESSAGE } from "@/lib/run-action";
 
 const STATUS_VARIANT: Record<string, "outline" | "secondary" | "default" | "success"> = {
   RECEIVED: "outline",
@@ -43,7 +44,14 @@ export function FeedbackTracker({ isSignedIn }: { isSignedIn: boolean }) {
   async function handleSearch() {
     if (!trackingId.trim()) return;
     setSearching(true);
-    const found = await getFeedbackStatus(trackingId);
+    let found: Awaited<ReturnType<typeof getFeedbackStatus>>;
+    try {
+      found = await getFeedbackStatus(trackingId);
+    } catch {
+      setSearching(false);
+      toast.error(ACTION_FAILED_MESSAGE);
+      return;
+    }
     setSearching(false);
     if (!found) {
       setResult("not-found");

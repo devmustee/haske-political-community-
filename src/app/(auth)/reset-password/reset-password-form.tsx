@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { runAction } from "@/lib/run-action";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const router = useRouter();
@@ -27,7 +28,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   async function onSubmit(values: ResetPasswordInput) {
     setLoading(true);
-    const result = await resetPassword(values);
+    const result = await runAction(() => resetPassword(values));
     setLoading(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -38,7 +39,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <input type="hidden" {...register("token")} />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password">New password</Label>

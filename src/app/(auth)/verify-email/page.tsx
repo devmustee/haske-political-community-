@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { verifyEmailToken } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
+import { runAction } from "@/lib/run-action";
 
 export const metadata: Metadata = { title: "Verify your email" };
 
@@ -12,7 +13,7 @@ export default async function VerifyEmailPage({
   searchParams: Promise<{ token?: string }>;
 }) {
   const { token } = await searchParams;
-  const result = token ? await verifyEmailToken(token) : { ok: false as const, error: "Missing verification token." };
+  const result = token ? await runAction(() => verifyEmailToken(token)) : { ok: false as const, error: "Missing verification token." };
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">

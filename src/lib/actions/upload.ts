@@ -1,6 +1,6 @@
 "use server";
 
-import { requireUser } from "@/lib/session";
+import { requireUserResult } from "@/lib/session";
 import { getStorageService, validateUpload } from "@/lib/services/storage";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -9,7 +9,9 @@ export type UploadedFile = { url: string; contentType: string };
 const ALLOWED_FOLDERS = new Set(["posts", "avatars", "covers"]);
 
 export async function uploadFile(formData: FormData, folder: string): Promise<{ ok: true; data: UploadedFile } | { ok: false; error: string }> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   if (!ALLOWED_FOLDERS.has(folder)) return { ok: false, error: "Invalid upload destination." };
 

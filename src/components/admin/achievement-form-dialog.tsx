@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { saveAchievement, type AchievementFormInput } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 const CATEGORIES = Object.values(AchievementCategory);
 const STATUSES = Object.values(ContentStatus);
@@ -48,7 +49,7 @@ export function AchievementFormDialog({ initial, trigger }: { initial?: Initial;
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await saveAchievement(form);
+    const result = await runAction(() => saveAchievement(form));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

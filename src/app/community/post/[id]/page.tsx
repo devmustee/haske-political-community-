@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { getPostById } from "@/lib/queries/posts";
 import { getCommentTree, type CommentNode } from "@/lib/queries/comments";
 import { PostCard } from "@/components/community/post-card";
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await auth();
+  const session = await getSession();
 
   const post = await getPostById(id, session?.user?.id);
   if (!post) notFound();

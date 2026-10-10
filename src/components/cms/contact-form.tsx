@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { CheckCircle2, Copy, Loader2, LogIn, Send, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { submitFeedback } from "@/lib/actions/feedback";
+import { runAction } from "@/lib/run-action";
 
 const DESKS = {
   enterprise: "Commercial & Agro-Industry",
@@ -51,11 +52,11 @@ export function ContactForm() {
 
   async function onSubmit(values: ContactInput) {
     setSubmitting(true);
-    const result = await submitFeedback({
+    const result = await runAction(() => submitFeedback({
       type: "QUESTION",
       subject: values.subject,
       description: `Contact desk: ${DESKS[values.desk]}\n\n${values.message}`,
-    });
+    }));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -126,7 +127,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       <p className="rounded-xl bg-secondary/40 px-3.5 py-2.5 text-xs text-muted-foreground">
         Sending as <span className="font-semibold text-foreground">{session.user.name ?? session.user.username}</span>
         {session.user.email && <> ({session.user.email})</>}

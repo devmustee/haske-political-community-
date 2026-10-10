@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { safeCallbackUrl } from "@/lib/safe-redirect";
 
 export function LoginForm() {
   const router = useRouter();
@@ -33,12 +34,12 @@ export function LoginForm() {
       toast.error("Invalid email/username or password.");
       return;
     }
-    router.push(searchParams.get("callbackUrl") ?? "/community");
+    router.push(safeCallbackUrl(searchParams.get("callbackUrl")));
     router.refresh();
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="identifier">Email or username</Label>
         <Input id="identifier" autoComplete="username" placeholder="you@example.com" {...register("identifier")} />

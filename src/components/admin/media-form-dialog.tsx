@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { saveMediaItem, type MediaFormInput } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 const CATEGORIES = Object.values(MediaCenterCategory);
 const STATUSES = Object.values(ContentStatus);
@@ -37,7 +38,7 @@ export function MediaFormDialog({ initial, trigger }: { initial?: Initial; trigg
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await saveMediaItem(form);
+    const result = await runAction(() => saveMediaItem(form));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { saveEvent, type EventFormInput } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 const STATUSES = Object.values(EventStatus);
 
@@ -40,7 +41,7 @@ export function EventFormDialog({ initial, trigger }: { initial?: Initial; trigg
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await saveEvent(form);
+    const result = await runAction(() => saveEvent(form));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

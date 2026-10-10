@@ -15,6 +15,7 @@ import { useGuestGate } from "@/components/community/guest-gate";
 import { toggleCommentLike, deleteComment } from "@/lib/actions/posts";
 import { reportContent } from "@/lib/actions/reports";
 import { cn, formatRelativeTime, initials } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 export interface CommentThreadItem {
   id: string;
@@ -42,7 +43,7 @@ export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadIt
   const handleLike = guard(() => {
     setLikeState((s) => ({ liked: !s.liked, count: s.liked ? s.count - 1 : s.count + 1 }));
     (async () => {
-      const result = await toggleCommentLike(comment.id);
+      const result = await runAction(() => toggleCommentLike(comment.id));
       if (!result.ok) {
         toast.error(result.error);
         setLikeState({ liked: comment.liked, count: comment.likesCount });
@@ -51,7 +52,7 @@ export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadIt
   });
 
   async function handleDelete() {
-    const result = await deleteComment(comment.id);
+    const result = await runAction(() => deleteComment(comment.id));
     if (!result.ok) {
       toast.error(result.error);
       return;

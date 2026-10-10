@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, MailCheck } from "lucide-react";
+import { runAction } from "@/lib/run-action";
 
 export function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ export function ForgotPasswordForm() {
 
   async function onSubmit(values: ForgotPasswordInput) {
     setLoading(true);
-    const result = await requestPasswordReset(values);
+    const result = await runAction(() => requestPasswordReset(values));
     setLoading(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -45,7 +46,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email">Email</Label>
         <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" {...register("email")} />

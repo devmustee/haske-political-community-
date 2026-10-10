@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn, formatCount } from "@/lib/utils";
 import { Check, CheckCircle2 } from "lucide-react";
+import { runAction } from "@/lib/run-action";
 
 interface PollOption {
   id: string;
@@ -58,7 +59,7 @@ export function PollCard({
       return;
     }
     startTransition(async () => {
-      const result = await votePoll(pollId, selected);
+      const result = await runAction(() => votePoll(pollId, selected));
       if (!result.ok) {
         toast.error(result.error);
         return;

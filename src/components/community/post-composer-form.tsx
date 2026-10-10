@@ -14,6 +14,7 @@ import { createPost } from "@/lib/actions/posts";
 import { uploadFile } from "@/lib/actions/upload";
 import { compressImage, type PreparedImage } from "@/lib/compress-image";
 import { initials, cn } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 const MAX_CHARS = 2000;
 const MAX_ATTACHMENTS = 4;
@@ -137,7 +138,7 @@ export function PostComposerForm({
       const prepared: PreparedImage = attachment.type === "IMAGE" ? await compressImage(file) : { file };
       const formData = new FormData();
       formData.append("file", prepared.file);
-      const result = await uploadFile(formData, "posts").catch(() => ({ ok: false as const, error: "Upload failed. Please try again." }));
+      const result = await runAction(() => uploadFile(formData, "posts")).catch(() => ({ ok: false as const, error: "Upload failed. Please try again." }));
       if (!result.ok) {
         toast.error(result.error);
         removeAttachment(attachment.id);
@@ -179,7 +180,7 @@ export function PostComposerForm({
     const media = attachments
       .filter((a) => a.url)
       .map((a) => ({ url: a.url!, type: a.type, width: a.width, height: a.height }));
-    const result = await createPost({
+    const result = await runAction(() => createPost({
       content: content.trim() || undefined,
       media: media.length ? media : undefined,
       quoteOfId,
@@ -192,7 +193,7 @@ export function PostComposerForm({
             resultsVisibility: "AFTER_VOTE",
           }
         : undefined,
-    });
+    }));
     setSubmitting(false);
 
     if (!result.ok) {

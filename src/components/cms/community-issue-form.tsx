@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { submitCommunityIssue } from "@/lib/actions/feedback";
 import { communityIssueSchema, type CommunityIssueInput } from "@/lib/validations/feedback";
+import { runAction } from "@/lib/run-action";
 
 const CATEGORIES: CommunityIssueInput["category"][] = [
   "ROADS",
@@ -41,7 +42,7 @@ export function CommunityIssueForm() {
 
   async function onSubmit(values: CommunityIssueInput) {
     setSubmitting(true);
-    const result = await submitCommunityIssue(values);
+    const result = await runAction(() => submitCommunityIssue(values));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -53,7 +54,7 @@ export function CommunityIssueForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 rounded-2xl border border-border p-5">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 rounded-2xl border border-border p-5">
       <div className="flex flex-col gap-1.5">
         <Label>Category</Label>
         <Select value={watch("category")} onValueChange={(v) => setValue("category", v as CommunityIssueInput["category"])}>

@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Baseline security headers for every response.
+        source: "/(.*)",
+        headers: [
+          // Nobody may embed this site in a frame (clickjacking).
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+        ],
+      },
+      {
         // Always revalidate the service worker so updates reach users promptly.
         source: "/sw.js",
         headers: [

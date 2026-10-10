@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { getNotifications } from "@/lib/queries/notifications";
 import { NotificationItem } from "@/components/community/notification-item";
 import { MarkAllReadButton } from "@/components/community/mark-all-read-button";
@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Notifications" };
 export const dynamic = "force-dynamic";
 
 export default async function NotificationsPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user) redirect("/login?callbackUrl=/community/notifications");
 
   const notifications = await getNotifications(session.user.id);

@@ -31,6 +31,7 @@ import { PostComposer } from "@/components/community/post-composer";
 import { ReportDialog } from "@/components/community/report-dialog";
 import { CommentComposer } from "@/components/community/comment-composer";
 import { cn, formatCount } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 export function PostActions({
   postId,
@@ -83,7 +84,7 @@ export function PostActions({
   const handleLike = guard(() => {
     setLikeState((s) => ({ liked: !s.liked, count: s.liked ? s.count - 1 : s.count + 1 }));
     startTransition(async () => {
-      const result = await toggleLike(postId);
+      const result = await runAction(() => toggleLike(postId));
       if (!result.ok) {
         toast.error(result.error);
         setLikeState({ liked, count: likesCount });
@@ -94,7 +95,7 @@ export function PostActions({
   const handleRepost = guard(() => {
     setRepostState((s) => ({ reposted: !s.reposted, count: s.reposted ? s.count - 1 : s.count + 1 }));
     startTransition(async () => {
-      const result = await toggleRepost(postId);
+      const result = await runAction(() => toggleRepost(postId));
       if (!result.ok) {
         toast.error(result.error);
         setRepostState({ reposted, count: repostsCount });
@@ -109,7 +110,7 @@ export function PostActions({
   const handleBookmark = guard(() => {
     setBookmarkState((v) => !v);
     startTransition(async () => {
-      const result = await toggleBookmark(postId);
+      const result = await runAction(() => toggleBookmark(postId));
       if (!result.ok) {
         toast.error(result.error);
         setBookmarkState(bookmarked);
@@ -146,7 +147,7 @@ export function PostActions({
 
   async function handleDelete() {
     setDeleteOpen(false);
-    const result = await deletePost(postId);
+    const result = await runAction(() => deletePost(postId));
     if (!result.ok) {
       toast.error(result.error);
       return;

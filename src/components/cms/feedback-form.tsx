@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { submitFeedback } from "@/lib/actions/feedback";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validations/feedback";
+import { runAction } from "@/lib/run-action";
 
 const TYPE_OPTIONS: { value: FeedbackInput["type"]; label: string }[] = [
   { value: "IDEA", label: "Idea" },
@@ -37,7 +38,7 @@ export function FeedbackForm() {
 
   async function onSubmit(values: FeedbackInput) {
     setSubmitting(true);
-    const result = await submitFeedback(values);
+    const result = await runAction(() => submitFeedback(values));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -72,7 +73,7 @@ export function FeedbackForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label>Type</Label>
         <Select value={watch("type")} onValueChange={(v) => setValue("type", v as FeedbackInput["type"])}>

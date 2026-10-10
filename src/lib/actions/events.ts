@@ -3,11 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUserResult } from "@/lib/session";
 import type { ActionResult } from "@/lib/actions/auth";
 
 export async function registerForEvent(eventId: string): Promise<ActionResult<{ registered: boolean }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
 
   const event = await prisma.event.findUnique({ where: { id: eventId } });
   if (!event) return { ok: false, error: "Event not found." };
@@ -46,7 +48,9 @@ export async function registerForEvent(eventId: string): Promise<ActionResult<{ 
 }
 
 export async function askEventQuestion(eventId: string, question: string): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const trimmed = question.trim();
   if (!trimmed) return { ok: false, error: "Question can't be empty." };
   if (trimmed.length > 500) return { ok: false, error: "Keep your question under 500 characters." };

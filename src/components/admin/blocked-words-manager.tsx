@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { addBlockedWord, removeBlockedWord } from "@/lib/actions/admin-moderation";
+import { runAction } from "@/lib/run-action";
 
 export function BlockedWordsManager({ words }: { words: string[] }) {
   const router = useRouter();
@@ -17,7 +18,7 @@ export function BlockedWordsManager({ words }: { words: string[] }) {
   function add() {
     if (!value.trim()) return;
     startTransition(async () => {
-      const result = await addBlockedWord(value);
+      const result = await runAction(() => addBlockedWord(value));
       if (!result.ok) {
         toast.error(result.error);
         return;
@@ -29,7 +30,7 @@ export function BlockedWordsManager({ words }: { words: string[] }) {
 
   function remove(word: string) {
     startTransition(async () => {
-      await removeBlockedWord(word);
+      await runAction(() => removeBlockedWord(word));
       router.refresh();
     });
   }

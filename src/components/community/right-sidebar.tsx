@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -12,7 +12,7 @@ import { Hash } from "lucide-react";
 const EVENT_TZ = "Africa/Lagos";
 
 export async function RightSidebar() {
-  const session = await auth();
+  const session = await getSession();
   const viewerId = session?.user?.id;
   const [trending, events, officials] = await Promise.all([
     prisma.hashtag.findMany({ orderBy: { postsCount: "desc" }, take: 5 }),

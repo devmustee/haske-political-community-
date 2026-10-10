@@ -3,12 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUser, requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
 import type { ActionResult } from "@/lib/actions/auth";
 
 export async function votePoll(pollId: string, optionIds: string[]): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   if (optionIds.length === 0) return { ok: false, error: "Choose at least one option." };
 
   const poll = await prisma.poll.findUnique({

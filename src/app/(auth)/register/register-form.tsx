@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, MailCheck } from "lucide-react";
+import { runAction } from "@/lib/run-action";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -27,11 +28,11 @@ export function RegisterForm() {
 
   async function onSubmit(values: RegisterInput) {
     setLoading(true);
-    const result = await registerUser(values);
+    const result = await runAction(() => registerUser(values));
     setLoading(false);
 
     if (!result.ok) {
-      if (result.fieldErrors) {
+      if ("fieldErrors" in result && result.fieldErrors) {
         for (const [field, messages] of Object.entries(result.fieldErrors)) {
           setError(field as keyof RegisterInput, { message: messages[0] });
         }
@@ -69,7 +70,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="name">Full name</Label>
         <Input id="name" autoComplete="name" placeholder="Aisha Mohammed" {...register("name")} />

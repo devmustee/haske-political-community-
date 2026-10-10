@@ -19,6 +19,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { updateProfile } from "@/lib/actions/profile";
 import { uploadFile } from "@/lib/actions/upload";
 import { initials } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 interface Props {
   open: boolean;
@@ -51,7 +52,7 @@ export function EditProfileDialog({ open, onOpenChange, user }: Props) {
     setUploading(kind);
     const formData = new FormData();
     formData.append("file", file);
-    const result = await uploadFile(formData, kind === "avatar" ? "avatars" : "covers");
+    const result = await runAction(() => uploadFile(formData, kind === "avatar" ? "avatars" : "covers"));
     setUploading(null);
     if (!result.ok) {
       toast.error(result.error);
@@ -63,7 +64,7 @@ export function EditProfileDialog({ open, onOpenChange, user }: Props) {
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await updateProfile({ name, bio, location, avatarUrl, coverImageUrl });
+    const result = await runAction(() => updateProfile({ name, bio, location, avatarUrl, coverImageUrl }));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

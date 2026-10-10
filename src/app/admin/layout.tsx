@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { permissionsForRoles } from "@/lib/permissions";
 import { AdminRoleName } from "@prisma/client";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user) redirect("/login?callbackUrl=/admin");
 
   const roles = (session.user.adminRoles ?? []) as AdminRoleName[];

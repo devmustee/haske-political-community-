@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { markAllNotificationsRead } from "@/lib/actions/notifications";
+import { runAction } from "@/lib/run-action";
 
 export function MarkAllReadButton() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export function MarkAllReadButton() {
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
-          await markAllNotificationsRead();
+          await runAction(() => markAllNotificationsRead());
           router.refresh();
         })
       }

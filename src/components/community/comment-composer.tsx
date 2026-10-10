@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { initials } from "@/lib/utils";
+import { runAction } from "@/lib/run-action";
 
 export function CommentComposer({
   postId,
@@ -35,7 +36,7 @@ export function CommentComposer({
     if (!content.trim()) return;
     setSubmitting(true);
     (async () => {
-      const result = await createComment({ postId, parentId, content: content.trim() });
+      const result = await runAction(() => createComment({ postId, parentId, content: content.trim() }));
       setSubmitting(false);
       if (!result.ok) {
         toast.error(result.error);

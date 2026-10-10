@@ -9,6 +9,7 @@ import { Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { registerForEvent, askEventQuestion } from "@/lib/actions/events";
+import { runAction } from "@/lib/run-action";
 
 export function EventRegisterButton({
   eventId,
@@ -34,7 +35,7 @@ export function EventRegisterButton({
 
   async function handleClick() {
     setPending(true);
-    const result = await registerForEvent(eventId);
+    const result = await runAction(() => registerForEvent(eventId));
     setPending(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -85,7 +86,7 @@ export function EventQuestionForm({ eventId }: { eventId: string }) {
   async function submit() {
     if (!question.trim()) return;
     setSubmitting(true);
-    const result = await askEventQuestion(eventId, question);
+    const result = await runAction(() => askEventQuestion(eventId, question));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);

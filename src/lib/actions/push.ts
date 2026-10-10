@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/session";
+import { requireUser, requireUserResult } from "@/lib/session";
 import { rateLimit } from "@/lib/rate-limit";
 import type { ActionResult } from "@/lib/actions/auth";
 
@@ -14,7 +14,9 @@ const subscriptionSchema = z.object({
 
 /** Saves this browser's push subscription for the signed-in user. */
 export async function subscribePush(input: unknown): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const limited = rateLimit(`push:${user.id}`, 20, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many attempts. Try again later." };
 
@@ -35,7 +37,9 @@ export async function subscribePush(input: unknown): Promise<ActionResult> {
 
 /** Removes this browser's subscription (only if it belongs to the signed-in user). */
 export async function unsubscribePush(endpoint: string): Promise<ActionResult> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   await prisma.pushSubscription.deleteMany({ where: { endpoint, userId: user.id } });
   return { ok: true, data: undefined };
 }

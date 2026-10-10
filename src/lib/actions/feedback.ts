@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireUser, requirePermission } from "@/lib/session";
+import { requireUser, requirePermission, requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
 import { logAudit } from "@/lib/audit";
 import { feedbackSchema, communityIssueSchema, type FeedbackInput, type CommunityIssueInput } from "@/lib/validations/feedback";
@@ -21,7 +21,9 @@ async function generateTrackingId(): Promise<string> {
 }
 
 export async function submitFeedback(input: FeedbackInput): Promise<ActionResult<{ trackingId: string }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const parsed = feedbackSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid submission." };
   const data = parsed.data;
@@ -56,7 +58,9 @@ export async function getMyFeedback() {
 }
 
 export async function submitCommunityIssue(input: CommunityIssueInput): Promise<ActionResult<{ issueId: string }>> {
-  const user = await requireUser();
+  const authResult = await requireUserResult();
+  if (!authResult.ok) return authResult;
+  const user = authResult.user;
   const parsed = communityIssueSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid submission." };
   const data = parsed.data;

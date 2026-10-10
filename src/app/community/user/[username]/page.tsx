@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, MapPin, MessageSquare, MessageCircle, Image as ImageIcon, Heart } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { getUserProfile } from "@/lib/queries/users";
 import { getUserPosts, getUserLikedPosts } from "@/lib/queries/posts";
 import { getUserReplies } from "@/lib/queries/replies";
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
-  const session = await auth();
+  const session = await getSession();
   const user = await getUserProfile(username, session?.user?.id);
   if (!user) notFound();
 

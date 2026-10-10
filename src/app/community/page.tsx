@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { getFeedPosts } from "@/lib/queries/posts";
 import { PostCard } from "@/components/community/post-card";
 import { FeedTabs } from "@/components/community/feed-tabs";
@@ -23,7 +23,7 @@ export default async function CommunityFeedPage({
   const { tab: tabParam } = await searchParams;
   const tab: Tab = TABS.includes(tabParam as Tab) ? (tabParam as Tab) : "for-you";
 
-  const session = await auth();
+  const session = await getSession();
   const posts = await getFeedPosts({ viewerId: session?.user?.id, tab });
 
   return (
