@@ -9,8 +9,10 @@ export const NOTIFICATION_VERB: Record<string, string> = {
   POLL_RESULT: "voted in your poll",
 };
 
-/** Where a notification should take the user. Mirrors NotificationItem's link. */
-export function notificationHref(n: { postId?: string | null; actorUsername?: string | null }) {
+/** Where a notification should take the user (in-app list and push). */
+export function notificationHref(n: { type?: string; postId?: string | null; actorUsername?: string | null; link?: string | null }) {
+  if (n.type === "APPLICATION_STATUS") return "/applications";
+  if (n.type === "ADMIN_ANNOUNCEMENT" && n.link) return n.link;
   if (n.postId) return `/community/post/${n.postId}`;
   if (n.actorUsername) return `/community/user/${n.actorUsername}`;
   return "/community/notifications";

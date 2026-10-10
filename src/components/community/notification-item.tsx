@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Heart, MessageCircle, Repeat2, UserPlus, BarChart3, Calendar, Sparkles, Megaphone, MessageSquareWarning } from "lucide-react";
+import { Heart, MessageCircle, Repeat2, UserPlus, BarChart3, Calendar, Sparkles, Megaphone, MessageSquareWarning, ClipboardCheck } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { VerifiedBadge } from "@/components/community/verified-badge";
 import { formatRelativeTime, initials, cn } from "@/lib/utils";
-import { NOTIFICATION_VERB as VERB } from "@/lib/notification-text";
+import { NOTIFICATION_VERB as VERB, notificationHref } from "@/lib/notification-text";
 
 const ICONS: Record<string, { icon: React.ElementType; className: string }> = {
   LIKE: { icon: Heart, className: "text-rose-600" },
@@ -17,6 +17,7 @@ const ICONS: Record<string, { icon: React.ElementType; className: string }> = {
   PROGRAM_UPDATE: { icon: Sparkles, className: "text-accent-foreground" },
   ADMIN_ANNOUNCEMENT: { icon: Megaphone, className: "text-primary" },
   FEEDBACK_STATUS: { icon: MessageSquareWarning, className: "text-primary" },
+  APPLICATION_STATUS: { icon: ClipboardCheck, className: "text-primary" },
 };
 
 
@@ -28,12 +29,18 @@ interface NotificationData {
   message: string | null;
   createdAt: Date;
   actor: { name: string; username: string; avatarUrl: string | null; verification: string } | null;
+  announcement?: { title: string; body: string; link: string | null } | null;
 }
 
 export function NotificationItem({ notification }: { notification: NotificationData }) {
   const config = ICONS[notification.type] ?? { icon: Megaphone, className: "text-primary" };
   const Icon = config.icon;
-  const href = notification.postId ? `/community/post/${notification.postId}` : notification.actor ? `/community/user/${notification.actor.username}` : "#";
+  const href = notificationHref({
+    type: notification.type,
+    postId: notification.postId,
+    actorUsername: notification.actor?.username,
+    link: notification.announcement?.link,
+  });
 
   return (
     <Link
@@ -53,6 +60,11 @@ export function NotificationItem({ notification }: { notification: NotificationD
               <VerifiedBadge status={notification.actor.verification} className="mx-1 inline" />
               {VERB[notification.type] ?? notification.message}
             </p>
+          </div>
+        ) : notification.announcement ? (
+          <div className="text-sm">
+            <p className="font-semibold">{notification.announcement.title}</p>
+            <p className="mt-0.5 whitespace-pre-line text-muted-foreground">{notification.announcement.body}</p>
           </div>
         ) : (
           <p className="text-sm">{notification.message ?? "New update"}</p>

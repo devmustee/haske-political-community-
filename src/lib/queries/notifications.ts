@@ -6,7 +6,7 @@ export async function getNotifications(userId: string) {
     where: { userId },
     orderBy: { createdAt: "desc" },
     take: 50,
-    include: { actor: true },
+    include: { actor: true, announcement: { select: { title: true, body: true, link: true } } },
   });
 }
 

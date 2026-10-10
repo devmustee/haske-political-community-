@@ -17,6 +17,7 @@ const PREF_FIELD: Partial<Record<NotificationType, string>> = {
   PROGRAM_UPDATE: "programUpdates",
   ADMIN_ANNOUNCEMENT: "adminAnnouncements",
   FEEDBACK_STATUS: "feedbackUpdates",
+  APPLICATION_STATUS: "programUpdates",
 };
 
 interface NotifyInput {
@@ -57,7 +58,7 @@ export async function notify(input: NotifyInput) {
   after(() =>
     sendPushToUser(input.userId, {
       ...notificationPushText({ type: input.type, actorName: notification.actor?.name, message: input.message }),
-      url: notificationHref({ postId: input.postId, actorUsername: notification.actor?.username }),
+      url: notificationHref({ type: input.type, postId: input.postId, actorUsername: notification.actor?.username }),
       tag: `${input.type}:${input.postId ?? notification.actor?.username ?? notification.id}`,
     })
   );

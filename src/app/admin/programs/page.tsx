@@ -5,18 +5,22 @@ import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { ProgramFormDialog } from "@/components/admin/program-form-dialog";
 import { ProgramRowActions } from "@/components/admin/program-row-actions";
-import { ApplicationStatusSelect } from "@/components/admin/application-status-select";
-import { formatDate } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { APPLICATION_STATUS_INFO } from "@/lib/applications";
+import { isPayoutConfigured } from "@/lib/crypto/payout";
 
 export const metadata: Metadata = { title: "Admin · Programs" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminProgramsPage() {
   await requireAdminPagePermission("cms.programs");
+  const payoutConfigured = isPayoutConfigured();
   const programs = await prisma.program.findMany({
     orderBy: { createdAt: "desc" },
-    include: { applications: { include: { user: true }, orderBy: { createdAt: "desc" } } },
   });
+  const grouped = await prisma.programApplication.groupBy({ by: ["programId", "status"], _count: true });
+  const countsFor = (programId: string) => grouped.filter((g) => g.programId === programId);
 
   return (
     <div className="p-6 sm:p-8">
@@ -25,7 +29,7 @@ export default async function AdminProgramsPage() {
           <h1 className="text-h1">Programs</h1>
           <p className="mt-1 text-sm text-muted-foreground">{programs.length} programs.</p>
         </div>
-        <ProgramFormDialog />
+        <ProgramFormDialog payoutConfigured={payoutConfigured} />
       </div>
 
       <div className="mt-6 flex flex-col gap-4">
@@ -37,30 +41,34 @@ export default async function AdminProgramsPage() {
                   <Badge variant="secondary">{p.category.replaceAll("_", " ")}</Badge>
                   <Badge variant="outline">{p.status}</Badge>
                   <ContentStatusBadge status={p.contentStatus} />
+                  {p.requiresPayoutDetails && (
+                    <Badge variant="outline">Bank details: {p.payoutDetailsStage === "AT_APPLICATION" ? "when applying" : "after acceptance"}</Badge>
+                  )}
                 </div>
                 <p className="mt-1 font-medium">{p.name}</p>
               </div>
-              <ProgramRowActions program={p} />
+              <ProgramRowActions program={p} payoutConfigured={payoutConfigured} />
             </div>
 
-            {p.applications.length > 0 && (
-              <div className="mt-3 border-t border-border pt-3">
-                <p className="mb-2 text-xs font-semibold text-muted-foreground">
-                  {p.applications.length} application{p.applications.length === 1 ? "" : "s"}
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  {p.applications.map((app) => (
-                    <div key={app.id} className="flex items-center justify-between gap-3 rounded-lg bg-secondary/40 px-3 py-2 text-sm">
-                      <div className="min-w-0">
-                        <span className="font-medium">{app.fullName}</span>{" "}
-                        <span className="text-muted-foreground">&middot; {app.phone} &middot; {formatDate(app.createdAt)}</span>
-                      </div>
-                      <ApplicationStatusSelect applicationId={app.id} status={app.status} />
-                    </div>
-                  ))}
+            {(() => {
+              const counts = countsFor(p.id);
+              const total = counts.reduce((n, c) => n + c._count, 0);
+              return (
+                <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs text-muted-foreground">
+                    {total === 0
+                      ? "No applications yet"
+                      : `${total} application${total === 1 ? "" : "s"}: ` +
+                        counts.map((c) => `${c._count} ${APPLICATION_STATUS_INFO[c.status].label.toLowerCase()}`).join(", ")}
+                  </p>
+                  {total > 0 && (
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/programs/${p.id}/applications`}>Review applications</Link>
+                    </Button>
+                  )}
                 </div>
-              </div>
-            )}
+              );
+            })()}
           </div>
         ))}
         {programs.length === 0 && <p className="text-sm text-muted-foreground">No programs yet.</p>}

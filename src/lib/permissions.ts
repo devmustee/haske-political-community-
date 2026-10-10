@@ -14,6 +14,12 @@ export type Permission =
   | "community.moderate"
   | "community.manage_users"
   | "programs.manage_applications"
+  /** Reveal one applicant's full account number (logged, with a reason). */
+  | "programs.view_payout_details"
+  /** Export accepted beneficiaries' payout details for bank transfer (logged). */
+  | "programs.export_payouts"
+  /** Send an announcement to every user. */
+  | "notifications.broadcast"
   | "events.manage"
   | "feedback.manage"
   | "analytics.view"
@@ -33,6 +39,9 @@ const ROLE_PERMISSIONS: Record<AdminRoleName, Permission[]> = {
     "community.moderate",
     "community.manage_users",
     "programs.manage_applications",
+    "programs.view_payout_details",
+    "programs.export_payouts",
+    "notifications.broadcast",
     "events.manage",
     "feedback.manage",
     "analytics.view",
@@ -52,6 +61,7 @@ const ROLE_PERMISSIONS: Record<AdminRoleName, Permission[]> = {
     "community.moderate",
     "community.manage_users",
     "moderation.review",
+    "notifications.broadcast",
   ],
   PROGRAM_MANAGER: ["cms.programs", "programs.manage_applications"],
   EVENT_MANAGER: ["events.manage"],

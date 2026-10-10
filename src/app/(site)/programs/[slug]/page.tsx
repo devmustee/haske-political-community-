@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { APPLICATION_STATUS_INFO, APPLY_BLOCK_MESSAGE, applyBlockReason } from "@/lib/applications";
+import { isPayoutConfigured } from "@/lib/crypto/payout";
+import { getBankList } from "@/lib/payout/provider";
+import { Button } from "@/components/ui/button";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { ProgramApplyDialog } from "@/components/cms/program-apply-dialog";
 import { DetailHeader, DetailMetaItem } from "@/components/cms/detail-header";
@@ -32,7 +38,16 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
   });
   if (!program || program.contentStatus === "DRAFT") notFound();
 
-  const canApply = program.status === "OPEN" || program.status === "UPCOMING" || program.status === "ONGOING";
+  const blocked = applyBlockReason(program);
+  const session = await getSession();
+  const myApplication = session?.user
+    ? await prisma.programApplication.findUnique({
+        where: { programId_userId: { programId: program.id, userId: session.user.id } },
+        select: { status: true },
+      })
+    : null;
+  const collectPayout = program.requiresPayoutDetails && program.payoutDetailsStage === "AT_APPLICATION" && isPayoutConfigured();
+  const banks = collectPayout && !blocked && !myApplication ? await getBankList() : [];
 
   return (
     <article>
@@ -80,10 +95,28 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
         )}
 
         <div className="mt-8 border-t border-border pt-6">
-          {canApply ? (
-            <ProgramApplyDialog programId={program.id} programName={program.name} />
+          {myApplication ? (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm">
+                You applied to this program. Status:{" "}
+                <span className="font-semibold">{APPLICATION_STATUS_INFO[myApplication.status].label}</span>
+              </p>
+              <Button asChild variant="outline">
+                <Link href="/applications">Track my application</Link>
+              </Button>
+            </div>
+          ) : !blocked ? (
+            <ProgramApplyDialog
+              programId={program.id}
+              programName={program.name}
+              programSlug={program.slug}
+              collectPayout={collectPayout}
+              banks={banks}
+            />
           ) : (
-            <p className="text-sm text-muted-foreground">Applications are not currently open for this program.</p>
+            <p className="text-sm text-muted-foreground">
+              {program.status === "UPCOMING" ? "Applications for this program open soon." : APPLY_BLOCK_MESSAGE[blocked]}
+            </p>
           )}
         </div>
       </div>

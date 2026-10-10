@@ -1,10 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import slugify from "slugify";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/session";
 import { logAudit } from "@/lib/audit";
+import { notify } from "@/lib/notify";
+import { ADMIN_SETTABLE_STATUSES, APPLICATION_STATUS_INFO } from "@/lib/applications";
+import { isPayoutConfigured } from "@/lib/crypto/payout";
 import {
   AchievementCategory,
   ProgramCategory,
@@ -90,12 +94,17 @@ export interface ProgramFormInput {
   adminNotes?: string;
   contentStatus: ContentStatus;
   applicationDeadline?: string;
+  requiresPayoutDetails?: boolean;
+  payoutDetailsStage?: "AT_APPLICATION" | "AFTER_ACCEPTANCE";
 }
 
 export async function saveProgram(input: ProgramFormInput): Promise<ActionResult<{ id: string }>> {
   const admin = await requirePermission("cms.programs");
   if (!input.name.trim() || !input.description.trim()) {
     return { ok: false, error: "Name and description are required." };
+  }
+  if (input.requiresPayoutDetails && !isPayoutConfigured()) {
+    return { ok: false, error: "Bank-detail collection needs PAYOUT_ENCRYPTION_KEY and PAYOUT_HASH_KEY configured on the server first." };
   }
 
   const data = {
@@ -110,6 +119,8 @@ export async function saveProgram(input: ProgramFormInput): Promise<ActionResult
     adminNotes: input.adminNotes || null,
     contentStatus: input.contentStatus,
     applicationDeadline: input.applicationDeadline ? new Date(input.applicationDeadline) : null,
+    requiresPayoutDetails: input.requiresPayoutDetails ?? false,
+    payoutDetailsStage: input.payoutDetailsStage ?? "AFTER_ACCEPTANCE",
   };
 
   const record = input.id
@@ -131,14 +142,70 @@ export async function deleteProgram(id: string): Promise<ActionResult> {
   return { ok: true, data: undefined };
 }
 
-export async function updateApplicationStatus(
-  applicationId: string,
-  status: "SUBMITTED" | "UNDER_REVIEW" | "SHORTLISTED" | "ACCEPTED" | "REJECTED"
-): Promise<ActionResult> {
+export async function updateApplicationStatus(applicationId: string, status: string, note?: string): Promise<ActionResult> {
   const admin = await requirePermission("programs.manage_applications");
-  await prisma.programApplication.update({ where: { id: applicationId }, data: { status } });
-  await logAudit(admin.id, "cms.update_application_status", "ProgramApplication", applicationId, { status });
+  const parsed = z
+    .object({ status: z.enum(ADMIN_SETTABLE_STATUSES), note: z.string().trim().max(2000).optional() })
+    .safeParse({ status, note: note || undefined });
+  if (!parsed.success) return { ok: false, error: "Invalid status." };
+
+  const application = await prisma.programApplication.findUnique({
+    where: { id: applicationId },
+    select: {
+      id: true,
+      status: true,
+      userId: true,
+      programId: true,
+      payout: { select: { id: true } },
+      program: { select: { name: true, requiresPayoutDetails: true } },
+    },
+  });
+  if (!application) return { ok: false, error: "Application not found." };
+  if (application.status === "WITHDRAWN") return { ok: false, error: "The applicant withdrew this application." };
+  if (application.status === parsed.data.status) return { ok: true, data: undefined };
+
+  // Conditional on the status we read, so a concurrent withdrawal or another
+  // reviewer's decision isn't silently overwritten.
+  const updated = await prisma.programApplication.updateMany({
+    where: { id: application.id, status: application.status },
+    data: {
+      status: parsed.data.status,
+      reviewedById: admin.id,
+      reviewedAt: new Date(),
+      ...(parsed.data.note ? { decisionNote: parsed.data.note } : {}),
+    },
+  });
+  if (updated.count === 0) return { ok: false, error: "This application was just updated by someone else. Refresh and try again." };
+
+  await prisma.applicationEvent.create({
+    data: {
+      applicationId: application.id,
+      actorId: admin.id,
+      type: "STATUS_CHANGED",
+      fromStatus: application.status,
+      toStatus: parsed.data.status,
+      note: parsed.data.note,
+    },
+  });
+  await logAudit(admin.id, "programs.update_application_status", "ProgramApplication", application.id, {
+    from: application.status,
+    to: parsed.data.status,
+  });
+
+  // The applicant sees the public wording only, never the internal note.
+  const info = APPLICATION_STATUS_INFO[parsed.data.status];
+  const needsBankDetails = parsed.data.status === "ACCEPTED" && application.program.requiresPayoutDetails && !application.payout;
+  await notify({
+    userId: application.userId,
+    type: "APPLICATION_STATUS",
+    message:
+      `Your application to ${application.program.name}: ${info.label}. ${info.description}` +
+      (needsBankDetails ? " Next step: add your bank details on My applications so we can pay you." : ""),
+  });
+
   revalidatePath("/admin/programs");
+  revalidatePath(`/admin/programs/${application.programId}/applications`);
+  revalidatePath("/applications");
   return { ok: true, data: undefined };
 }
 

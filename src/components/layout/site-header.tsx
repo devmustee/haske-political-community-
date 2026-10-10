@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Menu, X, ChevronDown, Sparkles, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Sparkles, LogOut, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOutUser } from "@/lib/sign-out";
 import {
@@ -448,6 +448,12 @@ export function SiteHeader() {
                   <Link href="/community" onClick={() => setOpen(false)}>
                     <Sparkles className="size-4 text-accent" />
                     Go to Community Hub
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="w-full">
+                  <Link href="/applications" onClick={() => setOpen(false)}>
+                    <ClipboardList className="size-4" />
+                    My applications
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" className="w-full" onClick={signOutUser}>

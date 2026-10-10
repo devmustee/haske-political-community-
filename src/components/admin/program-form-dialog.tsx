@@ -11,7 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { saveProgram, type ProgramFormInput } from "@/lib/actions/admin-cms";
+import { runAction } from "@/lib/run-action";
 
 const CATEGORIES = Object.values(ProgramCategory);
 const STATUSES = Object.values(ProgramStatus);
@@ -19,7 +21,16 @@ const CONTENT_STATUSES = Object.values(ContentStatus);
 
 type Initial = { [K in keyof ProgramFormInput]?: ProgramFormInput[K] | null } & { id?: string };
 
-export function ProgramFormDialog({ initial, trigger }: { initial?: Initial; trigger?: React.ReactNode }) {
+export function ProgramFormDialog({
+  initial,
+  trigger,
+  payoutConfigured,
+}: {
+  initial?: Initial;
+  trigger?: React.ReactNode;
+  /** Whether the server has the encryption keys bank-detail collection needs. */
+  payoutConfigured: boolean;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -36,11 +47,13 @@ export function ProgramFormDialog({ initial, trigger }: { initial?: Initial; tri
     adminNotes: initial?.adminNotes ?? "",
     contentStatus: initial?.contentStatus ?? "DRAFT",
     applicationDeadline: initial?.applicationDeadline ?? "",
+    requiresPayoutDetails: initial?.requiresPayoutDetails ?? false,
+    payoutDetailsStage: initial?.payoutDetailsStage ?? "AFTER_ACCEPTANCE",
   });
 
   async function handleSave() {
     setSubmitting(true);
-    const result = await saveProgram(form);
+    const result = await runAction(() => saveProgram(form));
     setSubmitting(false);
     if (!result.ok) {
       toast.error(result.error);
@@ -94,6 +107,45 @@ export function ProgramFormDialog({ initial, trigger }: { initial?: Initial; tri
                 <SelectContent>{CONTENT_STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
               </Select>
             </Field>
+          </div>
+
+          <div className="rounded-xl border border-border p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <Label htmlFor="requires-payout">Collect bank details</Label>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  For programs that pay beneficiaries. Turn on only after legal review. Account numbers are encrypted and only Super
+                  Admins can reveal or export them.
+                </p>
+              </div>
+              <Switch
+                id="requires-payout"
+                checked={form.requiresPayoutDetails ?? false}
+                disabled={!payoutConfigured && !form.requiresPayoutDetails}
+                onCheckedChange={(v) => setForm({ ...form, requiresPayoutDetails: v })}
+              />
+            </div>
+            {!payoutConfigured && (
+              <p className="mt-2 text-xs text-destructive">
+                Unavailable: set PAYOUT_ENCRYPTION_KEY and PAYOUT_HASH_KEY on the server first.
+              </p>
+            )}
+            {form.requiresPayoutDetails && (
+              <div className="mt-3">
+                <Field label="When to collect them">
+                  <Select
+                    value={form.payoutDetailsStage}
+                    onValueChange={(v) => setForm({ ...form, payoutDetailsStage: v as "AT_APPLICATION" | "AFTER_ACCEPTANCE" })}
+                  >
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AFTER_ACCEPTANCE">After acceptance (recommended)</SelectItem>
+                      <SelectItem value="AT_APPLICATION">When applying</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
+            )}
           </div>
         </div>
         <DialogFooter>

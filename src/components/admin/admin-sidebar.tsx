@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   Menu,
   X,
+  Megaphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Permission } from "@/lib/permissions";
@@ -37,6 +38,7 @@ const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
       { href: "/admin/moderation", label: "Moderation", icon: ShieldAlert, permission: "moderation.review" },
       { href: "/admin/users", label: "Users", icon: Users, permission: "community.manage_users" },
       { href: "/admin/feedback", label: "Citizen Feedback", icon: MessageSquare, permission: "feedback.manage" },
+      { href: "/admin/announcements", label: "Announcements", icon: Megaphone, permission: "notifications.broadcast" },
     ],
   },
   {

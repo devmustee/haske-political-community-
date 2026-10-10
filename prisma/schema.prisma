@@ -9,8 +9,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  /// Runtime: Supabase transaction pooler (:6543, ?pgbouncer=true&connection_limit=1)
+  url       = env("DATABASE_URL")
+  /// Migrations: session pooler (:5432) or direct connection
+  directUrl = env("DIRECT_URL")
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -104,6 +107,7 @@ enum NotificationType {
   PROGRAM_UPDATE
   ADMIN_ANNOUNCEMENT
   FEEDBACK_STATUS
+  APPLICATION_STATUS
 }
 
 enum PollResultsVisibility {
@@ -156,6 +160,9 @@ enum ApplicationStatus {
   SHORTLISTED
   ACCEPTED
   REJECTED
+  WAITLISTED
+  WITHDRAWN
+  PAID
 }
 
 enum EventStatus {
@@ -255,36 +262,39 @@ model User {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
-  posts               Post[]                   @relation("PostAuthor")
-  comments            Comment[]
-  postLikes           PostLike[]
-  commentLikes        CommentLike[]
-  reposts             Repost[]
-  bookmarks           Bookmark[]
-  following           Follow[]                 @relation("Follower")
-  followers           Follow[]                 @relation("Following")
-  pollVotes           PollVote[]
-  notifications       Notification[]           @relation("NotificationRecipient")
-  notificationsCaused Notification[]           @relation("NotificationActor")
-  notificationPref    NotificationPreference?
-  reportsFiled        Report[]                 @relation("Reporter")
-  reportsReceived     Report[]                 @relation("ReportedUser")
-  reportsReviewed     Report[]                 @relation("ReportReviewer")
-  moderationActionsBy ModerationAction[]       @relation("Moderator")
-  moderationActionsOn ModerationAction[]       @relation("ModerationTarget")
-  adminRoles          AdminRole[]              @relation("AdminRoleUser")
-  adminRolesGranted   AdminRole[]              @relation("AdminRoleGrantedBy")
-  auditLogs           AuditLog[]
-  programApplications ProgramApplication[]
-  eventRegistrations  EventRegistration[]
-  eventQuestions      EventQuestion[]
-  feedbackSubmissions FeedbackSubmission[]
-  feedbackUpdatesMade FeedbackUpdate[]
-  communityIssues     CommunityIssue[]
-  passwordResetTokens PasswordResetToken[]
-  emailVerifyTokens   EmailVerificationToken[]
-  sessions            Session[]
-  pushSubscriptions   PushSubscription[]
+  posts                Post[]                   @relation("PostAuthor")
+  comments             Comment[]
+  postLikes            PostLike[]
+  commentLikes         CommentLike[]
+  reposts              Repost[]
+  bookmarks            Bookmark[]
+  following            Follow[]                 @relation("Follower")
+  followers            Follow[]                 @relation("Following")
+  pollVotes            PollVote[]
+  notifications        Notification[]           @relation("NotificationRecipient")
+  notificationsCaused  Notification[]           @relation("NotificationActor")
+  notificationPref     NotificationPreference?
+  reportsFiled         Report[]                 @relation("Reporter")
+  reportsReceived      Report[]                 @relation("ReportedUser")
+  reportsReviewed      Report[]                 @relation("ReportReviewer")
+  moderationActionsBy  ModerationAction[]       @relation("Moderator")
+  moderationActionsOn  ModerationAction[]       @relation("ModerationTarget")
+  adminRoles           AdminRole[]              @relation("AdminRoleUser")
+  adminRolesGranted    AdminRole[]              @relation("AdminRoleGrantedBy")
+  auditLogs            AuditLog[]
+  programApplications  ProgramApplication[]     @relation("ApplicationApplicant")
+  applicationsReviewed ProgramApplication[]     @relation("ApplicationReviewer")
+  applicationEvents    ApplicationEvent[]
+  announcements        Announcement[]
+  eventRegistrations   EventRegistration[]
+  eventQuestions       EventQuestion[]
+  feedbackSubmissions  FeedbackSubmission[]
+  feedbackUpdatesMade  FeedbackUpdate[]
+  communityIssues      CommunityIssue[]
+  passwordResetTokens  PasswordResetToken[]
+  emailVerifyTokens    EmailVerificationToken[]
+  sessions             Session[]
+  pushSubscriptions    PushSubscription[]
 
   // Election situation room
   collectorAssignments       CollectorAssignment[] @relation("CollectorAssignmentCollector")
@@ -549,18 +559,20 @@ model PollVote {
 }
 
 model Notification {
-  id        String           @id @default(cuid())
-  userId    String
-  actorId   String?
-  type      NotificationType
-  postId    String?
-  commentId String?
-  message   String?
-  read      Boolean          @default(false)
-  createdAt DateTime         @default(now())
+  id             String           @id @default(cuid())
+  userId         String
+  actorId        String?
+  type           NotificationType
+  postId         String?
+  commentId      String?
+  message        String?
+  read           Boolean          @default(false)
+  announcementId String?
+  createdAt      DateTime         @default(now())
 
-  user  User  @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
-  actor User? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  user         User          @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor        User?         @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  announcement Announcement? @relation(fields: [announcementId], references: [id], onDelete: Cascade)
 
   @@index([userId, read, createdAt])
 }
@@ -578,6 +590,24 @@ model PushSubscription {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+/// An admin broadcast. Sending it creates one ADMIN_ANNOUNCEMENT notification
+/// per recipient (linked here) and pushes to their devices.
+model Announcement {
+  id             String   @id @default(cuid())
+  title          String
+  body           String   @db.Text
+  /// Optional destination: a site path ("/events/...") or an https URL.
+  link           String?
+  createdById    String?
+  recipientCount Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  createdBy     User?          @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  notifications Notification[]
+
+  @@index([createdAt])
 }
 
 model NotificationPreference {
@@ -713,22 +743,26 @@ model AchievementDocument {
 // ─────────────────────────────────────────────────────────────────────────
 
 model Program {
-  id                  String          @id @default(cuid())
-  name                String
-  slug                String          @unique
-  category            ProgramCategory
-  description         String          @db.Text
-  targetBeneficiaries String?
-  location            String?
-  status              ProgramStatus   @default(UPCOMING)
-  startDate           DateTime?
-  applicationDeadline DateTime?
-  eligibility         String?         @db.Text
-  resultsImpact       String?         @db.Text
-  adminNotes          String?         @db.Text
-  contentStatus       ContentStatus   @default(DRAFT)
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  id                    String             @id @default(cuid())
+  name                  String
+  slug                  String             @unique
+  category              ProgramCategory
+  description           String             @db.Text
+  targetBeneficiaries   String?
+  location              String?
+  status                ProgramStatus      @default(UPCOMING)
+  startDate             DateTime?
+  applicationDeadline   DateTime?
+  eligibility           String?            @db.Text
+  resultsImpact         String?            @db.Text
+  adminNotes            String?            @db.Text
+  contentStatus         ContentStatus      @default(DRAFT)
+  /// Off by default: bank details are only collected once switched on for a
+  /// program (after legal review), and only if PAYOUT_ENCRYPTION_KEY is set.
+  requiresPayoutDetails Boolean            @default(false)
+  payoutDetailsStage    PayoutDetailsStage @default(AFTER_ACCEPTANCE)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
 
   images       ProgramImage[]
   reports      ProgramReport[]
@@ -759,22 +793,78 @@ model ProgramReport {
 }
 
 model ProgramApplication {
-  id        String            @id @default(cuid())
-  programId String
-  userId    String
-  fullName  String
-  phone     String
-  email     String
-  details   String?           @db.Text
-  status    ApplicationStatus @default(SUBMITTED)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id           String            @id @default(cuid())
+  programId    String
+  userId       String
+  fullName     String
+  phone        String
+  email        String
+  lga          String?
+  details      String?           @db.Text
+  status       ApplicationStatus @default(SUBMITTED)
+  /// Internal note on the latest decision; never shown to the applicant.
+  decisionNote String?           @db.Text
+  reviewedById String?
+  reviewedAt   DateTime?
+  withdrawnAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
-  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program    Program                   @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user       User                      @relation("ApplicationApplicant", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User?                     @relation("ApplicationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  events     ApplicationEvent[]
+  payout     ApplicationPayoutDetails?
 
   @@unique([programId, userId])
   @@index([programId, status])
+  @@index([programId, createdAt])
+}
+
+/// Bank details for paying an applicant. Kept in its own table so ordinary
+/// application queries never load it. The account number is stored only
+/// encrypted (AES-256-GCM, src/lib/crypto/payout.ts); last4 is for masked
+/// display and the HMAC is for duplicate detection without decrypting.
+model ApplicationPayoutDetails {
+  id                 String    @id @default(cuid())
+  applicationId      String    @unique
+  accountName        String
+  bankCode           String
+  bankName           String
+  accountNumberEnc   String
+  accountNumberLast4 String
+  accountNumberHash  String
+  /// Name the bank returned for the account (name enquiry), if checked.
+  verifiedName       String?
+  nameMatch          NameMatch @default(UNVERIFIED)
+  consentVersion     String
+  consentAt          DateTime
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  application ProgramApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([accountNumberHash])
+}
+
+/// Append-only history of an application (submissions, status changes,
+/// withdrawals). Drives the applicant's timeline and the admin history.
+model ApplicationEvent {
+  id            String             @id @default(cuid())
+  applicationId String
+  /// Null when the applicant or the system acted.
+  actorId       String?
+  type          String
+  fromStatus    ApplicationStatus?
+  toStatus      ApplicationStatus?
+  /// Internal note (admin-only).
+  note          String?            @db.Text
+  createdAt     DateTime           @default(now())
+
+  application ProgramApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  actor       User?              @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([applicationId, createdAt])
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -1359,4 +1449,17 @@ enum VerificationAction {
   APPROVE
   REJECT
   REQUEST_CORRECTION
+}
+
+enum PayoutDetailsStage {
+  AT_APPLICATION
+  AFTER_ACCEPTANCE
+}
+
+enum NameMatch {
+  UNVERIFIED
+  MATCH
+  PARTIAL
+  MISMATCH
+  FAILED
 }
