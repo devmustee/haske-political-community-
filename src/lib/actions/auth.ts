@@ -28,7 +28,7 @@ export type ActionResult<T = undefined> =
   | { ok: true; data: T }
   | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
 
-export async function registerUser(input: RegisterInput): Promise<ActionResult<{ userId: string }>> {
+export async function registerUser(input: RegisterInput): Promise<ActionResult<{ userId: string; emailSent: boolean }>> {
   const limited = await rateLimit(await clientKey("register"), 8, 60_000);
   if (!limited.ok) return { ok: false, error: "Too many attempts. Try again in a moment." };
 
@@ -72,9 +72,11 @@ export async function registerUser(input: RegisterInput): Promise<ActionResult<{
   await prisma.emailVerificationToken.create({
     data: { token, userId: user.id, expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24) },
   });
-  await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
+  // The account exists either way; if the email failed, the form tells them
+  // to use "Resend email" on the community banner.
+  const sent = await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
 
-  return { ok: true, data: { userId: user.id } };
+  return { ok: true, data: { userId: user.id, emailSent: sent.ok } };
 }
 
 export async function verifyEmailToken(token: string): Promise<ActionResult> {
@@ -109,7 +111,8 @@ export async function resendVerificationEmail(): Promise<ActionResult> {
   await prisma.emailVerificationToken.create({
     data: { token, userId: user.id, expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24) },
   });
-  await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
+  const sent = await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
+  if (!sent.ok) return { ok: false, error: "We couldn't send the email right now. Please try again in a few minutes." };
   return { ok: true, data: undefined };
 }
 
@@ -128,6 +131,8 @@ export async function requestPasswordReset(input: ForgotPasswordInput): Promise<
   await prisma.passwordResetToken.create({
     data: { token, userId: user.id, expiresAt: new Date(Date.now() + 60 * 60 * 1000) },
   });
+  // A failure is reported to Sentry inside, but the reply stays the same
+  // either way: a different answer would reveal that this email has an account.
   await sendPasswordResetEmail(user.email, `${APP_URL}/reset-password?token=${token}`);
 
   return { ok: true, data: undefined };

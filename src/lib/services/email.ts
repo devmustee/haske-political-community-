@@ -77,9 +77,46 @@ export function getEmailService(): EmailService {
   }
 }
 
+export type EmailResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Sends through the configured provider and never fails silently: a refused
+ * or failed send (wrong sender domain, bad key, network) is logged and
+ * reported to Sentry, and the caller gets `ok: false` to tell the user.
+ * In production, the "console" provider counts as a failure, since nothing
+ * is actually delivered.
+ */
+async function deliver(kind: string, input: SendEmailInput): Promise<EmailResult> {
+  let result: EmailResult;
+  if (process.env.VERCEL_ENV === "production" && (process.env.EMAIL_PROVIDER ?? "console") === "console") {
+    result = { ok: false, error: "EMAIL_PROVIDER is not set to a real provider in production, so no email was delivered." };
+  } else {
+    try {
+      result = await getEmailService().send(input);
+    } catch (err) {
+      result = { ok: false, error: err instanceof Error ? err.message : String(err) };
+    }
+  }
+  if (!result.ok) await reportEmailFailure(kind, result.error);
+  return result;
+}
+
+async function reportEmailFailure(kind: string, error: string) {
+  // Keep recipients' addresses out of logs and Sentry.
+  const detail = error.replace(/[\w.+-]+@[\w-]+(\.[\w-]+)+/g, "[email]").slice(0, 500);
+  console.error(`Email "${kind}" failed: ${detail}`);
+  if (!process.env.SENTRY_DSN) return;
+  try {
+    const Sentry = await import("@sentry/nextjs");
+    Sentry.captureMessage(`Email delivery failed: ${kind}`, { level: "error", tags: { email_kind: kind }, extra: { detail } });
+    await Sentry.flush(2000);
+  } catch {
+    // Reporting must never break the request itself.
+  }
+}
+
 export async function sendVerificationEmail(to: string, verifyUrl: string) {
-  const service = getEmailService();
-  return service.send({
+  return deliver("verification", {
     to,
     subject: "Verify your Haske Community account",
     text: `Welcome to Haske Community. Verify your email address:\n\n${verifyUrl}\n\nIf you did not create this account, ignore this email.`,
@@ -88,8 +125,7 @@ export async function sendVerificationEmail(to: string, verifyUrl: string) {
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
-  const service = getEmailService();
-  return service.send({
+  return deliver("password-reset", {
     to,
     subject: "Reset your Haske Community password",
     text: `A password reset was requested for your account.\n\n${resetUrl}\n\nThis link expires in 1 hour. If you did not request this, ignore this email.`,

@@ -18,6 +18,7 @@ export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(true);
 
   const {
     register,
@@ -42,6 +43,10 @@ export function RegisterForm() {
     }
 
     setRegisteredEmail(values.email);
+    setEmailSent(result.data.emailSent);
+    if (!result.data.emailSent) {
+      toast.warning("Your account is ready, but we couldn't send the verification email. Use \"Resend email\" at the top of the community.", { duration: 10000 });
+    }
     const signInRes = await signIn("credentials", {
       identifier: values.email,
       password: values.password,
@@ -57,11 +62,23 @@ export function RegisterForm() {
     return (
       <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-secondary/40 p-6 text-center">
         <MailCheck className="size-8 text-primary" />
-        <p className="font-medium">Check your inbox</p>
-        <p className="text-sm text-muted-foreground">
-          We sent a verification link to <span className="font-medium text-foreground">{registeredEmail}</span>. You&apos;re
-          signed in already — verifying your email helps secure your account.
-        </p>
+        {emailSent ? (
+          <>
+            <p className="font-medium">Check your inbox</p>
+            <p className="text-sm text-muted-foreground">
+              We sent a verification link to <span className="font-medium text-foreground">{registeredEmail}</span>. You&apos;re
+              signed in already. Verify your email to post and comment.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="font-medium">Your account is ready</p>
+            <p className="text-sm text-muted-foreground">
+              We couldn&apos;t send the verification email to <span className="font-medium text-foreground">{registeredEmail}</span>{" "}
+              just now. Use &ldquo;Resend email&rdquo; at the top of the community to try again.
+            </p>
+          </>
+        )}
         <Button variant="outline" onClick={() => router.push("/community")}>
           Continue to Haske Community
         </Button>
