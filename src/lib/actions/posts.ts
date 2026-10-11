@@ -7,6 +7,7 @@ import { requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
 import { containsBlockedWord, extractHashtags } from "@/lib/moderation";
 import { rateLimit } from "@/lib/rate-limit";
+import { isOwnMediaUrl } from "@/lib/uploaded-url";
 import { createPostSchema, createCommentSchema, type CreatePostInput, type CreateCommentInput } from "@/lib/validations/post";
 import type { ActionResult } from "@/lib/actions/auth";
 import type { CommentThreadItem } from "@/lib/comment-item";
@@ -44,7 +45,7 @@ export async function createPost(input: CreatePostInput): Promise<ActionResult<{
   if (!authResult.ok) return authResult;
   const user = authResult.user;
 
-  const limited = rateLimit(`post:${user.id}`, 20, 10 * 60_000);
+  const limited = await rateLimit(`post:${user.id}`, 20, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "You're posting too fast. Slow down a little." };
 
   const parsed = createPostSchema.safeParse(input);
@@ -53,6 +54,10 @@ export async function createPost(input: CreatePostInput): Promise<ActionResult<{
 
   if (data.content && (await containsBlockedWord(data.content))) {
     return { ok: false, error: "Your post contains language that isn't allowed here." };
+  }
+
+  if (data.media?.some((m) => !isOwnMediaUrl(m.url))) {
+    return { ok: false, error: "Please attach photos and videos by uploading them." };
   }
 
   if (data.content && !data.media?.length && !data.poll) {
@@ -214,7 +219,7 @@ export async function createComment(input: CreateCommentInput): Promise<ActionRe
   if (!authResult.ok) return authResult;
   const user = authResult.user;
 
-  const limited = rateLimit(`comment:${user.id}`, 30, 10 * 60_000);
+  const limited = await rateLimit(`comment:${user.id}`, 30, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "You're commenting too fast. Slow down a little." };
 
   const parsed = createCommentSchema.safeParse(input);

@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser, requireUserResult } from "@/lib/session";
+import { requireUserResult } from "@/lib/session";
+import { isOwnMediaUrl } from "@/lib/uploaded-url";
 import { updateProfileSchema, type UpdateProfileInput } from "@/lib/validations/profile";
 import type { ActionResult } from "@/lib/actions/auth";
 
@@ -13,6 +14,9 @@ export async function updateProfile(input: UpdateProfileInput): Promise<ActionRe
   const parsed = updateProfileSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid profile data." };
   const { name, bio, location, avatarUrl, coverImageUrl } = parsed.data;
+  if ((avatarUrl && !isOwnMediaUrl(avatarUrl)) || (coverImageUrl && !isOwnMediaUrl(coverImageUrl))) {
+    return { ok: false, error: "Please upload your profile and cover pictures." };
+  }
 
   await prisma.user.update({
     where: { id: user.id },

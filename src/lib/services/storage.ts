@@ -18,7 +18,8 @@ export interface UploadResult {
 }
 
 export interface StorageService {
-  upload(file: Buffer, opts: { filename: string; contentType: string; folder: string }): Promise<UploadResult>;
+  /** `ext` and `contentType` must come from the file's checked bytes, never from the browser. */
+  upload(file: Buffer, opts: { ext: string; contentType: string; folder: string }): Promise<UploadResult>;
   isConfigured(): boolean;
 }
 
@@ -48,9 +49,8 @@ class LocalStorageService implements StorageService {
     return true;
   }
 
-  async upload(file: Buffer, opts: { filename: string; contentType: string; folder: string }): Promise<UploadResult> {
-    const ext = path.extname(opts.filename) || "";
-    const key = `${opts.folder}/${randomUUID()}${ext}`;
+  async upload(file: Buffer, opts: { ext: string; contentType: string; folder: string }): Promise<UploadResult> {
+    const key = `${opts.folder}/${randomUUID()}${opts.ext}`;
     const destDir = path.join(process.cwd(), "public", "uploads", opts.folder);
     await mkdir(destDir, { recursive: true });
     await writeFile(path.join(process.cwd(), "public", "uploads", key), file);
@@ -67,7 +67,7 @@ class S3StorageService implements StorageService {
     );
   }
 
-  async upload(file: Buffer, opts: { filename: string; contentType: string; folder: string }): Promise<UploadResult> {
+  async upload(file: Buffer, opts: { ext: string; contentType: string; folder: string }): Promise<UploadResult> {
     if (!this.isConfigured()) {
       throw new Error(
         "S3 storage is not configured. Set S3_BUCKET, S3_REGION, S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY in .env, or switch STORAGE_PROVIDER back to 'local'."
@@ -82,14 +82,15 @@ class S3StorageService implements StorageService {
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
       },
     });
-    const ext = path.extname(opts.filename) || "";
-    const key = `${opts.folder}/${randomUUID()}${ext}`;
+    const key = `${opts.folder}/${randomUUID()}${opts.ext}`;
     await client.send(
       new PutObjectCommand({
         Bucket: this.bucket,
         Key: key,
         Body: file,
         ContentType: opts.contentType,
+        // Long-lived: every upload gets a new random key, so it never changes.
+        CacheControl: "public, max-age=31536000, immutable",
       })
     );
     const publicBase = process.env.S3_PUBLIC_URL || `https://${this.bucket}.s3.${process.env.S3_REGION}.amazonaws.com`;
