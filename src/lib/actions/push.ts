@@ -17,7 +17,7 @@ export async function subscribePush(input: unknown): Promise<ActionResult> {
   const authResult = await requireUserResult();
   if (!authResult.ok) return authResult;
   const user = authResult.user;
-  const limited = rateLimit(`push:${user.id}`, 20, 10 * 60_000);
+  const limited = await rateLimit(`push:${user.id}`, 20, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many attempts. Try again later." };
 
   const parsed = subscriptionSchema.safeParse(input);

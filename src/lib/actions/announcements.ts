@@ -41,7 +41,7 @@ export async function countAnnouncementRecipients() {
  */
 export async function sendAnnouncement(input: AnnouncementInput): Promise<ActionResult<{ recipients: number }>> {
   const admin = await requirePermission("notifications.broadcast");
-  const limited = rateLimit(`broadcast:${admin.id}`, 5, 60 * 60_000);
+  const limited = await rateLimit(`broadcast:${admin.id}`, 5, 60 * 60_000);
   if (!limited.ok) return { ok: false, error: "You've sent several announcements recently. Try again later." };
 
   const parsed = announcementSchema.safeParse(input);

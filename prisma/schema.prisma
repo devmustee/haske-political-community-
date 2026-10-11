@@ -1463,3 +1463,13 @@ enum NameMatch {
   MISMATCH
   FAILED
 }
+
+/// Shared rate-limit counters (fixed window), so limits hold across all
+/// server instances. Rows are short-lived; expired ones are swept regularly.
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}

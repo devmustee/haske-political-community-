@@ -19,7 +19,7 @@ export async function savePayoutDetails(
   const authResult = await requireUserResult();
   if (!authResult.ok) return authResult;
   const user = authResult.user;
-  const limited = rateLimit(`payout:${user.id}`, 10, 10 * 60_000);
+  const limited = await rateLimit(`payout:${user.id}`, 10, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many attempts. Please try again in a few minutes." };
   if (!isPayoutConfigured()) return { ok: false, error: "Payout details can't be collected right now. Please try again later." };
 
@@ -66,7 +66,7 @@ export async function revealAccountNumber(applicationId: string, reason: string)
   const admin = await requirePermission("programs.view_payout_details");
   const parsedReason = z.string().trim().min(5, "Give a short reason (at least 5 characters)").max(300).safeParse(reason);
   if (!parsedReason.success) return { ok: false, error: parsedReason.error.issues[0]?.message ?? "Give a reason." };
-  const limited = rateLimit(`reveal:${admin.id}`, 30, 60 * 60_000);
+  const limited = await rateLimit(`reveal:${admin.id}`, 30, 60 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many reveals in the last hour." };
 
   const payout = await prisma.applicationPayoutDetails.findUnique({

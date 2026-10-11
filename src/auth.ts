@@ -22,7 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const h = await headers();
         const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-        const limited = rateLimit(`login:${identifier.toLowerCase()}:${ip}`, 8, 5 * 60_000);
+        const limited = await rateLimit(`login:${identifier.toLowerCase()}:${ip}`, 8, 5 * 60_000);
         if (!limited.ok) return null;
 
         const cleanIdentifier = identifier.trim().toLowerCase();

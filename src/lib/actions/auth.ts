@@ -5,6 +5,7 @@ import { randomBytes } from "crypto";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { getSession } from "@/lib/session";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/services/email";
 import {
   registerSchema,
@@ -92,11 +93,16 @@ export async function verifyEmailToken(token: string): Promise<ActionResult> {
   return { ok: true, data: undefined };
 }
 
-export async function resendVerificationEmail(userId: string): Promise<ActionResult> {
-  const limited = await rateLimit(await clientKey("resend-verify"), 3, 5 * 60_000);
-  if (!limited.ok) return { ok: false, error: "Too many requests. Try again shortly." };
+/** Sends the signed-in member a fresh email verification link. */
+export async function resendVerificationEmail(): Promise<ActionResult> {
+  const session = await getSession();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "Please sign in first." };
 
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const limited = await rateLimit(`resend-verify:${userId}`, 3, 15 * 60_000);
+  if (!limited.ok) return { ok: false, error: "We've sent a few already. Please check your inbox and spam folder, or try again in 15 minutes." };
+
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, email: true, emailVerified: true } });
   if (!user || user.emailVerified) return { ok: true, data: undefined };
 
   const token = randomBytes(32).toString("hex");

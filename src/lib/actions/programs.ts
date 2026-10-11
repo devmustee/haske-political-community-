@@ -22,7 +22,7 @@ export async function applyToProgram(
   if (!authResult.ok) return authResult;
   const user = authResult.user;
 
-  const limited = rateLimit(`apply:${user.id}`, 10, 10 * 60_000);
+  const limited = await rateLimit(`apply:${user.id}`, 10, 10 * 60_000);
   if (!limited.ok) return { ok: false, error: "Too many attempts. Please try again in a few minutes." };
 
   const parsed = programApplicationSchema.safeParse(input);
