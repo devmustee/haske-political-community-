@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { toast } from "sonner";
-import { createComment } from "@/lib/actions/posts";
+import { useCommentList } from "@/components/community/comment-list";
 import { useGuestGate } from "@/components/community/guest-gate";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { initials } from "@/lib/utils";
-import { runAction } from "@/lib/run-action";
 
 export function CommentComposer({
   postId,
@@ -26,26 +23,20 @@ export function CommentComposer({
   onDone?: () => void;
 }) {
   const { data: session } = useSession();
-  const router = useRouter();
+  const list = useCommentList();
   const { guard, GateDialog, isGuest } = useGuestGate();
   const [content, setContent] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const user = session?.user;
 
+  // The comment appears in the list at once (marked "Sending…") and the box
+  // clears, so there's nothing to tap twice. A failed send stays in the list
+  // with Retry, so the text is never lost.
   const submit = guard(() => {
-    if (!content.trim()) return;
-    setSubmitting(true);
-    (async () => {
-      const result = await runAction(() => createComment({ postId, parentId, content: content.trim() }));
-      setSubmitting(false);
-      if (!result.ok) {
-        toast.error(result.error);
-        return;
-      }
-      setContent("");
-      router.refresh();
-      onDone?.();
-    })();
+    const text = content.trim();
+    if (!text || !list) return;
+    setContent("");
+    void list.send({ postId, parentId, content: text });
+    onDone?.();
   });
 
   if (isGuest && !parentId) {
@@ -76,7 +67,7 @@ export function CommentComposer({
           className="min-h-16 resize-none border-none p-0 shadow-none focus-visible:ring-0"
         />
         <div className="flex justify-end border-t border-border pt-2">
-          <Button size="sm" disabled={submitting || !content.trim()} onClick={submit}>
+          <Button size="sm" disabled={!content.trim()} onClick={submit}>
             Reply
           </Button>
         </div>

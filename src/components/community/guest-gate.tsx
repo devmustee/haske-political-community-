@@ -19,22 +19,27 @@ import { Button } from "@/components/ui/button";
  * "Join Haske Community to participate" dialog instead of running the action.
  */
 export function useGuestGate() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
 
   const guard = useCallback(
     <T extends unknown[]>(fn: (...args: T) => void) =>
       (...args: T) => {
+        // Ignore taps in the moment before the session has loaded, rather
+        // than telling a signed-in member to join.
+        if (status === "loading") return;
         if (!session?.user) {
           setOpen(true);
           return;
         }
         fn(...args);
       },
-    [session?.user]
+    [session?.user, status]
   );
 
-  const isGuest = !session?.user;
+  // Only a confirmed guest is a guest: on a slow connection the session takes
+  // a moment to load, and signed-in members shouldn't see "Sign in" meanwhile.
+  const isGuest = status === "unauthenticated";
 
   const GateDialog = (
     <Dialog open={open} onOpenChange={setOpen}>

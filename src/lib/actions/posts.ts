@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUserResult } from "@/lib/session";
 import { notify } from "@/lib/notify";
@@ -8,7 +9,15 @@ import { containsBlockedWord, extractHashtags } from "@/lib/moderation";
 import { rateLimit } from "@/lib/rate-limit";
 import { createPostSchema, createCommentSchema, type CreatePostInput, type CreateCommentInput } from "@/lib/validations/post";
 import type { ActionResult } from "@/lib/actions/auth";
+import type { CommentThreadItem } from "@/lib/comment-item";
 import { PostType } from "@prisma/client";
+
+/**
+ * A repeat of the same text by the same person within this window is treated
+ * as a double tap or a retry on a slow connection, and returns the first copy
+ * instead of saving a duplicate.
+ */
+const DUPLICATE_WINDOW_MS = 2 * 60_000;
 
 function inferPostType(input: CreatePostInput): PostType {
   if (input.poll) return PostType.POLL;
@@ -44,6 +53,20 @@ export async function createPost(input: CreatePostInput): Promise<ActionResult<{
 
   if (data.content && (await containsBlockedWord(data.content))) {
     return { ok: false, error: "Your post contains language that isn't allowed here." };
+  }
+
+  if (data.content && !data.media?.length && !data.poll) {
+    const duplicate = await prisma.post.findFirst({
+      where: {
+        authorId: user.id,
+        content: data.content,
+        quoteOfId: data.quoteOfId ?? null,
+        deletedAt: null,
+        createdAt: { gte: new Date(Date.now() - DUPLICATE_WINDOW_MS) },
+      },
+      select: { id: true },
+    });
+    if (duplicate) return { ok: true, data: { postId: duplicate.id } };
   }
 
   if (data.quoteOfId) {
@@ -186,7 +209,7 @@ export async function toggleBookmark(postId: string): Promise<ActionResult<{ boo
   return { ok: true, data: { bookmarked: true } };
 }
 
-export async function createComment(input: CreateCommentInput): Promise<ActionResult<{ commentId: string }>> {
+export async function createComment(input: CreateCommentInput): Promise<ActionResult<{ comment: CommentThreadItem; duplicate: boolean }>> {
   const authResult = await requireUserResult();
   if (!authResult.ok) return authResult;
   const user = authResult.user;
@@ -202,30 +225,69 @@ export async function createComment(input: CreateCommentInput): Promise<ActionRe
     return { ok: false, error: "Your comment contains language that isn't allowed here." };
   }
 
-  const post = await prisma.post.findUnique({ where: { id: postId }, select: { authorId: true, deletedAt: true } });
+  const [post, parent, duplicate] = await Promise.all([
+    prisma.post.findUnique({ where: { id: postId }, select: { authorId: true, deletedAt: true } }),
+    parentId ? prisma.comment.findUnique({ where: { id: parentId }, select: { authorId: true, postId: true } }) : null,
+    prisma.comment.findFirst({
+      where: {
+        postId,
+        parentId: parentId ?? null,
+        authorId: user.id,
+        content,
+        deletedAt: null,
+        createdAt: { gte: new Date(Date.now() - DUPLICATE_WINDOW_MS) },
+      },
+      include: { author: { select: commentAuthorSelect } },
+    }),
+  ]);
   if (!post || post.deletedAt) return { ok: false, error: "Post not found." };
+  if (parentId && (!parent || parent.postId !== postId)) return { ok: false, error: "The comment you're replying to no longer exists." };
+  if (duplicate) return { ok: true, data: { comment: toCommentItem(duplicate), duplicate: true } };
 
-  let parentAuthorId: string | null = null;
-  if (parentId) {
-    const parent = await prisma.comment.findUnique({ where: { id: parentId }, select: { authorId: true } });
-    if (!parent) return { ok: false, error: "The comment you're replying to no longer exists." };
-    parentAuthorId = parent.authorId;
-  }
+  const [comment] = await prisma.$transaction([
+    prisma.comment.create({
+      data: { postId, authorId: user.id, parentId, content },
+      include: { author: { select: commentAuthorSelect } },
+    }),
+    prisma.post.update({ where: { id: postId }, data: { commentsCount: { increment: 1 } } }),
+  ]);
 
-  const comment = await prisma.comment.create({
-    data: { postId, authorId: user.id, parentId, content },
-  });
+  // The UI shows the new comment straight from this response, so neither the
+  // notification nor a page re-render needs to hold it up.
+  after(() =>
+    notify(
+      parent
+        ? { userId: parent.authorId, actorId: user.id, type: "REPLY", postId, commentId: comment.id }
+        : { userId: post.authorId, actorId: user.id, type: "COMMENT", postId, commentId: comment.id }
+    ).catch((err) => console.error("Comment notification failed:", err))
+  );
+  return { ok: true, data: { comment: toCommentItem(comment), duplicate: false } };
+}
 
-  await prisma.post.update({ where: { id: postId }, data: { commentsCount: { increment: 1 } } });
+const commentAuthorSelect = { name: true, username: true, avatarUrl: true, verification: true } as const;
 
-  if (parentAuthorId) {
-    await notify({ userId: parentAuthorId, actorId: user.id, type: "REPLY", postId, commentId: comment.id });
-  } else {
-    await notify({ userId: post.authorId, actorId: user.id, type: "COMMENT", postId, commentId: comment.id });
-  }
-
-  revalidatePath(`/community/post/${postId}`);
-  return { ok: true, data: { commentId: comment.id } };
+function toCommentItem(c: {
+  id: string;
+  postId: string;
+  authorId: string;
+  content: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  likesCount: number;
+  author: { name: string; username: string; avatarUrl: string | null; verification: string };
+}): CommentThreadItem {
+  return {
+    id: c.id,
+    postId: c.postId,
+    authorId: c.authorId,
+    content: c.content,
+    createdAt: c.createdAt.toISOString(),
+    deletedAt: c.deletedAt ? c.deletedAt.toISOString() : null,
+    likesCount: c.likesCount,
+    liked: false,
+    author: c.author,
+    children: [],
+  };
 }
 
 export async function toggleCommentLike(commentId: string): Promise<ActionResult<{ liked: boolean }>> {
@@ -261,6 +323,5 @@ export async function deleteComment(commentId: string): Promise<ActionResult> {
     prisma.comment.update({ where: { id: commentId }, data: { deletedAt: new Date(), content: "[deleted]" } }),
     prisma.post.update({ where: { id: comment.postId }, data: { commentsCount: { decrement: 1 } } }),
   ]);
-  revalidatePath(`/community/post/${comment.postId}`);
   return { ok: true, data: undefined };
 }

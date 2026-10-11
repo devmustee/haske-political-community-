@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -12,27 +11,31 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { CommentComposer } from "@/components/community/comment-composer";
 import { ReportDialog } from "@/components/community/report-dialog";
 import { useGuestGate } from "@/components/community/guest-gate";
-import { toggleCommentLike, deleteComment } from "@/lib/actions/posts";
+import { useCommentList } from "@/components/community/comment-list";
+import { toggleCommentLike } from "@/lib/actions/posts";
 import { reportContent } from "@/lib/actions/reports";
 import { cn, formatRelativeTime, initials } from "@/lib/utils";
 import { runAction } from "@/lib/run-action";
+import type { CommentThreadItem } from "@/lib/comment-item";
 
-export interface CommentThreadItem {
-  id: string;
-  postId: string;
-  authorId: string;
-  content: string;
-  createdAt: string;
-  deletedAt: string | null;
-  likesCount: number;
-  liked: boolean;
-  author: { name: string; username: string; avatarUrl: string | null; verification: string };
-  children: CommentThreadItem[];
+export type { CommentThreadItem };
+
+/** The comments of the nearest CommentListProvider, or `empty` when there are none. */
+export function CommentList({ empty }: { empty?: React.ReactNode }) {
+  const list = useCommentList();
+  if (!list || list.comments.length === 0) return <>{empty}</>;
+  return (
+    <>
+      {list.comments.map((c) => (
+        <CommentThread key={c.id} comment={c} />
+      ))}
+    </>
+  );
 }
 
 export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadItem; depth?: number }) {
   const { data: session } = useSession();
-  const router = useRouter();
+  const list = useCommentList();
   const { guard, GateDialog } = useGuestGate();
   const [replying, setReplying] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
@@ -51,17 +54,10 @@ export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadIt
     })();
   });
 
-  async function handleDelete() {
-    const result = await runAction(() => deleteComment(comment.id));
-    if (!result.ok) {
-      toast.error(result.error);
-      return;
-    }
-    router.refresh();
-  }
+  const unsent = comment.status !== undefined;
 
   return (
-    <div className={cn(depth > 0 && "ml-6 border-l border-border pl-4 sm:ml-11")}>
+    <div className={cn(depth > 0 && "ml-6 border-l border-border pl-4 sm:ml-11", comment.status === "sending" && "opacity-70")}>
       <div className="flex gap-3 py-3">
         <Link href={`/community/user/${comment.author.username}`}>
           <Avatar className="size-9 shrink-0">
@@ -83,7 +79,20 @@ export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadIt
             {comment.content}
           </p>
 
-          {!comment.deletedAt && (
+          {comment.status === "sending" && <p className="mt-1 text-xs text-muted-foreground">Sending…</p>}
+          {comment.status === "failed" && (
+            <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs">
+              <span className="text-destructive">Not sent.</span>
+              <button onClick={() => list?.retry(comment.id)} className="font-semibold text-primary hover:underline max-sm:py-2">
+                Retry
+              </button>
+              <button onClick={() => list?.discard(comment.id)} className="text-muted-foreground hover:underline max-sm:py-2">
+                Discard
+              </button>
+            </p>
+          )}
+
+          {!comment.deletedAt && !unsent && (
             <div className="mt-1.5 flex items-center gap-4 text-muted-foreground">
               <button onClick={() => setReplying((v) => !v)} className="flex items-center gap-1.5 hover:text-primary">
                 <MessageCircle className="size-4" />
@@ -101,7 +110,7 @@ export function CommentThread({ comment, depth = 0 }: { comment: CommentThreadIt
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   {isOwner ? (
-                    <DropdownMenuItem variant="destructive" onClick={handleDelete}>
+                    <DropdownMenuItem variant="destructive" onClick={() => list?.remove(comment.id)}>
                       <Trash2 className="size-4" /> Delete
                     </DropdownMenuItem>
                   ) : (

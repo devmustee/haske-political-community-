@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { toggleFollow } from "@/lib/actions/follows";
@@ -17,7 +16,6 @@ export function FollowButton({
   initialFollowing: boolean;
   size?: "default" | "sm";
 }) {
-  const router = useRouter();
   const { guard, GateDialog } = useGuestGate();
   const [following, setFollowing] = useState(initialFollowing);
   const [pending, startTransition] = useTransition();
@@ -29,9 +27,9 @@ export function FollowButton({
       if (!result.ok) {
         toast.error(result.error);
         setFollowing(initialFollowing);
-        return;
       }
-      router.refresh();
+      // toggleFollow revalidates, and Next.js returns the refreshed page with
+      // the action's response, so follower counts update without a reload.
     });
   });
 

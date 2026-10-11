@@ -7,7 +7,8 @@ import { getPostById } from "@/lib/queries/posts";
 import { getCommentTree, type CommentNode } from "@/lib/queries/comments";
 import { PostCard } from "@/components/community/post-card";
 import { CommentComposer } from "@/components/community/comment-composer";
-import { CommentThread, type CommentThreadItem } from "@/components/community/comment-thread";
+import { CommentList, type CommentThreadItem } from "@/components/community/comment-thread";
+import { CommentListProvider } from "@/components/community/comment-list";
 
 function serializeComment(node: CommentNode): CommentThreadItem {
   return {
@@ -49,27 +50,25 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
   const commentTree = await getCommentTree(id, session?.user?.id);
 
   return (
-    <div>
-      <div className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <Link href="/community" className="rounded-full p-2 hover:bg-muted max-sm:p-3">
-          <ArrowLeft className="size-5" />
-        </Link>
-        <h1 className="font-serif text-lg font-semibold">Post</h1>
-      </div>
+    <CommentListProvider key={post.id} initial={commentTree.map(serializeComment)}>
+      <div>
+        <div className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
+          <Link href="/community" className="rounded-full p-2 hover:bg-muted max-sm:p-3">
+            <ArrowLeft className="size-5" />
+          </Link>
+          <h1 className="font-serif text-lg font-semibold">Post</h1>
+        </div>
 
-      <PostCard post={post} detail />
+        <PostCard post={post} detail />
 
-      <div className="border-b border-border px-4 py-3">
-        <CommentComposer postId={post.id} />
-      </div>
+        <div className="border-b border-border px-4 py-3">
+          <CommentComposer postId={post.id} />
+        </div>
 
-      <div className="px-4">
-        {commentTree.length === 0 ? (
-          <p className="py-10 text-center text-sm text-muted-foreground">No replies yet. Start the conversation.</p>
-        ) : (
-          commentTree.map((c) => <CommentThread key={c.id} comment={serializeComment(c)} />)
-        )}
+        <div className="px-4">
+          <CommentList empty={<p className="py-10 text-center text-sm text-muted-foreground">No replies yet. Start the conversation.</p>} />
+        </div>
       </div>
-    </div>
+    </CommentListProvider>
   );
 }

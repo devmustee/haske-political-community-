@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -30,6 +31,8 @@ import { useGuestGate } from "@/components/community/guest-gate";
 import { PostComposer } from "@/components/community/post-composer";
 import { ReportDialog } from "@/components/community/report-dialog";
 import { CommentComposer } from "@/components/community/comment-composer";
+import { CommentListProvider, useCommentList } from "@/components/community/comment-list";
+import { CommentList } from "@/components/community/comment-thread";
 import { cn, formatCount } from "@/lib/utils";
 import { runAction } from "@/lib/run-action";
 
@@ -73,6 +76,11 @@ export function PostActions({
   const [reportOpen, setReportOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [replyOpen, setReplyOpen] = useState(false);
+  // Comments added on this page: through the post page's list, or through the
+  // inline reply box under this post in a feed.
+  const pageComments = useCommentList();
+  const [inlineReplyDelta, setInlineReplyDelta] = useState(0);
+  const shownCommentsCount = commentsCount + (pageComments?.countDelta ?? 0) + inlineReplyDelta;
   const canNativeShare = useSyncExternalStore(
     noopSubscribe,
     () => typeof navigator.share === "function",
@@ -152,8 +160,8 @@ export function PostActions({
       toast.error(result.error);
       return;
     }
+    // deletePost revalidates, so the refreshed page comes back with the response.
     toast.success("Post deleted");
-    router.refresh();
   }
 
   return (
@@ -168,7 +176,7 @@ export function PostActions({
         <span className="rounded-full p-1.5 group-hover:bg-primary/10">
           <MessageCircle className="size-[18px]" />
         </span>
-        {commentsCount > 0 && <span className="text-xs">{formatCount(commentsCount)}</span>}
+        {shownCommentsCount > 0 && <span className="text-xs">{formatCount(shownCommentsCount)}</span>}
       </button>
 
       <DropdownMenu>
@@ -280,18 +288,20 @@ export function PostActions({
 
     </div>
 
-      {replyOpen && (
-        <div className="mt-3 border-t border-border pt-3">
-          <CommentComposer
-            postId={postId}
-            autoFocus
-            placeholder={`Reply to @${authorUsername}`}
-            onDone={() => {
-              setReplyOpen(false);
-              toast.success("Reply posted");
-            }}
-          />
-        </div>
+      {quickReply && (
+        <CommentListProvider onCountChange={(delta) => setInlineReplyDelta((d) => d + delta)}>
+          {replyOpen && (
+            <div className="mt-3 border-t border-border pt-3">
+              <CommentComposer
+                postId={postId}
+                autoFocus
+                placeholder={`Reply to @${authorUsername}`}
+                onDone={() => setReplyOpen(false)}
+              />
+            </div>
+          )}
+          <InlineReplies postId={postId} />
+        </CommentListProvider>
       )}
 
       {GateDialog}
@@ -326,6 +336,20 @@ export function PostActions({
         onOpenChange={setReportOpen}
         onSubmit={(reason, details) => reportContent({ targetType: "POST", postId, reason, details })}
       />
+    </div>
+  );
+}
+
+/** Replies the viewer just posted from a feed, so they don't seem to vanish. */
+function InlineReplies({ postId }: { postId: string }) {
+  const list = useCommentList();
+  if (!list || list.comments.length === 0) return null;
+  return (
+    <div className="mt-3 border-t border-border">
+      <CommentList />
+      <Link href={`/community/post/${postId}`} className="inline-block py-2 text-sm font-medium text-primary hover:underline">
+        View conversation
+      </Link>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Image as ImageIcon, BarChart3, X, Loader2, ImagePlus, Hash } from "lucide-react";
@@ -53,7 +52,6 @@ export function PostComposerForm({
   onPosted?: () => void;
 }) {
   const { data: session } = useSession();
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dragDepth = useRef(0);
@@ -61,6 +59,9 @@ export function PostComposerForm({
   const [content, setContent] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  // State updates land on the next render, so a quick double tap could get
+  // past `submitting`; this ref blocks the second tap immediately.
+  const submittingRef = useRef(false);
   const [expanded, setExpanded] = useState(variant === "dialog");
   const [dragActive, setDragActive] = useState(false);
   const [showPoll, setShowPoll] = useState(false);
@@ -164,6 +165,7 @@ export function PostComposerForm({
   }
 
   async function handleSubmit() {
+    if (submittingRef.current) return;
     if (uploading || submitting) return;
     if (showPoll) {
       const validOptions = pollOptions.map((o) => o.trim()).filter(Boolean);
@@ -176,6 +178,7 @@ export function PostComposerForm({
       return;
     }
 
+    submittingRef.current = true;
     setSubmitting(true);
     const media = attachments
       .filter((a) => a.url)
@@ -194,6 +197,7 @@ export function PostComposerForm({
           }
         : undefined,
     }));
+    submittingRef.current = false;
     setSubmitting(false);
 
     if (!result.ok) {
@@ -203,8 +207,9 @@ export function PostComposerForm({
 
     toast.success(quoteOfId ? "Quote reposted." : "Posted to Haske Community.");
     reset();
+    // The action revalidates the feed, and Next.js returns the refreshed page
+    // in the same response, so there's no separate reload here.
     onPosted?.();
-    router.refresh();
   }
 
   const dragHandlers = {
@@ -395,7 +400,7 @@ export function PostComposerForm({
             )}
             <Button onClick={handleSubmit} disabled={submitting || uploading} size={inline ? "sm" : "default"} className={cn(inline && "h-9 px-5")}>
               {(submitting || uploading) && <Loader2 className="size-4 animate-spin" />}
-              {uploading ? "Uploading" : quoteOfId ? "Repost" : "Post"}
+              {uploading ? "Uploading" : submitting ? "Posting" : quoteOfId ? "Repost" : "Post"}
             </Button>
           </div>
         </div>
