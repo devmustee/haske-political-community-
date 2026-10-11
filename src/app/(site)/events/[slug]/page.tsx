@@ -10,6 +10,7 @@ import { formatDate, formatCount, initials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Calendar, MapPin, User as UserIcon, Users, FileCheck } from "lucide-react";
 import { MediaGrid } from "@/components/community/media-grid";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -27,7 +28,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
     include: {
       _count: { select: { registrations: true } },
       registrations: session?.user ? { where: { userId: session.user.id } } : false,
-      questions: { include: { user: true }, orderBy: { createdAt: "desc" }, take: 20 },
+      questions: { include: { user: { select: publicUserSelect } }, orderBy: { createdAt: "desc" }, take: 20 },
       media: true,
     },
   });

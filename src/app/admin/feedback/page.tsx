@@ -21,7 +21,7 @@ export default async function AdminFeedbackPage() {
   await requireAdminPagePermission("feedback.manage");
   const submissions = await prisma.feedbackSubmission.findMany({
     orderBy: { createdAt: "desc" },
-    include: { user: true },
+    include: { user: { select: { name: true, username: true } } },
     take: 100,
   });
 

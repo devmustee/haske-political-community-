@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { publicUserSelect } from "@/lib/queries/public-user";
 import { postInclude } from "@/lib/queries/posts";
 
 export async function globalSearch(query: string, viewerId?: string) {
@@ -11,7 +12,7 @@ export async function globalSearch(query: string, viewerId?: string) {
   const [people, posts, programs, achievements, events, media] = await Promise.all([
     prisma.user.findMany({
       where: { OR: [{ name: { contains: q, mode: "insensitive" } }, { username: { contains: q, mode: "insensitive" } }] },
-      include: { followers: { where: { followerId: viewerId ?? "" }, select: { id: true } } },
+      select: { ...publicUserSelect, followers: { where: { followerId: viewerId ?? "" }, select: { id: true } } },
       take: 10,
     }),
     prisma.post.findMany({

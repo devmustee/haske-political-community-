@@ -1,10 +1,11 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 function commentInclude(viewerId?: string) {
   return {
-    author: true,
+    author: { select: publicUserSelect },
     // Always keep the relation selected (see postInclude for why `false`
     // for guests is unsafe) but match nothing when there's no viewer.
     likes: { where: { userId: viewerId ?? "__no-viewer__" }, select: { id: true } },

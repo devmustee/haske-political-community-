@@ -1,10 +1,15 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 export async function getUserProfile(username: string, viewerId?: string) {
   const user = await prisma.user.findUnique({
     where: { username },
-    include: {
+    select: {
+      ...publicUserSelect,
+      bio: true,
+      coverImageUrl: true,
+      createdAt: true,
       _count: { select: { posts: { where: { deletedAt: null } }, followers: true, following: true } },
       followers: viewerId ? { where: { followerId: viewerId }, select: { id: true } } : false,
     },

@@ -1,12 +1,13 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 export async function getNotifications(userId: string) {
   return prisma.notification.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
     take: 50,
-    include: { actor: true, announcement: { select: { title: true, body: true, link: true } } },
+    include: { actor: { select: publicUserSelect }, announcement: { select: { title: true, body: true, link: true } } },
   });
 }
 

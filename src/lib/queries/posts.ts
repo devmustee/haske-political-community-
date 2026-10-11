@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 // A viewer-scoped filter that always keeps the relation selected (so the
 // result shape is stable and typed), but matches zero rows when there is no
@@ -13,7 +14,7 @@ function viewerScoped(viewerId: string | undefined) {
 
 export function postInclude(viewerId?: string) {
   return {
-    author: true,
+    author: { select: publicUserSelect },
     media: { orderBy: { order: "asc" as const } },
     poll: {
       include: {
@@ -24,7 +25,7 @@ export function postInclude(viewerId?: string) {
     quoteOf: {
       where: { deletedAt: null },
       include: {
-        author: true,
+        author: { select: publicUserSelect },
         media: { orderBy: { order: "asc" as const } },
       },
     },

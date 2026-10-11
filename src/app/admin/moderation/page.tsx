@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ReportActions } from "@/components/admin/report-actions";
 import { BlockedWordsManager } from "@/components/admin/blocked-words-manager";
 import { formatRelativeTime, initials } from "@/lib/utils";
+import { publicUserSelect } from "@/lib/queries/public-user";
 
 export const metadata: Metadata = { title: "Moderation" };
 export const dynamic = "force-dynamic";
@@ -19,8 +20,8 @@ export default async function ModerationPage() {
       orderBy: { createdAt: "desc" },
       include: {
         reporter: true,
-        post: { include: { author: true } },
-        comment: { include: { author: true } },
+        post: { include: { author: { select: publicUserSelect } } },
+        comment: { include: { author: { select: publicUserSelect } } },
         reportedUser: true,
       },
       take: 30,
