@@ -119,6 +119,33 @@ are all in the experience:
 - The service worker never caches signed-in pages, so it can't serve stale
   comments.
 
+## Progress (11 October)
+
+- **Done in code:**
+  - **M1, M2:** comments appear instantly, feed replies stay visible, and
+    double sends are ignored (`efcc096`).
+  - **M7:** rate limits are shared across servers (Postgres `RateLimit` table).
+  - **M8:** uploads are typed by their bytes; posts and profiles only accept
+    this site's own media URLs.
+  - **Public user fields:** queries select public user fields only. The own
+    profile page was sending the signed-in member's full record, password
+    hash included, to their own browser; it no longer does.
+  - **Verification email:** resend now uses the session, and a "Verify your
+    email" banner with a Resend button shows to unverified members.
+  - **M3 (code side):** Sentry is wired in, but stays off until
+    `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` are set.
+  - **Next.js 16.3.8:** fixes three high-severity advisories that affected
+    16.3.6.
+- **Still to do (accounts and settings):**
+  - M3: create a Sentry project, add the DSNs, and set up an uptime monitor.
+  - M4: confirm email delivery.
+  - M5: confirm uploads work in production.
+  - M6: rotate the database password.
+  - M9: move to Vercel Pro, check the Supabase plan, and turn on Fluid Compute.
+- **Known:** Server Actions accept bodies up to 10 MB, so videos over 10 MB
+  can't be uploaded despite the 100 MB limit. Direct-to-storage uploads
+  would fix this.
+
 ## Suggested order
 
 1. **Today (no code):** M4, M5, M6, M9 checks in Vercel and Supabase; turn on
