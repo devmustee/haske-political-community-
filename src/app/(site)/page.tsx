@@ -5,6 +5,7 @@ import { getSiteSetting, type BiographySettings, type MissionSettings, type Visi
 import { getFeedPosts } from "@/lib/queries/posts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { MediaArtwork } from "@/components/cms/media-artwork";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Badge } from "@/components/ui/badge";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
@@ -876,6 +877,15 @@ export default async function HomePage() {
               <Reveal key={m.id} variant="scale" delay={i * 100}>
                 <Link href={`/media/${m.slug}`}>
                   <SpotlightCard spotlightColor="gold" className="overflow-hidden h-full flex flex-col justify-between">
+                    {!m.featuredImage && (
+                      <MediaArtwork
+                        size="sm"
+                        content={m.content}
+                        categoryLabel={m.category.replaceAll("_", " ").toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
+                        date={m.date}
+                        className="aspect-video w-full"
+                      />
+                    )}
                     {m.featuredImage && (
                       <div className="relative aspect-video w-full overflow-hidden bg-muted">
                         {/* eslint-disable-next-line @next/next/no-img-element */}

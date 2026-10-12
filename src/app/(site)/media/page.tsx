@@ -6,6 +6,7 @@ import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/motion/reveal";
+import { MediaArtwork } from "@/components/cms/media-artwork";
 import { formatDate } from "@/lib/utils";
 import { PlayCircle, Image as ImageIcon, Newspaper, ArrowRight } from "lucide-react";
 
@@ -105,7 +106,12 @@ export default async function MediaCenterPage({
                         )}
                       </div>
                     ) : (
-                      <div className="hidden bg-gradient-to-br from-primary/10 to-accent/10 lg:block" />
+                      <MediaArtwork
+                        content={latest.content}
+                        categoryLabel={CATEGORY_LABELS[latest.category] ?? latest.category}
+                        date={latest.date}
+                        className="aspect-square w-full sm:aspect-video lg:aspect-auto lg:min-h-[24rem]"
+                      />
                     )}
                     <div className="flex flex-col justify-center p-8 sm:p-10">
                       <div className="flex flex-wrap items-center gap-2">
@@ -140,6 +146,15 @@ export default async function MediaCenterPage({
                         spotlightColor="primary"
                         className="overflow-hidden h-full flex flex-col justify-between"
                       >
+                        {!item.featuredImage && (
+                          <MediaArtwork
+                            size="sm"
+                            content={item.content}
+                            categoryLabel={CATEGORY_LABELS[item.category] ?? item.category}
+                            date={item.date}
+                            className="aspect-video w-full"
+                          />
+                        )}
                         {item.featuredImage && (
                           <div className="relative aspect-video w-full overflow-hidden bg-muted">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
