@@ -5,8 +5,11 @@ import { PageHero } from "@/components/cms/page-hero";
 import { ContentStatusBadge } from "@/components/cms/content-status-badge";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/motion/reveal";
+import { CardImage } from "@/components/cms/card-image";
 import { ArrowRight, Award, ShieldCheck, MapPin, Calendar } from "lucide-react";
+import type { Prisma } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: "Documented Achievements — Abdulrahman Bashir Haske",
@@ -27,16 +30,88 @@ const CATEGORY_LABELS: Record<string, string> = {
   PHILANTHROPY: "Philanthropy",
 };
 
+type AchievementWithImage = Prisma.AchievementGetPayload<{ include: { images: true } }>;
+
+/**
+ * One achievement. "wide" puts the image beside the text from the lg
+ * breakpoint (used for the spotlight and for a lone remaining card, so it
+ * doesn't sit at half width next to empty space); "stacked" is the grid card.
+ */
+function AchievementCard({ achievement: a, layout, featured = false }: { achievement: AchievementWithImage; layout: "wide" | "stacked"; featured?: boolean }) {
+  const image = a.images[0];
+  const wide = layout === "wide";
+
+  return (
+    <Link
+      href={`/achievements/${a.slug}`}
+      className="block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    >
+      <SpotlightCard
+        spotlightColor={featured ? "gold" : "primary"}
+        className={cn("h-full", featured && "shadow-elevated")}
+        contentClassName={cn("flex flex-col", wide && "lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]")}
+      >
+        {image ? (
+          <CardImage
+            src={image.url}
+            alt={image.caption ?? a.title}
+            className={cn("aspect-video w-full shrink-0", wide && "lg:aspect-auto lg:h-full lg:min-h-[22rem]")}
+          />
+        ) : (
+          wide && <div className="hidden bg-gradient-to-br from-primary/10 to-accent/10 lg:block" />
+        )}
+
+        <div className={cn("flex flex-1 flex-col", wide ? "justify-center p-6 sm:p-10" : "p-6 sm:p-7")}>
+          <div className="flex flex-wrap items-center gap-2">
+            {featured && <Badge variant="gold" className="font-bold">Featured Spotlight</Badge>}
+            <Badge variant="secondary">{CATEGORY_LABELS[a.category] ?? a.category}</Badge>
+            <ContentStatusBadge status={a.contentStatus} />
+          </div>
+
+          <h2 className={cn("mt-4 font-serif font-bold text-balance text-foreground", wide ? "text-2xl sm:text-3xl" : "text-xl sm:text-2xl")}>
+            {a.title}
+          </h2>
+
+          {(a.year || a.location) && (
+            <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold uppercase tracking-wider text-accent">
+              {a.location && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-3.5" aria-hidden />
+                  {a.location}
+                </span>
+              )}
+              {a.year && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="size-3.5" aria-hidden />
+                  {a.year}
+                </span>
+              )}
+            </p>
+          )}
+
+          <p className={cn("mt-4 leading-relaxed text-muted-foreground text-pretty", wide ? "text-[15px] sm:text-base" : "flex-1 text-sm sm:text-[15px]")}>
+            {a.summary}
+          </p>
+
+          <span className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-bold text-primary">
+            {featured ? "Read the full documented case" : "Examine the documented evidence"}
+            <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+          </span>
+        </div>
+      </SpotlightCard>
+    </Link>
+  );
+}
+
 export default async function AchievementsPage() {
   const achievements = await prisma.achievement.findMany({
     where: { contentStatus: { notIn: ["DRAFT"] } },
     orderBy: [{ featured: "desc" }, { order: "asc" }],
-    include: { images: { take: 1 } },
+    include: { images: { orderBy: { order: "asc" }, take: 1 } },
   });
 
-  const isSpotlight = achievements[0]?.featured === true;
-  const spotlight = isSpotlight ? achievements[0] : undefined;
-  const rest = isSpotlight ? achievements.slice(1) : achievements;
+  const spotlight = achievements[0]?.featured ? achievements[0] : undefined;
+  const rest = spotlight ? achievements.slice(1) : achievements;
 
   return (
     <div>
@@ -52,109 +127,43 @@ export default async function AchievementsPage() {
         }
       />
 
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
         {achievements.length === 0 ? (
           <div className="py-20 text-center">
-            <Award className="mx-auto size-14 text-muted-foreground/30 mb-4" />
-            <p className="text-muted-foreground text-lg">No achievements published yet.</p>
+            <Award className="mx-auto mb-4 size-14 text-muted-foreground/30" />
+            <p className="text-lg text-muted-foreground">No achievements published yet.</p>
           </div>
         ) : (
-          <>
+          <div className="flex flex-col gap-8 sm:gap-10">
             {spotlight && (
-              <Reveal variant="scale" className="mb-12">
-                <Link href={`/achievements/${spotlight.slug}`}>
-                  <SpotlightCard
-                    spotlightColor="gold"
-                    className="overflow-hidden lg:grid lg:grid-cols-2 shadow-elevated"
-                  >
-                    {spotlight.images[0] ? (
-                      <div className="relative aspect-video w-full overflow-hidden bg-muted lg:aspect-auto">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={spotlight.images[0].url}
-                          alt={spotlight.images[0].caption ?? ""}
-                          className="size-full object-cover transition-transform duration-700 hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <div className="hidden bg-gradient-to-br from-primary/10 to-accent/10 lg:block" />
-                    )}
-                    <div className="flex flex-col justify-center p-8 sm:p-10">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="gold" className="font-bold">Featured Spotlight</Badge>
-                        <Badge variant="secondary">{CATEGORY_LABELS[spotlight.category] ?? spotlight.category}</Badge>
-                        <ContentStatusBadge status={spotlight.contentStatus} />
-                      </div>
-                      <h2 className="mt-4 font-serif text-2xl sm:text-3xl font-bold text-foreground">
-                        {spotlight.title}
-                      </h2>
-                      {(spotlight.year || spotlight.location) && (
-                        <p className="mt-2 text-xs font-semibold text-accent uppercase tracking-wider flex items-center gap-2">
-                          {spotlight.location && <span className="flex items-center gap-1"><MapPin className="size-3.5" />{spotlight.location}</span>}
-                          {spotlight.year && <span className="flex items-center gap-1"><Calendar className="size-3.5" />{spotlight.year}</span>}
-                        </p>
-                      )}
-                      <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-                        {spotlight.summary}
-                      </p>
-                      <span className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-bold text-primary">
-                        Read full documented case <ArrowRight className="size-4" />
-                      </span>
-                    </div>
-                  </SpotlightCard>
-                </Link>
+              <Reveal variant="scale">
+                <AchievementCard achievement={spotlight} layout="wide" featured />
               </Reveal>
             )}
 
             {rest.length > 0 && (
-              <div className="grid gap-6 sm:grid-cols-2">
-                {rest.map((a, i) => (
-                  <Reveal key={a.id} variant="scale" delay={Math.min(i, 5) * 80}>
-                    <Link href={`/achievements/${a.slug}`}>
-                      <SpotlightCard
-                        spotlightColor="primary"
-                        className="overflow-hidden h-full flex flex-col justify-between"
-                      >
-                        {a.images[0] && (
-                          <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={a.images[0].url}
-                              alt={a.images[0].caption ?? ""}
-                              className="size-full object-cover transition-transform duration-700 hover:scale-105"
-                              loading="lazy"
-                            />
-                          </div>
-                        )}
-                        <div className="flex flex-1 flex-col p-6 sm:p-7">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="secondary">{CATEGORY_LABELS[a.category] ?? a.category}</Badge>
-                            <ContentStatusBadge status={a.contentStatus} />
-                          </div>
-                          <h2 className="mt-4 font-serif text-xl font-bold text-foreground">
-                            {a.title}
-                          </h2>
-                          {(a.year || a.location) && (
-                            <p className="mt-1.5 text-xs font-semibold text-muted-foreground flex items-center gap-2">
-                              {a.location && <span>{a.location}</span>}
-                              {a.year && <span>&middot; {a.year}</span>}
-                            </p>
-                          )}
-                          <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                            {a.summary}
-                          </p>
-                          <span className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary">
-                            Examine documented evidence <ArrowRight className="size-3.5" />
-                          </span>
-                        </div>
-                      </SpotlightCard>
-                    </Link>
+              <section aria-labelledby="more-achievements" className="flex flex-col gap-5">
+                {spotlight && (
+                  <h2 id="more-achievements" className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
+                    More documented work
+                  </h2>
+                )}
+                {rest.length === 1 ? (
+                  <Reveal variant="scale">
+                    <AchievementCard achievement={rest[0]} layout="wide" />
                   </Reveal>
-                ))}
-              </div>
+                ) : (
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {rest.map((a, i) => (
+                      <Reveal key={a.id} variant="scale" delay={Math.min(i, 5) * 80} className="h-full">
+                        <AchievementCard achievement={a} layout="stacked" />
+                      </Reveal>
+                    ))}
+                  </div>
+                )}
+              </section>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

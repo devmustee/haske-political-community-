@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Lets SpotlightCard's cursor glow fade in and out (a registered color can
+   transition; an unregistered custom property would just switch). */
+@property --spot-color {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
 :root {
   --radius: 0.875rem;
 
