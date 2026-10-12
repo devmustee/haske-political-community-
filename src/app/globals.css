@@ -496,56 +496,41 @@
     opacity: 0.7;
   }
 
-  /* ─── Scroll-reveal multi-variant system ─── */
+  /* ─── Scroll-reveal multi-variant system ───
+     Content is only hidden under `.js`, which the inline script in the root
+     layout sets when it can also reveal it (so a failed or blocked script
+     never leaves blank sections), and which it skips under reduced motion.
+     No will-change: pinning a layer on 100+ elements exhausts GPU memory on
+     low-end phones. */
   .reveal {
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .js .reveal:not(.visible) {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
   }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-scale {
+  .js .reveal-scale:not(.visible) {
     transform: translateY(16px) scale(0.96);
   }
-  .reveal-scale.visible {
-    transform: translateY(0) scale(1);
-  }
   .reveal-blur {
-    filter: blur(10px);
-    transform: translateY(16px);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .reveal-blur.visible {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0);
+  .js .reveal-blur:not(.visible) {
+    filter: blur(10px);
+    transform: translateY(16px);
   }
-  .reveal-left {
+  .js .reveal-left:not(.visible) {
     transform: translateX(-32px);
   }
-  .reveal-left.visible {
-    transform: translateX(0);
-  }
-  .reveal-right {
+  .js .reveal-right:not(.visible) {
     transform: translateX(32px);
   }
-  .reveal-right.visible {
-    transform: translateX(0);
-  }
   /* Phones: sideways slides push content past the screen edge while they
-     animate (where overflow-hidden ancestors clip it), so rise up instead.
-     Reduced motion is handled globally and in <Reveal>. */
+     animate (where overflow-hidden ancestors clip it), so rise up instead. */
   @media (max-width: 639.98px) {
-    .reveal-left,
-    .reveal-right {
+    .js .reveal-left:not(.visible),
+    .js .reveal-right:not(.visible) {
       transform: translateY(24px);
-    }
-    .reveal-left.visible,
-    .reveal-right.visible {
-      transform: translateY(0);
     }
   }
 

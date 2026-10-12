@@ -155,16 +155,15 @@ while the page is still loading**, the **page length**, and the
 - **Fix:** an "Install the app" button (community sidebar and menu, plus a
   one-time card) that triggers Chrome's own install dialog.
 
-**11. Phones download desktop-sized images.**
-- **Cause:**
-  - 22 of the 39 `next/image` uses have no `sizes`, so a phone gets the
-    1200px version. That's why `/gallery` is 877 KB.
-  - The new media artwork loads the 1920px official portrait into a
+**11. Image weight.**
+- **Correction from the first draft:** fixed-width `next/image` uses
+  already get a 1×/2× `srcset`, and the gallery's 1200px images are right
+  for a 3× phone screen.
+- **The real wins are:**
+  - **AVIF:** the optimizer only produced WebP. AVIF is about 30% smaller.
+  - **Raw images in new components:** the media artwork and card images
+    bypassed the optimizer. The artwork loaded the 1920px portrait into a
     roughly 220px slot.
-- **Fix:**
-  - Add `sizes` everywhere (e.g. `(max-width: 640px) 100vw, 33vw`).
-  - Serve the artwork portrait through `next/image`, or ship a 600px
-    version.
 
 **12. Small tap targets in the community.**
 - **Cause:** 9–11 controls under 40px on the feed and on post pages: comment

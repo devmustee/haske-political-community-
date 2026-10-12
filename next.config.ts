@@ -37,6 +37,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // AVIF first (about 30% smaller than WebP at the same quality), WebP
+    // for browsers without it. Matters most on phones on mobile data.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "http", hostname: "localhost" },
       { protocol: "https", hostname: "**" },

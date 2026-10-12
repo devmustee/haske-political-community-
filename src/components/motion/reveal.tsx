@@ -15,7 +15,6 @@ type RevealProps = {
   staggerIndex?: number;
   variant?: RevealVariant;
   className?: string;
-  threshold?: number;
 };
 
 /**
@@ -29,7 +28,6 @@ export function Reveal({
   staggerIndex,
   variant = "up",
   className,
-  threshold = 0.12,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -37,6 +35,11 @@ export function Reveal({
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    // Already revealed by the inline script (see reveal-script.tsx).
+    if (node.classList.contains("visible")) {
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(frame);
+    }
 
     if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const frame = requestAnimationFrame(() => setVisible(true));
@@ -50,11 +53,13 @@ export function Reveal({
           observer.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -8% 0px" },
+      // No percentage threshold: an element taller than the screen might
+      // never reach it and would stay hidden.
+      { rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, []);
 
   const Tag = as as "div";
   const calculatedDelay = staggerIndex !== undefined ? Math.min(staggerIndex * 70, 700) : delay;
@@ -75,6 +80,8 @@ export function Reveal({
     <Tag
       ref={ref as React.RefObject<HTMLDivElement>}
       className={cn("reveal", variantClass, visible && "visible", className)}
+      // The inline reveal script may add "visible" before hydration.
+      suppressHydrationWarning
       style={style}
     >
       {children}

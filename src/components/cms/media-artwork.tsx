@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Quote } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 
@@ -50,17 +51,17 @@ export function MediaArtwork({
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_100%_0%,oklch(0.78_0.145_88/0.28),transparent_55%),linear-gradient(160deg,transparent_30%,oklch(0.18_0.06_152/0.85))]" />
       <div className="absolute inset-0 -z-10 opacity-[0.07] bg-[repeating-linear-gradient(135deg,currentColor_0_1px,transparent_1px_14px)]" />
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={PORTRAIT}
-        alt=""
-        loading="lazy"
-        className={cn(
-          "absolute bottom-0 right-0 -z-10 h-full object-cover object-top grayscale-[15%]",
-          "[mask-image:linear-gradient(to_left,black_45%,transparent_95%)]",
-          lg ? "w-[62%] sm:w-[55%]" : "w-[60%]"
-        )}
-      />
+      {/* Through the image optimizer: the source is 1920px, the slot is a
+          few hundred pixels wide. */}
+      <div className={cn("absolute inset-y-0 right-0 -z-10", lg ? "w-[62%] sm:w-[55%]" : "w-[60%]")}>
+        <Image
+          src={PORTRAIT}
+          alt=""
+          fill
+          sizes={lg ? "(min-width: 1024px) 320px, 60vw" : "(min-width: 1024px) 220px, (min-width: 640px) 30vw, 60vw"}
+          className="object-cover object-top grayscale-[15%] [mask-image:linear-gradient(to_left,black_45%,transparent_95%)]"
+        />
+      </div>
 
       <div className={cn("relative flex h-full flex-col justify-between", lg ? "p-6 sm:p-9" : "p-5")}>
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-accent/40 bg-black/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent backdrop-blur-sm">

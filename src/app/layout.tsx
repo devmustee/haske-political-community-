@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { RevealScript } from "@/components/motion/reveal-script";
 import "./globals.css";
 
 // Self-hosted (not next/font/google): Vercel's Turbopack build image doesn't
@@ -68,6 +69,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
+      <head>
+        <RevealScript />
+      </head>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
         <ServiceWorkerRegister />
